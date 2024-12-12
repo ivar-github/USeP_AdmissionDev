@@ -160,6 +160,9 @@
 
     @push('scripts')
 
+        {{-- SWEETALERTS --}}
+        <script src="{{ asset('JS/SweetAlerts/SwalGeneric.js') }}"></script>
+
         <script>
             let selectedColumns = ['Applicant']; 
             let currentPage = 1;
@@ -199,6 +202,7 @@
                     document.body.appendChild(link);
                     link.click();
                     link.remove();
+                    swalGenericExport();
                 })
                 .catch(error => console.error('Error exporting to Excel:', error));
             }

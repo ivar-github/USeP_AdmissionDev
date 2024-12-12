@@ -22,7 +22,7 @@ class CourseEvalStatement extends Model
         'desc',
         'isActive',
         'sortOrder',
-        'evaltypeID',
+        'evalTypeID',
         'parameterID',
         'versionID',
         'ratingTemplateID',

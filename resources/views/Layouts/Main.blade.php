@@ -9,6 +9,8 @@
 
         <!-- FONTS -->
         <link rel="preconnect" href="https://fonts.bunny.net">
+        <link rel="dns-prefetch" href="//fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
         {{-- CSS --}}
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />

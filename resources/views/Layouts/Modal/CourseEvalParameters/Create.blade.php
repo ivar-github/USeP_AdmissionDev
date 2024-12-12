@@ -17,7 +17,6 @@
             <form method="POST" id="addParameterForm">
                 @csrf
 
-                <div id="responseMessage" class="mt-4 text-green-500"></div>
                 <div id="errorMessage" class="mt-4 text-red-500">
                     <x-Validation-Error :messages="$errors->get('status')" class="mt-2" />
                 </div>
@@ -25,13 +24,13 @@
                 <div class="grid grid-cols mt-4 gap-4">
                     <div class=" text-white">
                         <x-Input-Label for="name">Name</x-Input-Label>
-                        <x-Input-Field id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required   />
+                        <x-Input-Field id="name" class="block mt-1 w-full" type="text" name="Name" :value="old('Name')" required   />
                     </div>
                 </div>
                 <div class="grid grid-cols mt-4 gap-4">
                     <div class=" text-white">
                         <x-Input-Label for="desc">Description</x-Input-Label>
-                        <x-Input-Field id="desc" class="block mt-1 w-full" type="text" name="desc" :value="old('desc')" required  />
+                        <x-Input-Field id="desc" class="block mt-1 w-full" type="text" name="Description" :value="old('Description')" required  />
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 mt-4 gap-4">
@@ -39,29 +38,29 @@
                         <x-Input-Label for="sortorderN">SortOrder No.</x-Input-Label>
                         <x-Input-Field id="sortorderN" class="block mt-1 w-full"
                             type="number"
-                            name="sortorderN"
+                            name="SortOrder_Num"
                             required />
                     </div>
                     <div class=" text-white">
                         <x-Input-Label for="sortorderA">SortOrder Alph.</x-Input-Label>
                         <x-Input-Field id="sortorderA" class="block mt-1 w-full"
                             type="text"
-                            name="sortorderA"
+                            name="SortOrder_Alpha"
                             required />
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 mt-4 gap-4">
                     <div class=" text-white">
                         <x-Input-Label for="status">Status</x-Input-Label>
-                        <x-Input-Dropdown name="status" id="status">
+                        <x-Input-Dropdown name="Status" id="status">
                             <option value="" disabled selected>Select</option>
                             <option value="0">Inactive</option>
                             <option value="1">Active</option>
                         </x-Input-Dropdown>
                     </div>
                     <div class=" text-white">
-                        <x-Input-Label for="evaltypeID">EvalType</x-Input-Label>
-                        <x-Input-Dropdown name="evaltypeID" id="evaltypeID">
+                        <x-Input-Label for="evaltypeID">EvalType ID</x-Input-Label>
+                        <x-Input-Dropdown name="EvalType_ID" id="evaltypeID">
                             <option value="" disabled selected>Select</option>
                             <option value="0">Inactive</option>
                             <option value="1">Active</option>

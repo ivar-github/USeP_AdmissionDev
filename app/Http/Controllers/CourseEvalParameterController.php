@@ -32,33 +32,50 @@ class CourseEvalParameterController extends Controller
         //
     }
 
- 
+
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'desc' => ['required', 'string', 'max:255'],
-            'sortorderN' => ['required', 'integer', 'max:100'],
-            'sortorderA' => ['required', 'string', 'max:2'],
-            'status' => ['required', 'integer', 'in:0,1'],
-            'evaltypeID' => ['required', 'integer'],
-        ]);
 
-        $parameter = CourseEvalParameter::create([
-            'name' => $request->name,
-            'desc' => $request->desc,
-            'sortOrderN' => $request->sortorderN,
-            'sortOrderA' => $request->sortorderA,
-            'isActive' => $request->status,
-            'dateAdded' => now(),
-            'evalTypeID' => $request->evaltypeID,
-        ]);
-
-        session()->flash('success', $request->name . ' has been created successfully!');
-        return response()->json(['message' => $request->name . ' has been created successfully!'], 200);
+        try {
+            $request->validate([
+                'Name' => ['required', 'string', 'max:255'],
+                'Description' => ['required', 'string', 'max:255'],
+                'SortOrder_Num' => ['required', 'integer', 'max:100'],
+                'SortOrder_Alpha' => ['required', 'string', 'max:1'],
+                'Status' => ['required', 'integer', 'in:0,1'],
+                'EvalType_ID' => ['required', 'integer'],
+            ]);
+        
+            $parameter = CourseEvalParameter::create([
+                'name' => $request->Name,
+                'desc' => $request->Description,
+                'sortOrderN' => $request->SortOrder_Num,
+                'sortOrderA' => $request->SortOrder_Alpha,
+                'isActive' => $request->Status,
+                'dateAdded' => now(),
+                'evalTypeID' => $request->EvalType_ID,
+            ]);
+        
+            return response()->json([
+                'message' => 'Parameter created successfully!',
+                'status' => 'success',
+            ], 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $e->errors(),
+                'status' => 'error',
+            ], 422);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'An unexpected error occurred!',
+                'status' => 'error',
+            ], 500);
+        }
+    
     }
 
- 
+
     public function show(string $id)
     {
         //
@@ -74,44 +91,70 @@ class CourseEvalParameterController extends Controller
  
     public function update(Request $request)
     {
-        $parameterID = $request->input('parameterId');
-        $parameter = CourseEvalParameter::where('id', $parameterID)->firstOrFail();
-        $request->validate([
-            'a' => ['required', 'string', 'max:255'],
-            'b' => ['required', 'string', 'max:255'],
-            'c' => ['required', 'integer', 'max:100'],
-            'd' => ['required', 'string', 'max:2'],
-            'e' => ['required', 'integer', 'in:0,1'],
-            'f' => ['required', 'integer'],
-        ]);
-    
-    
-        $parameter->name = $request->input('a');
-        $parameter->desc = $request->input('b');
-        $parameter->sortOrderN = $request->input('c');
-        $parameter->sortOrderA = $request->input('d');
-        $parameter->isActive = $request->input('e');
-        $parameter->evalTypeID = $request->input('f');
-        $parameter->save();
 
+        try {
 
+            $parameterID = $request->input('parameterId');
+            $parameter = CourseEvalParameter::where('id', $parameterID)->firstOrFail();
 
-        if ($parameter->wasChanged()) {
-            session()->flash('success', $request->a . ' has been updated successfully!');
-            return response()->json(['message' => $request->a . ' has been updated successfully!'], 200);
+            $request->validate([
+                'Name' => ['required', 'string', 'max:255'],
+                'Description' => ['required', 'string', 'max:255'],
+                'SortOrder_Num' => ['required', 'integer', 'max:100'],
+                'SortOrder_Alpha' => ['required', 'string', 'max:1'],
+                'Status' => ['required', 'integer', 'in:0,1'],
+                'EvalType_ID' => ['required', 'integer'],
+            ]);
+        
+            $parameter->name = $request->input('Name');
+            $parameter->desc = $request->input('Description');
+            $parameter->sortOrderN = $request->input('SortOrder_Num');
+            $parameter->sortOrderA = $request->input('SortOrder_Alpha');
+            $parameter->isActive = $request->input('Status');
+            $parameter->evalTypeID = $request->input('EvalType_ID');
+            $parameter->save();
+        
+            if ($parameter->wasChanged()) {
+                return response()->json([
+                    'message' => 'Parameter updated successfully!',
+                    'status' => 'success',
+                ], 200);
+            }else{
+                return response()->json([
+                    'message' => 'No changes were made!',
+                    'status' => 'success',
+                ], 200);
+            }
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $e->errors(),
+                'status' => 'error',
+            ], 422);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'An unexpected error occurred!',
+                'status' => 'error',
+            ], 500);
         }
     
-        return response()->json(['message' => 'No changes were made.'], 400);
     }
 
 
     public function destroy(string $id)
     {
-        
-        $user = CourseEvalParameter::findOrFail($id);
-        dd($user);
-        $user->delete();
+        try {
 
-        return redirect()->route('courseEvalParameters.index')->with('success', 'Parameter deleted successfully.');
+            $user = CourseEvalParameter::findOrFail($id);
+            $user->delete();
+            return redirect()->route('courseEvalParameters.index')->with('success', 'Parameter deleted successfully.');
+
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'An unexpected error occurred!',
+                'status' => 'error',
+            ], 500);
+        }
     }
 }

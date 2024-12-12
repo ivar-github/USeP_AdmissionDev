@@ -18,6 +18,8 @@
     "dependencies": {
         "apexcharts": "^3.50.0",
         "flowbite": "^2.4.1",
-        "simple-datatables": "^9.2.1"
+        "jquery": "^3.7.1",
+        "simple-datatables": "^9.2.1",
+        "sweetalert2": "^11.14.5"
     }
 }
