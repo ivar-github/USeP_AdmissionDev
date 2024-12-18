@@ -56,19 +56,15 @@
                         <x-Input-Label for="e_parameterID">Parameter ID</x-Input-Label>
                         <x-Input-Dropdown name="Parameter_ID" id="e_parameterID">
                             <option value="" disabled selected>Select</option>
-                            <option value="0">Inactive</option>
-                            <option value="1">Active</option>
+                            <option value="45">45</option>
+                            <option value="46">46</option>
                         </x-Input-Dropdown>
                     </div>
                     <div class=" text-white">
                         <x-Input-Label for="e_evaltypeID">EvalType</x-Input-Label>
                         <x-Input-Dropdown name="EvalType_ID" id="e_evaltypeID">
                             <option value="" disabled selected>Select</option>
-                            <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
+                            <option value="21">Course Evaluation</option>
                         </x-Input-Dropdown>
                     </div>
                 </div>

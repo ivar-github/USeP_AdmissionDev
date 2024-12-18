@@ -62,8 +62,7 @@
                         <x-Input-Label for="evaltypeID">EvalType ID</x-Input-Label>
                         <x-Input-Dropdown name="EvalType_ID" id="evaltypeID">
                             <option value="" disabled selected>Select</option>
-                            <option value="0">Inactive</option>
-                            <option value="1">Active</option>
+                            <option value="21">Course Evaluation</option>
                         </x-Input-Dropdown>
                     </div>
                 </div>

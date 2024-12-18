@@ -88,14 +88,14 @@
                                                 </svg>
                                             </button>
                                         </td>
-                                        
+
                                     </tr>
-        
+
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
-        
+
                 </div>
             </div>
 
@@ -113,7 +113,6 @@
         <script src="{{ asset('JS/SweetAlerts/SwalUnique.js') }}"></script>
         <script src="{{ asset('JS/SweetAlerts/SwalGeneric.js') }}"></script>
 
-        {{-- MODAL --}}
         <script>
             document.addEventListener('DOMContentLoaded', function() {
 
@@ -208,6 +207,7 @@
                     })
                     .catch(error => {
                         console.error('Error fetching user data:', error);
+                        swalGenericError('An unexpected error occurred!',error);
                     });
             }
 
@@ -241,7 +241,7 @@
             // FUNCTION TO CLOSE MODALS
             function closeAddModal() {
                 document.getElementById('addRatingModal').classList.add('hidden');
-                document.getElementById('responseMessage').innerHTML = '';
+                document.getElementById('errorMessage').innerHTML = '';
             }
             function closeEditModal() {
                 document.getElementById('editRatingModal').classList.add('hidden');

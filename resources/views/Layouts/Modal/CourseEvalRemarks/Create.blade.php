@@ -16,7 +16,7 @@
             <!-- MODAL Body-->
             <form method="POST" id="addRemarkForm">
                 @csrf
-                
+
                 <div id="errorMessage" class="mt-4 text-red-500">
                     <x-Validation-Error :messages="$errors->get('status')" class="mt-2" />
                 </div>
@@ -54,19 +54,15 @@
                         <x-Input-Label for="parameterID">Parameter ID</x-Input-Label>
                         <x-Input-Dropdown name="Parameter_ID" id="parameterID">
                             <option value="" disabled selected>Select</option>
-                            <option value="0">Inactive</option>
-                            <option value="1">Active</option>
+                            <option value="45">45</option>
+                            <option value="46">46</option>
                         </x-Input-Dropdown>
                     </div>
                     <div class=" text-white">
                         <x-Input-Label for="evaltypeID">EvalType</x-Input-Label>
                         <x-Input-Dropdown name="EvalType_ID" id="evaltypeID">
                             <option value="" disabled selected>Select</option>
-                            <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
+                            <option value="21">Course Evalluation</option>
                         </x-Input-Dropdown>
                     </div>
                 </div>

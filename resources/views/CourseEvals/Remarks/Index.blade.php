@@ -25,6 +25,9 @@
                             <thead >
                                 <tr>
                                     <th scope="col"  class="text-md text-gray-800 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
+                                        ID
+                                    </th>
+                                    <th scope="col"  class="text-md text-gray-800 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
                                         QUESTION
                                     </th>
                                     <th scope="col"  class="text-md text-gray-800 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
@@ -53,6 +56,9 @@
                             <tbody>
                                 @foreach ($remarks as $remark)
                                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-sm">
+                                        <td>
+                                            {{ $remark->id }}
+                                        </td>
                                         <td scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
                                             <div class="ps-3">
                                                 <div class="font-semibold max-w-[24rem] truncate">{{ $remark->question }}</div>
@@ -88,14 +94,14 @@
                                                 </svg>
                                             </button>
                                         </td>
-                                        
+
                                     </tr>
-        
+
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
-        
+
                 </div>
             </div>
 
@@ -113,8 +119,6 @@
         <script src="{{ asset('JS/SweetAlerts/SwalUnique.js') }}"></script>
         <script src="{{ asset('JS/SweetAlerts/SwalGeneric.js') }}"></script>
 
-
-        {{-- MODAL --}}
         <script>
             document.addEventListener('DOMContentLoaded', function() {
 
@@ -127,7 +131,6 @@
 
                     axios.post(submitFormUrl, formData)
                         .then(response => {
-                            console.log('Response:', response);
                             closeAddModal();
                             this.reset();
                             document.getElementById('errorMessage').innerHTML = '';
@@ -156,8 +159,8 @@
                 });
 
 
-                // FUNCTION UPDATE ITEM
-                document.getElementById('editRemarkForm').addEventListener('submit', function (e) {
+                 // FUNCTION UPDATE ITEM
+                 document.getElementById('editRemarkForm').addEventListener('submit', function (e) {
                     e.preventDefault();
 
                     const formData = new FormData(this);
@@ -165,25 +168,29 @@
 
                     axios.post(`/courseEvalRemarks/${remarkId}`, formData)
                         .then(response => {
-                            document.getElementById('responseMessage').innerText = response.data.message;
                             closeEditModal();
-                            location.reload();
+                            this.reset();
+                            document.getElementById('e_errorMessage').innerHTML = '';
+                            swalGenericUpdate(response.data.message);
                         })
                         .catch(error => {
-                            const errorMessageElement = document.getElementById('e_errorMessage');
-                            errorMessageElement.innerHTML = '';
-
                             if (error.response && error.response.status === 422) {
                                 const errors = error.response.data.errors;
+                                const errorList = document.getElementById('e_errorMessage');
+                                errorList.innerHTML = '';
+
                                 for (const key in errors) {
                                     if (errors.hasOwnProperty(key)) {
                                         const errorMessage = document.createElement('li');
                                         errorMessage.innerText = errors[key][0];
-                                        errorMessageElement.appendChild(errorMessage);
+                                        errorList.appendChild(errorMessage);
                                     }
                                 }
                             } else {
-                                console.error('An unexpected error occurred:', error);
+                                const errorMsg = error.response.data.message;
+                                console.log('ErrorMsg',errorMsg);
+                                console.log('Error',error);
+                                swalGenericError('An unexpected error occurred!',error);
                             }
                         });
                 });
@@ -191,29 +198,59 @@
             });
 
 
-            // // FUNCTION TO SHOW USER TO EDIT
-            // function openEditModal(remarkId) {
-            //     axios.get(`/courseEvalRemarks/${remarkId}/edit`)
-            //         .then(response => {
-            //             const item = response.data;
-            //             document.getElementById('remarkId').value = item.id;
-            //             document.getElementById('e_question').value = item.question;
-            //             document.getElementById('e_placeholder').value = item.placeHolder;
-            //             document.getElementById('e_sortorderN').value = item.sortOrderN;
-            //             document.getElementById('e_sortorderA').value = item.sortOrderA;
-            //             document.getElementById('e_parameterID').value = item.parameterID;
-            //             document.getElementById('e_evaltypeID').value = item.evalTypeID;
-            //             document.getElementById('e_status').value = item.isActive;
-            //         })
-            //         .catch(error => {
-            //             console.error('Error fetching user data:', error);
-            //         });
-            // }
+            // FUNCTION TO SHOW USER TO EDIT
+            function openEditModal(remarkId) {
+                axios.get(`/courseEvalRemarks/${remarkId}/edit`)
+                    .then(response => {
+                        const item = response.data;
+                        document.getElementById('remarkId').value = item.id;
+                        document.getElementById('e_question').value = item.question;
+                        document.getElementById('e_placeholder').value = item.placeHolder;
+                        document.getElementById('e_sortorderN').value = item.sortOrderN;
+                        document.getElementById('e_sortorderA').value = item.sortOrderA;
+                        document.getElementById('e_parameterID').value = item.parameterID;
+                        document.getElementById('e_evaltypeID').value = item.evalTypeID;
+                        document.getElementById('e_status').value = item.isActive;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching user data:', error);
+                        swalGenericError('An unexpected error occurred!',error);
+                    });
+            }
+
+
+            // FUNCTION TO DELETE ITEM
+            function swalDelete(id) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: "Yes, Delete It",
+                    cancelButtonText: 'No, Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let form = document.createElement('form');
+                        form.action = `{{ route('courseEvalRemarks.destroy', '') }}/${id}`;
+                        form.method = 'POST';
+                        form.innerHTML = `
+                            @csrf
+                            @method('DELETE')
+                        `;
+                        document.body.appendChild(form);
+                        form.submit();
+                        swalGenericDelete();
+                    }
+                });
+            }
+
 
             // FUNCTION TO CLOSE MODALS
             function closeAddModal() {
                 document.getElementById('addRemarkModal').classList.add('hidden');
-                document.getElementById('responseMessage').innerHTML = '';
+                document.getElementById('errorMessage').innerHTML = '';
             }
             function closeEditModal() {
                 document.getElementById('editRemarkModal').classList.add('hidden');

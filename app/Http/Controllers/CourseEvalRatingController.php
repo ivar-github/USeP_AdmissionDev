@@ -4,27 +4,29 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\CourseEvalRating;
+use Illuminate\Validation\ValidationException;
+use Exception;
 
 class CourseEvalRatingController extends Controller
 {
- 
+
     public function index()
     {
-        
+
         $ratings = CourseEvalRating::
             // where('isActive', 1)
-            orderBy('id', 'asc')  
+            orderBy('id', 'asc')
             ->get();
 
         return view('CourseEvals.Ratings.Index', compact('ratings'));
     }
- 
+
     public function create()
     {
         //
     }
 
- 
+
     public function store(Request $request)
     {
 
@@ -37,7 +39,7 @@ class CourseEvalRatingController extends Controller
                 'Status' => ['required', 'integer', 'in:0,1'],
                 'EvalTemp_ID' => ['required', 'integer'],
             ]);
-        
+
             $rating = CourseEvalRating::create([
                 'description' => $request->Description,
                 'alias' => $request->Alias,
@@ -46,7 +48,7 @@ class CourseEvalRatingController extends Controller
                 'isActive' => $request->Status,
                 'evalTemplateID' => $request->EvalTemp_ID,
             ]);
-        
+
             return response()->json([
                 'message' => 'Rating created successfully!',
                 'status' => 'success',
@@ -63,23 +65,23 @@ class CourseEvalRatingController extends Controller
                 'status' => 'error',
             ], 500);
         }
-    
+
     }
 
- 
+
     public function show(string $id)
     {
         //
     }
 
- 
+
     public function edit(string $id)
     {
         $rating = CourseEvalRating::findOrFail($id);
         return response()->json($rating);
     }
 
- 
+
     public function update(Request $request)
     {
 
@@ -96,7 +98,7 @@ class CourseEvalRatingController extends Controller
                 'Status' => ['required', 'integer', 'in:0,1'],
                 'EvalTemp_ID' => ['required', 'integer'],
             ]);
-        
+
             $rating->description = $request->input('Description');
             $rating->alias = $request->input('Alias');
             $rating->rating = $request->input('Rating');
@@ -104,7 +106,7 @@ class CourseEvalRatingController extends Controller
             $rating->isActive = $request->input('Status');
             $rating->evalTemplateID = $request->input('EvalTemp_ID');
             $rating->save();
-        
+
             if ($rating->wasChanged()) {
                 return response()->json([
                     'message' => 'Rating updated successfully!',
@@ -129,10 +131,10 @@ class CourseEvalRatingController extends Controller
                 'status' => 'error',
             ], 500);
         }
-    
+
     }
 
- 
+
     public function destroy(string $id)
     {
         try {

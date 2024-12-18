@@ -17,12 +17,10 @@
             <form method="POST" id="addRatingForm">
                 @csrf
 
-                <div id="responseMessage" class="mt-4 text-green-500"></div>
                 <div id="errorMessage" class="mt-4 text-red-500">
                     <x-Validation-Error :messages="$errors->get('status')" class="mt-2" />
                 </div>
 
-                
                 <div class="grid grid-cols mt-4 gap-4">
                     <div class=" text-white">
                         <x-Input-Label for="desc">Description</x-Input-Label>

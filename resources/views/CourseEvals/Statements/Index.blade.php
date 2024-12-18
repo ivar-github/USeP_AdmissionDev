@@ -101,14 +101,14 @@
                                                 </svg>
                                             </button>
                                         </td>
-                                        
+
                                     </tr>
-        
+
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
-        
+
                 </div>
             </div>
 
@@ -126,7 +126,6 @@
         <script src="{{ asset('JS/SweetAlerts/SwalUnique.js') }}"></script>
         <script src="{{ asset('JS/SweetAlerts/SwalGeneric.js') }}"></script>
 
-        {{-- MODAL --}}
         <script>
             document.addEventListener('DOMContentLoaded', function() {
 
@@ -139,11 +138,10 @@
 
                     axios.post(submitFormUrl, formData)
                         .then(response => {
-                            console.log('Response:', response);
                             closeAddModal();
                             this.reset();
                             document.getElementById('errorMessage').innerHTML = '';
-                            // swalGenericAdd(response.data.message);
+                            swalGenericAdd(response.data.message);
                         })
                         .catch(error => {
                             if (error.response && error.response.status === 422) {
@@ -224,6 +222,7 @@
                     })
                     .catch(error => {
                         console.error('Error fetching user data:', error);
+                        swalGenericError('An unexpected error occurred!',error);
                     });
             }
 
@@ -257,7 +256,7 @@
             // FUNCTION TO CLOSE MODALS
             function closeAddModal() {
                 document.getElementById('addStatementModal').classList.add('hidden');
-                document.getElementById('responseMessage').innerHTML = '';
+                document.getElementById('errorMessage').innerHTML = '';
             }
             function closeEditModal() {
                 document.getElementById('editStatementModal').classList.add('hidden');
