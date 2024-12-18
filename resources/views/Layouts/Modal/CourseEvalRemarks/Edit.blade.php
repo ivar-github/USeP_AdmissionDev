@@ -19,24 +19,20 @@
                 @method('PATCH')
                 <input type="hidden" id="remarkId" name="remarkId">
 
-                {{-- <x-Validation-Error :messages="$errors->get('name')" class="mt-2" />
-                <x-Validation-Error :messages="$errors->get('status')" class="mt-2" /> --}}
-
-                <div id="responseMessage" class="mt-4 text-green-500"></div>
                 <div id="e_errorMessage" class="mt-4 text-red-500">
                     <x-Validation-Error :messages="$errors->get('status')" class="mt-2" />
                 </div>
 
                 <div class="grid grid-cols mt-4 gap-4">
                     <div class=" text-white">
-                        <x-Input-Label for="e_name">Name</x-Input-Label>
-                        <x-Input-Field id="e_name" class="block mt-1 w-full" type="text" name="e_name" :value="old('e_name')" required   />
+                        <x-Input-Label for="e_question">Question</x-Input-Label>
+                        <x-Input-Field id="e_question" class="block mt-1 w-full" type="text" name="Question" :value="old('Question')" required   />
                     </div>
                 </div>
                 <div class="grid grid-cols mt-4 gap-4">
                     <div class=" text-white">
-                        <x-Input-Label for="e_desc">Description</x-Input-Label>
-                        <x-Input-Field id="e_desc" class="block mt-1 w-full" type="text" name="e_desc" :value="old('e_desc')" required  />
+                        <x-Input-Label for="e_placeholder">PlaceHolder</x-Input-Label>
+                        <x-Input-Field id="e_placeholder" class="block mt-1 w-full" type="text" name="PlaceHolder" :value="old('placeHolder')" required  />
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 mt-4 gap-4">
@@ -44,29 +40,42 @@
                         <x-Input-Label for="e_sortorderN">SortOrder No.</x-Input-Label>
                         <x-Input-Field id="e_sortorderN" class="block mt-1 w-full"
                             type="number"
-                            name="e_sortorderN"
+                            name="SortOrder_Num"
                             required />
                     </div>
                     <div class=" text-white">
                         <x-Input-Label for="e_sortorderA">SortOrder Alph.</x-Input-Label>
                         <x-Input-Field id="e_sortorderA" class="block mt-1 w-full"
                             type="text"
-                            name="e_sortorderA"
+                            name="SortOrder_Alpha"
                             required />
                     </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 mt-4 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 mt-4 gap-4">
                     <div class=" text-white">
-                        <x-Input-Label for="e_status">Status</x-Input-Label>
-                        <x-Input-Dropdown name="e_status" id="e_status">
+                        <x-Input-Label for="e_parameterID">Parameter ID</x-Input-Label>
+                        <x-Input-Dropdown name="Parameter_ID" id="e_parameterID">
                             <option value="" disabled selected>Select</option>
                             <option value="0">Inactive</option>
                             <option value="1">Active</option>
                         </x-Input-Dropdown>
                     </div>
                     <div class=" text-white">
-                        <x-Input-Label for="e_evaltypeID">Evaluation Type</x-Input-Label>
-                        <x-Input-Dropdown name="e_evaltypeID" id="e_evaltypeID">
+                        <x-Input-Label for="e_evaltypeID">EvalType</x-Input-Label>
+                        <x-Input-Dropdown name="EvalType_ID" id="e_evaltypeID">
+                            <option value="" disabled selected>Select</option>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </x-Input-Dropdown>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 mt-4 gap-4">
+                    <div class=" text-white">
+                        <x-Input-Label for="e_status">Status</x-Input-Label>
+                        <x-Input-Dropdown name="Status" id="e_status">
                             <option value="" disabled selected>Select</option>
                             <option value="0">Inactive</option>
                             <option value="1">Active</option>

@@ -19,10 +19,10 @@ class CourseEvalRemark extends Model
     protected $fillable = [
         'question',
         'sortOrderN',
-        'sortOrderB',
+        'sortOrderA',
         'isActive',
         'parameterID',
-        'evaltypeID',
+        'evalTypeID',
         'placeHolder',
     ];
 

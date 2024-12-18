@@ -1,10 +1,4 @@
 <x-Main-layout>
-    @if (session('success'))
-        <x-Alert-success>
-            {{ session('success') }}
-        </x-Alert-success>
-    @endif
-
     <x-Breadcrumbs>
         <a  href="{{route('users.index')}}" class="text-lg font-medium text-gray-700  hover:text-red-900 dark:text-gray-400 dark:hover:text-white">Course Evaluation</a>
     </x-Breadcrumbs>
@@ -88,7 +82,7 @@
                                                     <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
                                                 </svg>
                                             </a>
-                                            <button type="button" class="hover:text-red-700 " data-modal-target="delete-modal" data-modal-toggle="delete-modal">
+                                            <button onclick="swalDelete({{ $remark->id }})" class="hover:text-red-700 "  >
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/>
                                                 </svg>
@@ -107,7 +101,6 @@
 
             @include('Layouts.Modal.CourseEvalRemarks.Create')
             @include('Layouts.Modal.CourseEvalRemarks.Edit')
-            @include('Layouts.Modal.CourseEvalRemarks.Delete')
         </div>
     </div>
 
@@ -116,31 +109,31 @@
 
         {{-- DATATABLES --}}
         <script src="{{ asset('JS/Tables/Datatables.js') }}"></script>
+        {{-- SWEETALERTS --}}
+        <script src="{{ asset('JS/SweetAlerts/SwalUnique.js') }}"></script>
+        <script src="{{ asset('JS/SweetAlerts/SwalGeneric.js') }}"></script>
+
 
         {{-- MODAL --}}
         <script>
             document.addEventListener('DOMContentLoaded', function() {
 
-
-                // AXIOS ADD USER
-                var submitFormUrl = "{{ route('courseEvalParameters.store') }}";
-                document.getElementById('addParameterForm').addEventListener('submit', function(e) {
+                // FUNCTION ADD ITEM
+                var submitFormUrl = "{{ route('courseEvalRemarks.store') }}";
+                document.getElementById('addRemarkForm').addEventListener('submit', function(e) {
                     e.preventDefault();
 
                     const formData = new FormData(this);
 
                     axios.post(submitFormUrl, formData)
                         .then(response => {
-
+                            console.log('Response:', response);
                             closeAddModal();
                             this.reset();
                             document.getElementById('errorMessage').innerHTML = '';
-                            document.getElementById('responseMessage').innerText = 'Form submitted successfully: ' + response.data.message;
-                            location.reload();
+                            swalGenericAdd(response.data.message);
                         })
                         .catch(error => {
-                            document.getElementById('responseMessage').innerHTML = '';
-
                             if (error.response && error.response.status === 422) {
                                 const errors = error.response.data.errors;
                                 const errorList = document.getElementById('errorMessage');
@@ -154,19 +147,23 @@
                                     }
                                 }
                             } else {
-                                console.error('An unexpected error occurred:', error);
+                                const errorMsg = error.response.data.message;
+                                console.log('ErrorMsg',errorMsg);
+                                console.log('Error',error);
+                                swalGenericError('An unexpected error occurred!',error);
                             }
                         });
                 });
 
-                // AXIOS UPDATE USER
-                document.getElementById('editParameterForm').addEventListener('submit', function (e) {
+
+                // FUNCTION UPDATE ITEM
+                document.getElementById('editRemarkForm').addEventListener('submit', function (e) {
                     e.preventDefault();
 
                     const formData = new FormData(this);
-                    const parameterId = document.getElementById('parameterId').value;
+                    const remarkId = document.getElementById('remarkId').value;
 
-                    axios.post(`/courseEvalParameters/${parameterId}`, formData)
+                    axios.post(`/courseEvalRemarks/${remarkId}`, formData)
                         .then(response => {
                             document.getElementById('responseMessage').innerText = response.data.message;
                             closeEditModal();
@@ -194,26 +191,24 @@
             });
 
 
-            // FUNCTION TO SHOW USER TO EDIT
-            function openEditModal(parameterId) {
-                console.log("Opening edit modal for user ID:", parameterId);
-                axios.get(`/courseEvalParameters/${parameterId}/edit`)
-                    .then(response => {
-                        const item = response.data;
-                        document.getElementById('parameterId').value = item.id;
-                        document.getElementById('e_name').value = item.name;
-                        document.getElementById('e_desc').value = item.desc;
-                        document.getElementById('e_sortorderN').value = item.sortOrderN;
-                        document.getElementById('e_sortorderA').value = item.sortOrderA;
-                        document.getElementById('e_status').value = item.isActive;
-                        document.getElementById('e_evaltypeID').value = item.evalTypeID;
-
-                        // document.getElementById('editRemarkModal').classList.remove('hidden');
-                    })
-                    .catch(error => {
-                        console.error('Error fetching user data:', error);
-                    });
-            }
+            // // FUNCTION TO SHOW USER TO EDIT
+            // function openEditModal(remarkId) {
+            //     axios.get(`/courseEvalRemarks/${remarkId}/edit`)
+            //         .then(response => {
+            //             const item = response.data;
+            //             document.getElementById('remarkId').value = item.id;
+            //             document.getElementById('e_question').value = item.question;
+            //             document.getElementById('e_placeholder').value = item.placeHolder;
+            //             document.getElementById('e_sortorderN').value = item.sortOrderN;
+            //             document.getElementById('e_sortorderA').value = item.sortOrderA;
+            //             document.getElementById('e_parameterID').value = item.parameterID;
+            //             document.getElementById('e_evaltypeID').value = item.evalTypeID;
+            //             document.getElementById('e_status').value = item.isActive;
+            //         })
+            //         .catch(error => {
+            //             console.error('Error fetching user data:', error);
+            //         });
+            // }
 
             // FUNCTION TO CLOSE MODALS
             function closeAddModal() {

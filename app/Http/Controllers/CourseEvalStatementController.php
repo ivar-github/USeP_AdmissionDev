@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\CourseEvalStatement;
+use Illuminate\Http\RedirectResponse;
 
 class CourseEvalStatementController extends Controller
 {
@@ -30,10 +31,10 @@ class CourseEvalStatementController extends Controller
 
         try {
             $request->validate([
-                'Statement' => ['required', 'string', 'max:255'],
-                'SortOrder' => ['required', 'integer', 'max:100'],
-                'Parameter_ID' => ['required', 'integer', 'max:500'],
-                'EvalType_ID' => ['required', 'integer', 'max:500'],
+                'Statement' => ['required', 'string'],
+                'SortOrder' => ['required', 'integer'],
+                'Parameter_ID' => ['required', 'integer'],
+                'EvalType_ID' => ['required', 'integer'],
                 'Version_ID' => ['required', 'integer', 'max:10'],
                 'RatingTemplate_ID' => ['required', 'integer', 'max:100'],
                 'Status' => ['required', 'integer', 'in:0,1'],
@@ -41,12 +42,12 @@ class CourseEvalStatementController extends Controller
         
             $statement = CourseEvalStatement::create([
                 'statement' => $request->Statement,
-                'dateAdded' => now(),
                 'sortOrder' => $request->SortOrder,
                 'parameterID' => $request->Parameter_ID,
                 'evalTypeID' => $request->EvalType_ID,
                 'versionID' => $request->Version_ID,
                 'ratingTemplateID' => $request->RatingTemplate_ID,
+                'dateAdded' => now(),
                 'isActive' => $request->Status,
             ]);
         

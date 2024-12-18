@@ -24,7 +24,7 @@
                                 class="object-cover h-full rounded-2xl mx-5"
                             />
                         </div>
-                        <h5 class="text-xl md:text-3xl font-sans font-extrabold text-red-800 my-5 dark:text-slate-300 text-center" >Admission System</h5>
+                        <h5 class="text-xl md:text-3xl font-sans font-extrabold text-red-800 my-5 dark:text-slate-300 text-center" ></h5>
             
                         <div class="my-3">
                             <x-Validation-Error :messages="$errors->get('inactive')" class="mt-2 md:text-sm text-xs " />

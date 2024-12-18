@@ -16,22 +16,21 @@
             <!-- MODAL Body-->
             <form method="POST" id="addRemarkForm">
                 @csrf
-
-                <div id="responseMessage" class="mt-4 text-green-500"></div>
+                
                 <div id="errorMessage" class="mt-4 text-red-500">
                     <x-Validation-Error :messages="$errors->get('status')" class="mt-2" />
                 </div>
 
                 <div class="grid grid-cols mt-4 gap-4">
                     <div class=" text-white">
-                        <x-Input-Label for="name">Name</x-Input-Label>
-                        <x-Input-Field id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required   />
+                        <x-Input-Label for="question">Question</x-Input-Label>
+                        <x-Input-Field id="question" class="block mt-1 w-full" type="text" name="Question" :value="old('Question')" required   />
                     </div>
                 </div>
                 <div class="grid grid-cols mt-4 gap-4">
                     <div class=" text-white">
-                        <x-Input-Label for="desc">Description</x-Input-Label>
-                        <x-Input-Field id="desc" class="block mt-1 w-full" type="text" name="desc" :value="old('desc')" required  />
+                        <x-Input-Label for="placeholder">PlaceHolder</x-Input-Label>
+                        <x-Input-Field id="placeholder" class="block mt-1 w-full" type="text" name="PlaceHolder" :value="old('placeHolder')" required  />
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 mt-4 gap-4">
@@ -39,21 +38,21 @@
                         <x-Input-Label for="sortorderN">SortOrder No.</x-Input-Label>
                         <x-Input-Field id="sortorderN" class="block mt-1 w-full"
                             type="number"
-                            name="sortorderN"
+                            name="SortOrder_Num"
                             required />
                     </div>
                     <div class=" text-white">
                         <x-Input-Label for="sortorderA">SortOrder Alph.</x-Input-Label>
                         <x-Input-Field id="sortorderA" class="block mt-1 w-full"
                             type="text"
-                            name="sortorderA"
+                            name="SortOrder_Alpha"
                             required />
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 mt-4 gap-4">
                     <div class=" text-white">
-                        <x-Input-Label for="status">Status</x-Input-Label>
-                        <x-Input-Dropdown name="status" id="status">
+                        <x-Input-Label for="parameterID">Parameter ID</x-Input-Label>
+                        <x-Input-Dropdown name="Parameter_ID" id="parameterID">
                             <option value="" disabled selected>Select</option>
                             <option value="0">Inactive</option>
                             <option value="1">Active</option>
@@ -61,7 +60,20 @@
                     </div>
                     <div class=" text-white">
                         <x-Input-Label for="evaltypeID">EvalType</x-Input-Label>
-                        <x-Input-Dropdown name="evaltypeID" id="evaltypeID">
+                        <x-Input-Dropdown name="EvalType_ID" id="evaltypeID">
+                            <option value="" disabled selected>Select</option>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </x-Input-Dropdown>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 mt-4 gap-4">
+                    <div class=" text-white">
+                        <x-Input-Label for="status">Status</x-Input-Label>
+                        <x-Input-Dropdown name="Status" id="status">
                             <option value="" disabled selected>Select</option>
                             <option value="0">Inactive</option>
                             <option value="1">Active</option>

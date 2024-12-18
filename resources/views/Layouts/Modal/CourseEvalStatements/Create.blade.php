@@ -16,7 +16,7 @@
             <!-- MODAL Body-->
             <form method="POST" id="addStatementForm">
                 @csrf
-                
+
                 <div id="errorMessage" class="mt-4 text-red-500">
                     <x-Validation-Error :messages="$errors->get('status')" class="mt-2" />
                 </div>
@@ -67,7 +67,7 @@
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
-                            <option value="4">5</option>
+                            <option value="4">4</option>
                             <option value="5">5</option>
                             <option value="6">6</option>
                         </x-Input-Dropdown>

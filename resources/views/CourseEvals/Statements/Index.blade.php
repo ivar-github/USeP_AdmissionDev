@@ -130,7 +130,6 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
 
-
                 // FUNCTION ADD ITEM
                 var submitFormUrl = "{{ route('courseEvalStatements.store') }}";
                 document.getElementById('addStatementForm').addEventListener('submit', function(e) {
@@ -140,10 +139,11 @@
 
                     axios.post(submitFormUrl, formData)
                         .then(response => {
+                            console.log('Response:', response);
                             closeAddModal();
                             this.reset();
                             document.getElementById('errorMessage').innerHTML = '';
-                            swalGenericAdd(response.data.message);
+                            // swalGenericAdd(response.data.message);
                         })
                         .catch(error => {
                             if (error.response && error.response.status === 422) {
@@ -166,6 +166,8 @@
                             }
                         });
                 });
+
+
                 // FUNCTION UPDATE ITEM
                 document.getElementById('editStatementForm').addEventListener('submit', function (e) {
                     e.preventDefault();
