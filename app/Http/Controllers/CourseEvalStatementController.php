@@ -31,10 +31,10 @@ class CourseEvalStatementController extends Controller
 
         try {
             $request->validate([
-                'Statement' => ['required', 'string'],
-                'SortOrder' => ['required', 'integer'],
-                'Parameter_ID' => ['required', 'integer'],
-                'EvalType_ID' => ['required', 'integer'],
+                'Statement' => ['required', 'string', 'max:255'],
+                'SortOrder' => ['required', 'integer', 'max:100'],
+                'Parameter_ID' => ['required', 'integer', 'max:500'],
+                'EvalType_ID' => ['required', 'integer', 'max:500'],
                 'Version_ID' => ['required', 'integer', 'max:10'],
                 'RatingTemplate_ID' => ['required', 'integer', 'max:100'],
                 'Status' => ['required', 'integer', 'in:0,1'],
