@@ -80,7 +80,10 @@
                                             {{ $remark->placeHolder }}
                                         </td>
                                         <td>
-                                            {{ $remark->isActive }}
+                                            <div class="flex items-center">
+                                                <div class="h-2.5 w-2.5 rounded-full {{ $remark->isActive ? 'bg-green-500' : 'bg-red-500' }} me-2"></div>
+                                                {{ $remark->isActive ? 'Active' : 'Inactive' }}
+                                            </div>
                                         </td>
                                         <td class="flex items-center justify-center space-x-2 pt-5 m-0 h-full mb-0">
                                             <a href="javascript:void(0)" onclick="openEditModal({{ $remark->id }})" data-modal-target="editRemarkModal" data-modal-toggle="editRemarkModal" class="hover:text-blue-700">

@@ -84,7 +84,10 @@
                                             {{ $statement->ratingTemplateID }}
                                         </td>
                                         <td>
-                                            {{ $statement->isActive }}
+                                            <div class="flex items-center">
+                                                <div class="h-2.5 w-2.5 rounded-full {{ $statement->isActive ? 'bg-green-500' : 'bg-red-500' }} me-2"></div>
+                                                {{ $statement->isActive ? 'Active' : 'Inactive' }}
+                                            </div>
                                         </td>
                                         <td>
                                             {{ $statement->dateAdded }}

@@ -37,13 +37,13 @@
                                         SORT BY ALPH.
                                     </th>
                                     <th scope="col"  class="text-md text-gray-800 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
-                                        STATUS
-                                    </th>
-                                    <th scope="col"  class="text-md text-gray-800 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
                                         EVALTYPE ID
                                     </th>
                                     <th scope="col"  class="text-md text-gray-800 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
                                         DATE
+                                    </th>
+                                    <th scope="col"  class="text-md text-gray-800 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
+                                        STATUS
                                     </th>
                                     <th scope="col"  class="text-md text-gray-800 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
                                         ACTION
@@ -69,13 +69,16 @@
                                             {{ $parameter->sortOrderA }}
                                         </td>
                                         <td>
-                                            {{ $parameter->isActive }}
-                                        </td>
-                                        <td>
                                             {{ $parameter->evalTypeID }}
                                         </td>
                                         <td>
                                             {{ $parameter->dateAdded }}
+                                        </td>
+                                        <td>
+                                            <div class="flex items-center">
+                                                <div class="h-2.5 w-2.5 rounded-full {{ $parameter->isActive ? 'bg-green-500' : 'bg-red-500' }} me-2"></div>
+                                                {{ $parameter->isActive ? 'Active' : 'Inactive' }}
+                                            </div>
                                         </td>
                                         <td class="flex items-center justify-center space-x-2 pt-5 m-0 h-full mb-0">
                                             <a href="javascript:void(0)" onclick="openEditModal({{ $parameter->id }})" data-modal-target="editParameterModal" data-modal-toggle="editParameterModal" class="hover:text-blue-700">
@@ -90,12 +93,12 @@
                                             </button>
                                         </td>
                                     </tr>
-        
+
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
-        
+
                 </div>
             </div>
 
@@ -188,7 +191,7 @@
                             }
                         });
                 });
-                
+
 
             });
 
@@ -246,7 +249,7 @@
             function closeEditModal() {
                 document.getElementById('editParameterModal').classList.add('hidden');
                 document.getElementById('e_errorMessage').innerHTML = '';
-            } 
+            }
 
 
         </script>

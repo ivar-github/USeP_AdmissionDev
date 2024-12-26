@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\CourseEvalRemark;
+use App\Models\CourseEvalParameter;
 use Illuminate\Validation\ValidationException;
 use Exception;
 
@@ -18,7 +19,12 @@ class CourseEvalRemarkController extends Controller
             orderBy('id', 'asc')
             ->get();
 
-        return view('CourseEvals.Remarks.Index', compact('remarks'));
+        $parameters = CourseEvalParameter::select('id', 'name', 'desc')
+        ->where('isActive', 1)
+        ->orderBy('id', 'asc')
+        ->get();
+
+        return view('CourseEvals.Remarks.Index', compact('remarks', 'parameters'));
     }
 
 

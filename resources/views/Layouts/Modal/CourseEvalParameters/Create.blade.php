@@ -24,13 +24,19 @@
                 <div class="grid grid-cols mt-4 gap-4">
                     <div class=" text-white">
                         <x-Input-Label for="name">Name</x-Input-Label>
-                        <x-Input-Field id="name" class="block mt-1 w-full" type="text" name="Name" :value="old('Name')" required   />
+                        <x-Input-TextArea id="name" class="block mt-1 w-full"
+                            name="Name"
+                            :value="old('Name')"
+                            required />
                     </div>
                 </div>
                 <div class="grid grid-cols mt-4 gap-4">
                     <div class=" text-white">
                         <x-Input-Label for="desc">Description</x-Input-Label>
-                        <x-Input-Field id="desc" class="block mt-1 w-full" type="text" name="Description" :value="old('Description')" required  />
+                        <x-Input-TextArea id="desc" class="block mt-1 w-full"
+                            name="Description"
+                            :value="old('Description')"
+                            required />
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 mt-4 gap-4">

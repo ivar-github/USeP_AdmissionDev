@@ -40,7 +40,7 @@
                                         ALIAS
                                     </th>
                                     <th scope="col"  class="text-md text-gray-800 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
-                                        EVALTYPE ID
+                                        RATING-TEMP ID
                                     </th>
                                     <th scope="col"  class="text-md text-gray-800 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
                                         STATUS
@@ -74,7 +74,10 @@
                                             {{ $rating->evalTemplateID }}
                                         </td>
                                         <td>
-                                            {{ $rating->isActive }}
+                                            <div class="flex items-center">
+                                                <div class="h-2.5 w-2.5 rounded-full {{ $rating->isActive ? 'bg-green-500' : 'bg-red-500' }} me-2"></div>
+                                                {{ $rating->isActive ? 'Active' : 'Inactive' }}
+                                            </div>
                                         </td>
                                         <td class="flex items-center justify-center space-x-2 pt-5 m-0 h-full mb-0">
                                             <a href="javascript:void(0)" onclick="openEditModal({{ $rating->id }})" data-modal-target="editRatingModal" data-modal-toggle="editRatingModal" class="hover:text-blue-700">

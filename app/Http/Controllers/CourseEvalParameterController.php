@@ -4,29 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\CourseEvalParameter;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\Rules;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
+use Exception;
 
 class CourseEvalParameterController extends Controller
 {
- 
+
     public function index()
     {
-        
+
         $parameters = CourseEvalParameter::
             // where('isActive', 1)
-            orderBy('id', 'asc')  
+            orderBy('id', 'asc')
             ->get();
 
         return view('CourseEvals.Parameters.Index', compact('parameters'));
     }
 
- 
+
     public function create()
     {
         //
@@ -45,7 +40,7 @@ class CourseEvalParameterController extends Controller
                 'Status' => ['required', 'integer', 'in:0,1'],
                 'EvalType_ID' => ['required', 'integer'],
             ]);
-        
+
             $parameter = CourseEvalParameter::create([
                 'name' => $request->Name,
                 'desc' => $request->Description,
@@ -55,7 +50,7 @@ class CourseEvalParameterController extends Controller
                 'dateAdded' => now(),
                 'evalTypeID' => $request->EvalType_ID,
             ]);
-        
+
             return response()->json([
                 'message' => 'Parameter created successfully!',
                 'status' => 'success',
@@ -72,7 +67,7 @@ class CourseEvalParameterController extends Controller
                 'status' => 'error',
             ], 500);
         }
-    
+
     }
 
 
@@ -81,14 +76,14 @@ class CourseEvalParameterController extends Controller
         //
     }
 
- 
+
     public function edit(string $id)
     {
         $parameter = CourseEvalParameter::findOrFail($id);
         return response()->json($parameter);
     }
 
- 
+
     public function update(Request $request)
     {
 
@@ -105,7 +100,7 @@ class CourseEvalParameterController extends Controller
                 'Status' => ['required', 'integer', 'in:0,1'],
                 'EvalType_ID' => ['required', 'integer'],
             ]);
-        
+
             $parameter->name = $request->input('Name');
             $parameter->desc = $request->input('Description');
             $parameter->sortOrderN = $request->input('SortOrder_Num');
@@ -113,7 +108,7 @@ class CourseEvalParameterController extends Controller
             $parameter->isActive = $request->input('Status');
             $parameter->evalTypeID = $request->input('EvalType_ID');
             $parameter->save();
-        
+
             if ($parameter->wasChanged()) {
                 return response()->json([
                     'message' => 'Parameter updated successfully!',
@@ -138,7 +133,7 @@ class CourseEvalParameterController extends Controller
                 'status' => 'error',
             ], 500);
         }
-    
+
     }
 
 

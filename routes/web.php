@@ -62,7 +62,7 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     // Route::patch('courseEvalParameter/{id}', [CourseEvalParameterController::class, 'update'])->name('courseEvalParameters.update');
     // Route::delete('courseEvalParameter/{id}', [CourseEvalParameterController::class, 'destroy'])->name('courseEvalParameters.destroy');
 
-    
+
     // Route::get('courseEvalStatement/index', [CourseEvalStatementController::class, 'index'])->name('courseEvalStatements.index');
     // Route::post('courseEvalStatement/store', [CourseEvalStatementController::class, 'store'])->name('courseEvalStatements.store');
     // Route::get('courseEvalStatement/{id}/edit', [CourseEvalStatementController::class, 'edit'])->name('courseEvalStatements.edit');
@@ -99,6 +99,9 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     Route::get('/api/schedulesData/getDates', [ScheduleController::class, 'getDates']);
     Route::get('/api/schedulesData/getTimes', [ScheduleController::class, 'getTimes']);
 
+    // Route::get('/api/resultsData', [CourseEvalParameterController::class, 'getData'])->name('api.results.data');
+    Route::get('/api/parameterData/getDataByStatus', [CourseEvalParameterController::class, 'getDataByStatus']);
+    // Route::get('/api/resultsData/getMajors', [CourseEvalParameterController::class, 'getMajors']);
 
     //EXPORT
     Route::get('/export-users', [UserController::class, 'exportUsers'])->name('export.users');

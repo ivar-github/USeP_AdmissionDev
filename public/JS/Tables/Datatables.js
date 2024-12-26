@@ -22,7 +22,7 @@ if (document.getElementById("main-table") && typeof simpleDatatables.DataTable !
         }
         const separatorRow = Array(dataTable.data.headings.filter((_heading, index) => !dataTable.columns.settings[index]?.hidden).length)
             .fill("+")
-            .join("+"); 
+            .join("+");
 
         const str = separatorRow + options.lineDelimiter + csv + options.lineDelimiter + separatorRow;
 

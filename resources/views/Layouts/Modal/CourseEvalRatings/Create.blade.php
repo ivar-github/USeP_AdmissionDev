@@ -24,13 +24,19 @@
                 <div class="grid grid-cols mt-4 gap-4">
                     <div class=" text-white">
                         <x-Input-Label for="desc">Description</x-Input-Label>
-                        <x-Input-Field id="Description" class="block mt-1 w-full" type="text" name="Description" :value="old('Description')" required  />
+                        <x-Input-TextArea id="desc" class="block mt-1 w-full"
+                            name="Description"
+                            :value="old('Description')"
+                            required />
                     </div>
                 </div>
                 <div class="grid grid-cols mt-4 gap-4">
                     <div class=" text-white">
                         <x-Input-Label for="alias">Alias</x-Input-Label>
-                        <x-Input-Field id="alias" class="block mt-1 w-full" type="text" name="Alias" :value="old('Alias')" required   />
+                        <x-Input-TextArea id="alias" class="block mt-1 w-full"
+                            name="Alias"
+                            :value="old('Alias')"
+                            required />
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 mt-4 gap-4">
@@ -51,16 +57,15 @@
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 mt-4 gap-4">
                     <div class=" text-white">
-                        <x-Input-Label for="status">Status</x-Input-Label>
-                        <x-Input-Dropdown name="Status" id="status">
-                            <option value="" disabled selected>Select</option>
-                            <option value="0">Inactive</option>
-                            <option value="1">Active</option>
-                        </x-Input-Dropdown>
+                        <x-Input-Label for="evalTempID">EvalTemplate ID</x-Input-Label>
+                        <x-Input-Field id="evalTempID" class="block mt-1 w-full"
+                            type="number"
+                            name="EvalTemp_ID"
+                            required />
                     </div>
                     <div class=" text-white">
-                        <x-Input-Label for="evalTempID">EvalTemplate ID</x-Input-Label>
-                        <x-Input-Dropdown name="EvalTemp_ID" id="evalTempID">
+                        <x-Input-Label for="status">Status</x-Input-Label>
+                        <x-Input-Dropdown name="Status" id="status">
                             <option value="" disabled selected>Select</option>
                             <option value="0">Inactive</option>
                             <option value="1">Active</option>

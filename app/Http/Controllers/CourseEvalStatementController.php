@@ -4,28 +4,45 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\CourseEvalStatement;
-use Illuminate\Http\RedirectResponse;
+use App\Models\CourseEvalParameter;
+use App\Models\CourseEvalRating;
+use Illuminate\Validation\ValidationException;
+use Exception;
 
 class CourseEvalStatementController extends Controller
 {
- 
+
     public function index()
     {
-            $statements = CourseEvalStatement::
-            // where('isActive', 1)
-            orderBy('id', 'asc')  
-            ->get();
-    
-            return view('CourseEvals.Statements.Index', compact('statements'));
+
+        $statements = CourseEvalStatement::
+        // where('isActive', 1)
+        orderBy('id', 'asc')
+        ->get();
+
+        $parameters = CourseEvalParameter::select('id', 'name', 'desc')
+        ->where('isActive', 1)
+        ->orderBy('id', 'asc')
+        ->get();
+
+        $ratings = CourseEvalRating::select('id', 'description', 'rating', 'sortOrder', 'evalTemplateID')
+        ->where('isActive', 1)
+        ->orderBy('evalTemplateID', 'asc')
+        ->orderBy('id', 'asc')
+        ->get()
+        ->groupBy('evalTemplateID');
+
+
+        return view('CourseEvals.Statements.Index', compact('statements', 'parameters', 'ratings'));
     }
 
- 
+
     public function create()
     {
         //
     }
 
- 
+
     public function store(Request $request)
     {
 
@@ -39,7 +56,7 @@ class CourseEvalStatementController extends Controller
                 'RatingTemplate_ID' => ['required', 'integer', 'max:100'],
                 'Status' => ['required', 'integer', 'in:0,1'],
             ]);
-        
+
             $statement = CourseEvalStatement::create([
                 'statement' => $request->Statement,
                 'sortOrder' => $request->SortOrder,
@@ -50,7 +67,7 @@ class CourseEvalStatementController extends Controller
                 'dateAdded' => now(),
                 'isActive' => $request->Status,
             ]);
-        
+
             return response()->json([
                 'message' => 'Statement created successfully!',
                 'status' => 'success',
@@ -67,23 +84,23 @@ class CourseEvalStatementController extends Controller
                 'status' => 'error',
             ], 500);
         }
-    
+
     }
 
- 
+
     public function show(string $id)
     {
         //
     }
 
- 
+
     public function edit(string $id)
     {
         $statement = CourseEvalStatement::findOrFail($id);
         return response()->json($statement);
     }
 
- 
+
     public function update(Request $request)
     {
 
@@ -101,7 +118,7 @@ class CourseEvalStatementController extends Controller
                 'RatingTemplate_ID' => ['required', 'integer', 'max:100'],
                 'Status' => ['required', 'integer', 'in:0,1'],
             ]);
-        
+
             $statement->statement = $request->input('Statement');
             $statement->sortOrder = $request->input('SortOrder');
             $statement->parameterID = $request->input('Parameter_ID');
@@ -110,7 +127,7 @@ class CourseEvalStatementController extends Controller
             $statement->ratingTemplateID = $request->input('RatingTemplate_ID');
             $statement->isActive = $request->input('Status');
             $statement->save();
-        
+
             if ($statement->wasChanged()) {
                 return response()->json([
                     'message' => 'Statement updated successfully!',
@@ -135,9 +152,9 @@ class CourseEvalStatementController extends Controller
                 'status' => 'error',
             ], 500);
         }
-    
+
     }
- 
+
     public function destroy(string $id)
     {
         try {

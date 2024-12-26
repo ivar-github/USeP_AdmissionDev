@@ -26,13 +26,30 @@
                 <div class="grid grid-cols mt-4 gap-4">
                     <div class=" text-white">
                         <x-Input-Label for="e_question">Question</x-Input-Label>
-                        <x-Input-Field id="e_question" class="block mt-1 w-full" type="text" name="Question" :value="old('Question')" required   />
+                        <x-Input-TextArea id="e_question" class="block mt-1 w-full"
+                            name="Question"
+                            :value="old('Question')"
+                            required />
                     </div>
                 </div>
                 <div class="grid grid-cols mt-4 gap-4">
                     <div class=" text-white">
                         <x-Input-Label for="e_placeholder">PlaceHolder</x-Input-Label>
-                        <x-Input-Field id="e_placeholder" class="block mt-1 w-full" type="text" name="PlaceHolder" :value="old('placeHolder')" required  />
+                        <x-Input-TextArea id="e_placeholder" class="block mt-1 w-full"
+                            name="PlaceHolder"
+                            :value="old('PlaceHolder')"
+                            required />
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 mt-4 gap-4">
+                    <div class=" text-white">
+                        <x-Input-Label for="e_parameterID">Parameter ID</x-Input-Label>
+                        <x-Input-Dropdown name="Parameter_ID" id="e_parameterID">
+                            <option value="" disabled selected>Select</option>
+                            @foreach ($parameters as $parameter)
+                                <option value="{{ $parameter->id }}">{{ $parameter->id }}-{{ $parameter->name }}</option>
+                            @endforeach
+                        </x-Input-Dropdown>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 mt-4 gap-4">
@@ -53,22 +70,12 @@
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 mt-4 gap-4">
                     <div class=" text-white">
-                        <x-Input-Label for="e_parameterID">Parameter ID</x-Input-Label>
-                        <x-Input-Dropdown name="Parameter_ID" id="e_parameterID">
-                            <option value="" disabled selected>Select</option>
-                            <option value="45">45</option>
-                            <option value="46">46</option>
-                        </x-Input-Dropdown>
-                    </div>
-                    <div class=" text-white">
                         <x-Input-Label for="e_evaltypeID">EvalType</x-Input-Label>
                         <x-Input-Dropdown name="EvalType_ID" id="e_evaltypeID">
                             <option value="" disabled selected>Select</option>
                             <option value="21">Course Evaluation</option>
                         </x-Input-Dropdown>
                     </div>
-                </div>
-                <div class="grid grid-cols-1 mt-4 gap-4">
                     <div class=" text-white">
                         <x-Input-Label for="e_status">Status</x-Input-Label>
                         <x-Input-Dropdown name="Status" id="e_status">
