@@ -63,7 +63,7 @@ class ResultController extends Controller
             ->orderBy('ProgName', 'asc')->get();
         return response()->json($programs);
     }
-    
+
     public function getMajors(Request $request)
     {
         $campusId = $request->input('campusId');
@@ -80,7 +80,7 @@ class ResultController extends Controller
 
     public function getData(Request $request)
     {
-        
+
         $columns = explode(',', $request->input('columns', ''));
         $perPage = $request->input('limit', 10);
         $status = $request->input('status');
@@ -90,7 +90,7 @@ class ResultController extends Controller
         $major = $request->input('major');
         $search = $request->input('search');
 
-        
+
         $prefCountQuery = Result::where('TermID', $termID)
             ->when($campus != 0, fn($query) => $query->where('CampusID', $campus))
             ->when($program != 0, fn($query) => $query->where('QualifiedCourseID', $program))
@@ -108,7 +108,7 @@ class ResultController extends Controller
         $confirmedtCount = (clone $prefCountQuery)->where('isEnlisted', '1')->count();
         $totalCount = $prefCountQuery->count();
 
-        
+
         $prefRowQuery = Result::select($columns)
             ->where('TermID', $termID)
             ->when($campus != 0, fn($query) => $query->where('CampusID', $campus))
@@ -142,7 +142,7 @@ class ResultController extends Controller
         $dataGraph = [];
         foreach ($results as $item) {
             $dataGraph[] = [
-                'TermID' => $item->TermID,
+                'TermID' => $item->AcademicYear . '-' . substr($item->SchoolTerm, 0, 3),
                 'appQualified' => $item->AppQualified,
                 'appConfirmed' => $item->AppConfirmed,
                 'appWaivedSlot' => $item->AppWaivedSlot,
