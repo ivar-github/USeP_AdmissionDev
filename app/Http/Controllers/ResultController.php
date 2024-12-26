@@ -128,7 +128,7 @@ class ResultController extends Controller
 
 
         $results = Result::select(
-            'TermID','AcademicYear','SchoolTerm',
+            'TermID',
             DB::raw("SUM(CASE WHEN Status = 'Qualified' THEN 1 ELSE 0 END) as AppQualified"),
             DB::raw("SUM(CASE WHEN Status = 'WaivedSlot' THEN 1 ELSE 0 END) as AppWaivedSlot"),
             DB::raw("SUM(CASE WHEN IsEnlisted = '1' THEN 1 ELSE 0 END) as AppConfirmed"),
@@ -142,8 +142,8 @@ class ResultController extends Controller
         $dataGraph = [];
         foreach ($results as $item) {
             $dataGraph[] = [
-                // 'TermID' => $item->TermID,
-                'TermID' => $item->AcademicYear . '-' . substr($item->SchoolTerm, 0, 3),
+                'TermID' => $item->TermID,
+                // 'TermID' => $item->AcademicYear . '-' . substr($item->SchoolTerm, 0, 3),
                 'appQualified' => $item->AppQualified,
                 'appConfirmed' => $item->AppConfirmed,
                 'appWaivedSlot' => $item->AppWaivedSlot,
