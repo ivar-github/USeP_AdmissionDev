@@ -14,6 +14,9 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
+use Exception;
 
 use App\Exports\UsersExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -43,25 +46,50 @@ class UserController extends Controller
     public function store(Request $request)
     {
 
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'type' => ['required', 'integer', 'in:0,1'],
-            'status' => ['required', 'integer', 'in:0,1'],
-        ]);
+        try {
+            $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+                // 'password' => ['required', 'confirmed', Rules\Password::defaults()],
+                'password' => [
+                    'required',
+                    'confirmed',
+                    Password::min(8)
+                        ->mixedCase()
+                        ->letters()
+                        ->numbers()
+                        ->symbols()
+                        ->uncompromised(),
+                ],
+                'type' => ['required', 'integer', 'in:0,1'],
+                'status' => ['required', 'integer', 'in:0,1'],
+            ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'type' => $request->type,
-            'status' => $request->status,
-        ]);
-        event(new Registered($user));
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'type' => $request->type,
+                'status' => $request->status,
+            ]);
+            event(new Registered($user));
 
-        session()->flash('success', $request->name . ' has been registered successfully!');
-        return response()->json(['message' => $request->name . ' has been registered successfully!'], 200);
+            return response()->json([
+                'message' => 'User created successfully!',
+                'status' => 'success',
+            ], 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $e->errors(),
+                'status' => 'error',
+            ], 422);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'An unexpected error occurred!',
+                'status' => 'error',
+            ], 500);
+        }
 
     }
 
@@ -74,8 +102,6 @@ class UserController extends Controller
 
     public function edit($user)
     {
-        // return view('Users.Edit', compact('user'));
-        // return response()->json(compact('user'));
 
         $user = User::findOrFail($user);
         return response()->json($user);
@@ -85,26 +111,47 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
-            'type' => ['required', 'integer', 'in:0,1'],
-            'status' => ['required', 'integer', 'in:0,1'],
-        ]);
 
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'type' => $request->type,
-            'status' => $request->status,
-        ]);
+        try {
 
-        // return redirect()->route('users.index', $user->id)
-        //         ->with('success', ''.$request->name.' updated successfully.');
+            $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
+                'type' => ['required', 'integer', 'in:0,1'],
+                'status' => ['required', 'integer', 'in:0,1'],
+            ]);
 
-        session()->flash('success', $request->name . ' has been updated successfully!');
-        return response()->json(['message' => $request->name . ' has been updated successfully!'], 200);
+            $user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'type' => $request->type,
+                'status' => $request->status,
+            ]);
 
+            if ($user->wasChanged()) {
+                return response()->json([
+                    'message' => 'User updated successfully!',
+                    'status' => 'success',
+                ], 200);
+            }else{
+                return response()->json([
+                    'message' => 'No changes were made!',
+                    'status' => 'success',
+                ], 200);
+            }
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $e->errors(),
+                'status' => 'error',
+            ], 422);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'An unexpected error occurred!',
+                'status' => 'error',
+            ], 500);
+        }
     }
 
     public function destroy(string $id)
@@ -113,27 +160,4 @@ class UserController extends Controller
     }
 
 
-    public function fetch(Request $request)
-    {
-        if($request->ajax())
-        {
-            $data = User::select('*');
-
-            return DataTables::of($data)->addIndexColumn()->make(true);
-        }
-        return view('users.fetch');
-    }
-
-    public function getData()
-    {
-        $query = User::query(); // Or any other query to fetch your data
-
-        return DataTables::of($query)
-            ->make(true);
-    }
-
-    public function exportUsers()
-    {
-        return Excel::download(new UsersExport, 'users.xlsx');
-    }
 }

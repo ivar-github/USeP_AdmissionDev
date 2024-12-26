@@ -16,10 +16,7 @@
             <!-- MODAL Body-->
             <form method="POST" id="addUserForm">
                 @csrf
-                {{-- <x-Validation-Error :messages="$errors->get('name')" class="mt-2" />
-                <x-Validation-Error :messages="$errors->get('status')" class="mt-2" /> --}}
 
-                <div id="responseMessage" class="mt-4 text-green-500"></div>
                 <div id="errorMessage" class="mt-4 text-red-500">
                     <x-Validation-Error :messages="$errors->get('status')" class="mt-2" />
                 </div>

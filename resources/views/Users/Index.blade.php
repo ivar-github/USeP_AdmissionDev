@@ -1,10 +1,4 @@
 <x-Main-layout>
-    @if (session('success'))
-        <x-Alert-success>
-            {{ session('success') }}
-        </x-Alert-success>
-    @endif
-
     <x-Breadcrumbs>
         <a  href="{{route('users.index')}}" class="text-lg font-medium text-gray-700  hover:text-red-900 dark:text-gray-400 dark:hover:text-white">USERS</a>
     </x-Breadcrumbs>
@@ -101,10 +95,14 @@
             });
         </script>
 
+
+        {{-- SWEETALERTS --}}
+        <script src="{{ asset('JS/SweetAlerts/SwalUnique.js') }}"></script>
+        <script src="{{ asset('JS/SweetAlerts/SwalGeneric.js') }}"></script>
+
         {{-- MODAL --}}
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-
 
                 // AXIOS ADD USER
                 var submitFormUrl = "{{ route('users.store') }}";
@@ -115,16 +113,12 @@
 
                     axios.post(submitFormUrl, formData)
                         .then(response => {
-
                             closeAddModal();
                             this.reset();
                             document.getElementById('errorMessage').innerHTML = '';
-                            document.getElementById('responseMessage').innerText = 'Form submitted successfully: ' + response.data.message;
-                            location.reload();
+                            swalGenericAdd(response.data.message);
                         })
                         .catch(error => {
-                            document.getElementById('responseMessage').innerHTML = '';
-
                             if (error.response && error.response.status === 422) {
                                 const errors = error.response.data.errors;
                                 const errorList = document.getElementById('errorMessage');
@@ -138,7 +132,10 @@
                                     }
                                 }
                             } else {
-                                console.error('An unexpected error occurred:', error);
+                                const errorMsg = error.response.data.message;
+                                console.log('ErrorMsg',errorMsg);
+                                console.log('Error',error);
+                                swalGenericError('An unexpected error occurred!',error);
                             }
                         });
                 });
@@ -152,25 +149,29 @@
 
                     axios.post(`/users/${userId}`, formData)
                         .then(response => {
-                            document.getElementById('responseMessage').innerText = 'User updated successfully!';
                             closeEditModal();
-                            location.reload();
+                            this.reset();
+                            document.getElementById('e_errorMessage').innerHTML = '';
+                            swalGenericUpdate(response.data.message);
                         })
                         .catch(error => {
-                            const errorMessageElement = document.getElementById('e_errorMessage');
-                            errorMessageElement.innerHTML = '';
-
                             if (error.response && error.response.status === 422) {
                                 const errors = error.response.data.errors;
+                                const errorList = document.getElementById('e_errorMessage');
+                                errorList.innerHTML = '';
+
                                 for (const key in errors) {
                                     if (errors.hasOwnProperty(key)) {
                                         const errorMessage = document.createElement('li');
                                         errorMessage.innerText = errors[key][0];
-                                        errorMessageElement.appendChild(errorMessage);
+                                        errorList.appendChild(errorMessage);
                                     }
                                 }
                             } else {
-                                console.error('An unexpected error occurred:', error);
+                                const errorMsg = error.response.data.message;
+                                console.log('ErrorMsg',errorMsg);
+                                console.log('Error',error);
+                                swalGenericError('An unexpected error occurred!',error);
                             }
                         });
                 });
@@ -180,7 +181,6 @@
 
             // FUNCTION TO SHOW USER TO EDIT
             function openEditModal(userId) {
-                console.log("Opening edit modal for user ID:", userId);
                 axios.get(`/users/${userId}/edit`)
                     .then(response => {
                         const user = response.data;
@@ -190,17 +190,17 @@
                         document.getElementById('e_type').value = user.type;
                         document.getElementById('e_status').value = user.status;
 
-                        // document.getElementById('editUserModal').classList.remove('hidden');
                     })
                     .catch(error => {
                         console.error('Error fetching user data:', error);
+                        swalGenericError('An unexpected error occurred!',error);
                     });
             }
 
             // FUNCTION TO CLOSE MODALS
             function closeAddModal() {
                 document.getElementById('addUserModal').classList.add('hidden');
-                document.getElementById('responseMessage').innerHTML = '';
+                document.getElementById('errorMessage').innerHTML = '';
             }
             function closeEditModal() {
                 document.getElementById('editUserModal').classList.add('hidden');

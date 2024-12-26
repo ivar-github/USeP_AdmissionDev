@@ -19,10 +19,6 @@
                 @method('PUT')
                 <input type="hidden" id="userId" name="id">
 
-                {{-- <x-Validation-Error :messages="$errors->get('name')" class="mt-2" />
-                <x-Validation-Error :messages="$errors->get('status')" class="mt-2" /> --}}
-
-                <div id="responseMessage" class="mt-4 text-green-500"></div>
                 <div id="e_errorMessage" class="mt-4 text-red-500">
                     <x-Validation-Error :messages="$errors->get('status')" class="mt-2" />
                 </div>
