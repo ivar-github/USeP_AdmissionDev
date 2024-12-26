@@ -142,7 +142,8 @@ class ResultController extends Controller
         $dataGraph = [];
         foreach ($results as $item) {
             $dataGraph[] = [
-                'TermID' => $item->AcademicYear . '-' . substr($item->SchoolTerm, 0, 3),
+                'TermID' => $item->AcademicYear,
+                // 'TermID' => $item->AcademicYear . '-' . substr($item->SchoolTerm, 0, 3),
                 'appQualified' => $item->AppQualified,
                 'appConfirmed' => $item->AppConfirmed,
                 'appWaivedSlot' => $item->AppWaivedSlot,
