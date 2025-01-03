@@ -45,7 +45,7 @@
                     <div class=" text-white">
                         <x-Input-Label for="e_rating">Rating</x-Input-Label>
                         <x-Input-Field id="e_rating" class="block mt-1 w-full"
-                            type="number"
+                            type="text"
                             name="Rating"
                             required />
                     </div>

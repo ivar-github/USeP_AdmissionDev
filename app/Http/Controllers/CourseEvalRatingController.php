@@ -34,7 +34,7 @@ class CourseEvalRatingController extends Controller
             $request->validate([
                 'Description' => ['required', 'string', 'max:50'],
                 'Alias' => ['required', 'string', 'max:5'],
-                'Rating' => ['required', 'string', 'max:1'],
+                'Rating' => ['required', 'string', 'max:3'],
                 'SortOrder' => ['required', 'integer', 'max:100'],
                 'Status' => ['required', 'integer', 'in:0,1'],
                 'EvalTemp_ID' => ['required', 'integer'],
@@ -93,7 +93,7 @@ class CourseEvalRatingController extends Controller
             $request->validate([
                 'Description' => ['required', 'string', 'max:50'],
                 'Alias' => ['required', 'string', 'max:5'],
-                'Rating' => ['required', 'string', 'max:1'],
+                'Rating' => ['required', 'string', 'max:3'],
                 'SortOrder' => ['required', 'integer', 'max:100'],
                 'Status' => ['required', 'integer', 'in:0,1'],
                 'EvalTemp_ID' => ['required', 'integer'],

@@ -76,7 +76,7 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     // Route::patch('courseEvalRating/{id}', [CourseEvalRatingController::class, 'update'])->name('courseEvalRatings.update');
     // Route::delete('courseEvalRating/{id}', [CourseEvalRatingController::class, 'destroy'])->name('courseEvalRatings.destroy');
 
-    // Route::resource('courseEvals', CourseEvalController::class);
+    Route::resource('courseEvals', CourseEvalController::class);
     Route::resource('courseEvalParameters', CourseEvalParameterController::class);
     Route::resource('courseEvalStatements', CourseEvalStatementController::class);
     Route::resource('courseEvalRatings', CourseEvalRatingController::class);
