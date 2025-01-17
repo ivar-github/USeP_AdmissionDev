@@ -195,7 +195,22 @@ class ResultController extends Controller
      */
     public function show(string $id)
     {
-        //
+
+        $results = Result::select(
+            'terms.TermID',
+            'terms.AcademicYear',
+            'terms.SchoolTerm',
+            DB::raw("SUM(CASE WHEN results.Status = 'Qualified' THEN 1 ELSE 0 END) as AppQualified"),
+            DB::raw("SUM(CASE WHEN results.Status = 'WaivedSlot' THEN 1 ELSE 0 END) as AppWaivedSlot"),
+            DB::raw("SUM(CASE WHEN results.IsEnlisted = '1' THEN 1 ELSE 0 END) as AppConfirmed"),
+            DB::raw("SUM(CASE WHEN results.AppNo != '' THEN 1 ELSE 0 END) as AppTotal")
+        )
+        ->join('ay_term as terms', 'results.TermID', '=', 'terms.TermID') // Join with the terms table
+        ->groupBy('terms.TermID', 'terms.AcademicYear', 'terms.SchoolTerm')
+        ->orderBy('terms.TermID', 'desc')
+        ->take(10)
+        ->get();
+
     }
 
     /**
