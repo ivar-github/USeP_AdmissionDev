@@ -59,7 +59,7 @@ return [
             ]) : [],
         ],
 
-        
+
 
         'mysql2' => [
             'driver' => 'mysql',
@@ -174,7 +174,7 @@ return [
     */
 
     'migrations' => [
-        'table' => 'rfid_migrations',
+        'table' => 'migrations',
         'update_date_on_publish' => true,
     ],
 

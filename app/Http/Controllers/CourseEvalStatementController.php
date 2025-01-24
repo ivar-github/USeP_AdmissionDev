@@ -7,6 +7,8 @@ use App\Models\CourseEvalStatement;
 use App\Models\CourseEvalParameter;
 use App\Models\CourseEvalRating;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ActionLogs;
 use Exception;
 
 class CourseEvalStatementController extends Controller
@@ -68,10 +70,22 @@ class CourseEvalStatementController extends Controller
                 'isActive' => $request->Status,
             ]);
 
+            ActionLogs::create([
+                'type' => 'Create',
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'module' => 'CourseEval Statements',
+                'affectedID' => $statement->id,
+                'affectedItem' => $request->Statement,
+                'description' => 'Statement created successfully',
+                'status' => 1,
+            ]);
+
             return response()->json([
                 'message' => 'Statement created successfully!',
                 'status' => 'success',
             ], 200);
+
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation error',
@@ -128,17 +142,32 @@ class CourseEvalStatementController extends Controller
             $statement->isActive = $request->input('Status');
             $statement->save();
 
+
+            $status = 0;
+            $desc = '';
             if ($statement->wasChanged()) {
-                return response()->json([
-                    'message' => 'Statement updated successfully!',
-                    'status' => 'success',
-                ], 200);
-            }else{
-                return response()->json([
-                    'message' => 'No changes were made!',
-                    'status' => 'success',
-                ], 200);
+                $status = 1;
+                $desc = 'Statement updated successfully';
+            } else {
+                $desc = 'No changes were made';
             }
+
+            ActionLogs::create([
+                'type' => 'Update',
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'module' => 'CourseEval Statements',
+                'affectedID' => $statement->id,
+                'affectedItem' => $request->input('Statement'),
+                'description' => $desc,
+                'status' => $status,
+            ]);
+
+            return response()->json([
+                'message' => $desc,
+                'status' => 'success',
+            ], 200);
+
 
         } catch (ValidationException $e) {
             return response()->json([
@@ -159,8 +188,20 @@ class CourseEvalStatementController extends Controller
     {
         try {
 
-            $user = CourseEvalStatement::findOrFail($id);
-            $user->delete();
+            $statement = CourseEvalStatement::findOrFail($id);
+            $statement->delete();
+
+            ActionLogs::create([
+                'type' => 'Delete',
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'module' => 'CourseEval Statements',
+                'affectedID' => $statement->id,
+                'affectedItem' => $statement->statement,
+                'description' => 'Statement deleted successfully',
+                'status' => 1,
+            ]);
+
             return redirect()->route('courseEvalStatements.index')->with('success', 'Statement deleted successfully.');
 
         } catch (Exception $e) {

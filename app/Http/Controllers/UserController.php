@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
@@ -16,6 +15,8 @@ use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ActionLogs;
 use Exception;
 
 use App\Exports\UsersExport;
@@ -72,6 +73,18 @@ class UserController extends Controller
                 'type' => $request->type,
                 'status' => $request->status,
             ]);
+
+            ActionLogs::create([
+                'type' => 'Create',
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'module' => 'Users',
+                'affectedID' => $user->id,
+                'affectedItem' => $user->name,
+                'description' => 'User created successfully',
+                'status' => 1,
+            ]);
+
             event(new Registered($user));
 
             return response()->json([
@@ -128,17 +141,31 @@ class UserController extends Controller
                 'status' => $request->status,
             ]);
 
+            $status = 0;
+            $desc = '';
             if ($user->wasChanged()) {
-                return response()->json([
-                    'message' => 'User updated successfully!',
-                    'status' => 'success',
-                ], 200);
-            }else{
-                return response()->json([
-                    'message' => 'No changes were made!',
-                    'status' => 'success',
-                ], 200);
+                $status = 1;
+                $desc = 'User updated successfully';
+            } else {
+                $desc = 'No changes were made';
             }
+
+            ActionLogs::create([
+                'type' => 'Update',
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'module' => 'Users',
+                'affectedID' => $user->id,
+                'affectedItem' => $request->name,
+                'description' => $desc,
+                'status' => $status,
+            ]);
+
+            return response()->json([
+                'message' => $desc,
+                'status' => 'success',
+            ], 200);
+
 
         } catch (ValidationException $e) {
             return response()->json([

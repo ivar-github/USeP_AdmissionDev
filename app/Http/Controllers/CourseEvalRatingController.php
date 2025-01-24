@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CourseEvalRating;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ActionLogs;
 use Exception;
 
 class CourseEvalRatingController extends Controller
@@ -49,10 +51,22 @@ class CourseEvalRatingController extends Controller
                 'evalTemplateID' => $request->EvalTemp_ID,
             ]);
 
+            ActionLogs::create([
+                'type' => 'Create',
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'module' => 'CourseEval Ratings',
+                'affectedID' => $rating->id,
+                'affectedItem' => $request->Description,
+                'description' => 'Rating created successfully',
+                'status' => 1,
+            ]);
+
             return response()->json([
                 'message' => 'Rating created successfully!',
                 'status' => 'success',
             ], 200);
+
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation error',
@@ -107,17 +121,32 @@ class CourseEvalRatingController extends Controller
             $rating->evalTemplateID = $request->input('EvalTemp_ID');
             $rating->save();
 
+
+            $status = 0;
+            $desc = '';
             if ($rating->wasChanged()) {
-                return response()->json([
-                    'message' => 'Rating updated successfully!',
-                    'status' => 'success',
-                ], 200);
-            }else{
-                return response()->json([
-                    'message' => 'No changes were made!',
-                    'status' => 'success',
-                ], 200);
+                $status = 1;
+                $desc = 'Rating updated successfully';
+            } else {
+                $desc = 'No changes were made';
             }
+
+            ActionLogs::create([
+                'type' => 'Update',
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'module' => 'CourseEval Ratings',
+                'affectedID' => $rating->id,
+                'affectedItem' => $request->input('Description'),
+                'description' => $desc,
+                'status' => $status,
+            ]);
+
+            return response()->json([
+                'message' => $desc,
+                'status' => 'success',
+            ], 200);
+
 
         } catch (ValidationException $e) {
             return response()->json([
@@ -139,8 +168,20 @@ class CourseEvalRatingController extends Controller
     {
         try {
 
-            $user = CourseEvalRating::findOrFail($id);
-            $user->delete();
+            $rating = CourseEvalRating::findOrFail($id);
+            $rating->delete();
+
+            ActionLogs::create([
+                'type' => 'Delete',
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'module' => 'CourseEval Ratings',
+                'affectedID' => $rating->id,
+                'affectedItem' => $rating->description,
+                'description' => 'Rating deleted successfully',
+                'status' => 1,
+            ]);
+
             return redirect()->route('courseEvalRatings.index')->with('success', 'Rating deleted successfully.');
 
         } catch (Exception $e) {

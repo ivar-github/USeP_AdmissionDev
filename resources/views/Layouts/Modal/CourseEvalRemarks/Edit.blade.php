@@ -38,7 +38,7 @@
                         <x-Input-TextArea id="e_placeholder" class="block mt-1 w-full"
                             name="PlaceHolder"
                             :value="old('PlaceHolder')"
-                            required />
+                             />
                     </div>
                 </div>
                 <div class="grid grid-cols-1 mt-4 gap-4">

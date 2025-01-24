@@ -56,26 +56,6 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     Route::get('student/table', [StudentController::class, 'table'])->name('students.table');
     Route::post('student/search', [StudentController::class, 'search'])->name('students.search');
 
-    // Route::get('courseEvalParameter/index', [CourseEvalParameterController::class, 'index'])->name('courseEvalParameters.index');
-    // Route::post('courseEvalParameter/store', [CourseEvalParameterController::class, 'store'])->name('courseEvalParameters.store');
-    // Route::get('courseEvalParameter/{id}/edit', [CourseEvalParameterController::class, 'edit'])->name('courseEvalParameters.edit');
-    // Route::patch('courseEvalParameter/{id}', [CourseEvalParameterController::class, 'update'])->name('courseEvalParameters.update');
-    // Route::delete('courseEvalParameter/{id}', [CourseEvalParameterController::class, 'destroy'])->name('courseEvalParameters.destroy');
-
-
-    // Route::get('courseEvalStatement/index', [CourseEvalStatementController::class, 'index'])->name('courseEvalStatements.index');
-    // Route::post('courseEvalStatement/store', [CourseEvalStatementController::class, 'store'])->name('courseEvalStatements.store');
-    // Route::get('courseEvalStatement/{id}/edit', [CourseEvalStatementController::class, 'edit'])->name('courseEvalStatements.edit');
-    // Route::patch('courseEvalStatement/{id}', [CourseEvalStatementController::class, 'update'])->name('courseEvalStatements.update');
-    // Route::delete('courseEvalStatement/{id}', [CourseEvalStatementController::class, 'destroy'])->name('courseEvalStatements.destroy');
-
-
-    // Route::get('courseEvalRating/index', [CourseEvalRatingController::class, 'index'])->name('courseEvalRatings.index');
-    // Route::post('courseEvalRating/store', [CourseEvalRatingController::class, 'store'])->name('courseEvalRatings.store');
-    // Route::get('courseEvalRating/{id}/edit', [CourseEvalRatingController::class, 'edit'])->name('courseEvalRatings.edit');
-    // Route::patch('courseEvalRating/{id}', [CourseEvalRatingController::class, 'update'])->name('courseEvalRatings.update');
-    // Route::delete('courseEvalRating/{id}', [CourseEvalRatingController::class, 'destroy'])->name('courseEvalRatings.destroy');
-
     Route::resource('courseEvals', CourseEvalController::class);
     Route::resource('courseEvalParameters', CourseEvalParameterController::class);
     Route::resource('courseEvalStatements', CourseEvalStatementController::class);
