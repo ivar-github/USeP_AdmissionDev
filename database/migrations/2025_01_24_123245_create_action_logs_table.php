@@ -17,8 +17,8 @@ return new class extends Migration
             $table->integer('userID');
             $table->string('userEmail', 100);
             $table->string('module', 100);
-            $table->integer('affectedID');
-            $table->string('affectedItem', 100);
+            $table->integer('affectedID')->nullable();
+            $table->string('affectedItem', 100)->nullable();
             $table->string('description', 100);
             $table->boolean('status')->nullable();
             $table->timestamps();

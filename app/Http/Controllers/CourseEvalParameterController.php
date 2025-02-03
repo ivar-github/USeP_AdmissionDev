@@ -125,12 +125,10 @@ class CourseEvalParameterController extends Controller
 
 
             $status = 0;
-            $desc = '';
+            $desc = 'No changes were made';
             if ($parameter->wasChanged()) {
                 $status = 1;
                 $desc = 'Parameter updated successfully';
-            } else {
-                $desc = 'No changes were made';
             }
 
             ActionLogs::create([

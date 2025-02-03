@@ -8,17 +8,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\ActionLogs;
 
 class ProfileController extends Controller
 {
- 
+
     public function edit(Request $request): View
     {
         return view('profile.edit', [
             'user' => $request->user(),
         ]);
     }
- 
+
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
@@ -29,9 +30,27 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
+        $status = 0;
+        $desc = 'No changes were made';
+        if ($request->user()->wasChanged()) {
+            $status = 1;
+            $desc = 'Fullname and Email updated successfully';
+        }
+
+        ActionLogs::create([
+            'type' => 'Update',
+            'userID' => Auth::user()->id,
+            'userEmail' => Auth::user()->email,
+            'module' => 'Users Profile',
+            'affectedID' => Auth::user()->id,
+            'affectedItem' => $request->input('name').' - '.$request->input('email'),
+            'description' => $desc,
+            'status' => $status,
+        ]);
+
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
- 
+
     public function destroy(Request $request): RedirectResponse
     {
         $request->validateWithBag('userDeletion', [

@@ -72,23 +72,13 @@
                     </button>
                     <ul id="dropdown-courseEvals" class="hidden mx-1 p-2 mt-1 space-y-2 rounded-xl bg-slate-100 dark:bg-slate-800">
                         <li >
+                            <x-subNav-Link :href="route('courseEvals.index')" :active="request()->routeIs('courseEvals.index')">
+                                <span class="ms-8">Form</span>
+                            </x-subNav-Link>
+                        </li>
+                        <li >
                             <x-subNav-Link :href="route('courseEvalParameters.index')" :active="request()->routeIs('courseEvalParameters.index')">
-                                <span class="ms-8">Parameters</span>
-                            </x-subNav-Link>
-                        </li>
-                        <li >
-                            <x-subNav-Link :href="route('questions.index')" :active="request()->routeIs('questions.index')">
-                                <span class="ms-8">Statements</span>
-                            </x-subNav-Link>
-                        </li>
-                        <li >
-                            <x-subNav-Link :href="route('results.data')" :active="request()->routeIs('results.data')">
-                                <span class="ms-8">Rating</span>
-                            </x-subNav-Link>
-                        </li>
-                        <li >
-                            <x-subNav-Link :href="route('results.data')" :active="request()->routeIs('results.data')">
-                                <span class="ms-8">Remarks</span>
+                                <span class="ms-8">Management</span>
                             </x-subNav-Link>
                         </li>
                     </ul>

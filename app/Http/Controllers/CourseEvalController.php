@@ -18,32 +18,6 @@ class CourseEvalController extends Controller
     public function index()
     {
 
-        // $remarks = CourseEvalRemark::
-        //     // where('isActive', 1)
-        //     orderBy('id', 'asc')
-        //     ->get();
-
-        // //HEADER
-        // $parameters = CourseEvalParameter::select('id', 'name', 'desc')
-        // ->where('isActive', 1)
-        // ->orderBy('id', 'asc')
-        // ->get();
-
-        // //QUESTIONS
-        // $statements = CourseEvalStatement::select('id', 'statement', 'parameterID')
-        // ->where('isActive', 1)
-        // ->orderBy('id', 'asc')
-        // ->get();
-
-
-        // //RATINGS/CHOICES
-        // $ratings = CourseEvalRating::select('id', 'deescription', 'rating')
-        // ->where('isActive', 1)
-        // ->orderBy('id', 'asc')
-        // ->get();
-
-        // return view('CourseEvals.Index', compact('remarks', 'parameters', 'statements', 'ratings'));
-
         $remarks = CourseEvalRemark::select('id', 'question', 'placeHolder')
             ->where('isActive', 1)
             ->orderBy('id', 'asc')

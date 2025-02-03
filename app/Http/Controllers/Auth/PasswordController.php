@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use App\Models\ActionLogs;
 
 class PasswordController extends Controller
 {
@@ -18,7 +19,6 @@ class PasswordController extends Controller
     {
         $validated = $request->validateWithBag('updatePassword', [
             'current_password' => ['required', 'current_password'],
-            // 'password' => ['required', Password::defaults(), 'confirmed'],
             'password' => [
                 'required',
                 'confirmed',
@@ -34,6 +34,27 @@ class PasswordController extends Controller
         $request->user()->update([
             'password' => Hash::make($validated['password']),
         ]);
+
+        $status = 0;
+        $desc = 'No changes were made';
+
+        if ($request->user()->wasChanged('password')) {
+            $status = 1;
+            $desc = 'Password updated successfully';
+        }
+
+        ActionLogs::create([
+            'type' => 'Update',
+            'userID' => Auth::user()->id,
+            'userEmail' => Auth::user()->email,
+            'module' => 'Users Password',
+            'affectedID' => Auth::user()->id,
+            'affectedItem' => Auth::user()->email,
+            'description' => $desc,
+            'status' => $status,
+        ]);
+
+
 
         Auth::logout();
         return back()->with('status', 'password-updated');

@@ -123,12 +123,10 @@ class CourseEvalRatingController extends Controller
 
 
             $status = 0;
-            $desc = '';
+            $desc = 'No changes were made';
             if ($rating->wasChanged()) {
                 $status = 1;
                 $desc = 'Rating updated successfully';
-            } else {
-                $desc = 'No changes were made';
             }
 
             ActionLogs::create([

@@ -144,12 +144,10 @@ class CourseEvalStatementController extends Controller
 
 
             $status = 0;
-            $desc = '';
+            $desc = 'No changes were made';
             if ($statement->wasChanged()) {
                 $status = 1;
                 $desc = 'Statement updated successfully';
-            } else {
-                $desc = 'No changes were made';
             }
 
             ActionLogs::create([

@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\DB;
 use App\Exports\ResultsExport;
 use Maatwebsite\Excel\Facades\Excel;
 
+use Illuminate\Support\Facades\Auth;
+use App\Models\ActionLogs;
+
 class ResultController extends Controller
 {
     /**
@@ -170,6 +173,18 @@ class ResultController extends Controller
     {
         $columns = explode(',', $request->input('columns', ''));
         $filters = $request->only(['termID', 'campus', 'program', 'major', 'status', 'search']);
+
+
+        ActionLogs::create([
+            'type' => 'Read',
+            'userID' => Auth::user()->id,
+            'userEmail' => Auth::user()->email,
+            'module' => 'USePAT Result',
+            // 'affectedID' => $parameter->id,
+            'affectedItem' => 'Applicants List',
+            'description' => 'Applicants Result List Exported',
+            'status' => 1,
+        ]);
 
         return Excel::download(new ResultsExport($columns, $filters), 'results-data.xlsx');
     }

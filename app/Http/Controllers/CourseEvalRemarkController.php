@@ -132,12 +132,10 @@ class CourseEvalRemarkController extends Controller
 
 
             $status = 0;
-            $desc = '';
+            $desc = 'No changes were made';
             if ($remark->wasChanged()) {
                 $status = 1;
                 $desc = 'Question updated successfully';
-            } else {
-                $desc = 'No changes were made';
             }
 
             ActionLogs::create([

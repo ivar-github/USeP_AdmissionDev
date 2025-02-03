@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\DB;
 use App\Exports\ScheduleOverallExport;
 use Maatwebsite\Excel\Facades\Excel;
 
+use Illuminate\Support\Facades\Auth;
+use App\Models\ActionLogs;
+
 class ScheduleController extends Controller
 {
     /**
@@ -63,16 +66,16 @@ class ScheduleController extends Controller
             ->distinct()
             ->when($centerId != 0, fn($query) => $query->where('testCenterID', $centerId))
             ->where('termID', $termId)
-            ->orderBy('testDate', 'asc') 
+            ->orderBy('testDate', 'asc')
             ->get();
 
         return response()->json($dates);
     }
-    
+
 
     public function getData(Request $request)
     {
-        
+
         $columns = explode(',', $request->input('columns', ''));
         $perPage = $request->input('limit', 10);
         $termId = $request->input('termID');
@@ -84,11 +87,11 @@ class ScheduleController extends Controller
         $prefRowQuery = ScheduleView::select($columns)
             ->where('TermID', $termId)
             ->when($centerId != 0, fn($query) => $query->where('testCenterID', $centerId))
-            ->when($dateFromId && $dateToId, fn($query) => $query->whereBetween('testDate', [$dateFromId, $dateToId])) 
-            ->when($dateFromId && !$dateToId, fn($query) => $query->where('testDate', '>=', $dateFromId)) 
+            ->when($dateFromId && $dateToId, fn($query) => $query->whereBetween('testDate', [$dateFromId, $dateToId]))
+            ->when($dateFromId && !$dateToId, fn($query) => $query->where('testDate', '>=', $dateFromId))
             ->when(!$dateFromId && $dateToId, fn($query) => $query->where('testDate', '<=', $dateToId))
-            ->orderBy('Name', 'asc') ; 
-    
+            ->orderBy('Name', 'asc') ;
+
 
         if ($search) {
             $prefRowQuery->where(function($q) use ($search) {
@@ -112,6 +115,19 @@ class ScheduleController extends Controller
     {
         $columns = explode(',', $request->input('columns', ''));
         $filters = $request->only(['termID', 'centerID', 'dateFromID', 'dateToID', 'search']);
+
+
+        ActionLogs::create([
+            'type' => 'Read',
+            'userID' => Auth::user()->id,
+            'userEmail' => Auth::user()->email,
+            'module' => 'Examinees Schedule',
+            // 'affectedID' => $parameter->id,
+            'affectedItem' => 'Examinees List',
+            'description' => 'Examinees Schedule List Exported',
+            'status' => 1,
+        ]);
+
 
         return Excel::download(new ScheduleOverallExport($columns, $filters), 'OverallScheds-data.xlsx');
     }
