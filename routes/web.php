@@ -22,6 +22,7 @@ use App\Http\Middleware\CheckUserStatus;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PDFController;
 use App\Exports\ResultsExport;
+use App\Http\Controllers\ScheduleApplicantController;
 use Maatwebsite\Excel\Facades\Excel;
 
 Route::middleware(['auth', CheckUserStatus::class])->group(function () {
@@ -40,8 +41,8 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     Route::resource('students', StudentController::class);
     Route::resource('employees', EmployeeController::class);
     Route::resource('users', UserController::class);
-    Route::resource('questions', QuestionController::class);
-    Route::resource('datas', DataController::class);
+    // Route::resource('questions', QuestionController::class);
+    // Route::resource('datas', DataController::class);
     Route::resource('registers', RegistrationController ::class);
 
     Route::resource('results', ResultController ::class);
@@ -49,6 +50,10 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
 
     Route::resource('schedules', ResultController ::class);
     Route::get('schedule/overall', [ScheduleController::class, 'overall'])->name('schedules.overall');
+    Route::resource('scheduleApplicants', ScheduleApplicantController ::class);
+    Route::post('scheduleApplicant/search', [ScheduleApplicantController::class, 'search'])->name('scheduleApplicants.search');
+
+
 
 
     Route::post('employee/search', [EmployeeController::class, 'search'])->name('employees.search');
@@ -80,7 +85,7 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     Route::get('/api/schedulesData/getTimes', [ScheduleController::class, 'getTimes']);
 
     // Route::get('/api/resultsData', [CourseEvalParameterController::class, 'getData'])->name('api.results.data');
-    Route::get('/api/parameterData/getDataByStatus', [CourseEvalParameterController::class, 'getDataByStatus']);
+    // Route::get('/api/parameterData/getDataByStatus', [CourseEvalParameterController::class, 'getDataByStatus']);
     // Route::get('/api/resultsData/getMajors', [CourseEvalParameterController::class, 'getMajors']);
 
     //EXPORT

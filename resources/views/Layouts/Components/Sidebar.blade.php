@@ -42,6 +42,29 @@
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor">
                             <path d="M560-680v-80h320v80H560Zm0 160v-80h320v80H560Zm0 160v-80h320v80H560Zm-240-40q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM80-160v-76q0-21 10-40t28-30q45-27 95.5-40.5T320-360q56 0 106.5 13.5T522-306q18 11 28 30t10 40v76H80Zm86-80h308q-35-20-74-30t-80-10q-41 0-80 10t-74 30Zm154-240q17 0 28.5-11.5T360-520q0-17-11.5-28.5T320-560q-17 0-28.5 11.5T280-520q0 17 11.5 28.5T320-480Zm0-40Zm0 280Z"/>
                         </svg>
+                        <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">RFID</span>
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                        </svg>
+                    </button>
+                    <ul id="dropdown-registrations" class="hidden mx-1 p-2 mt-1 space-y-2 rounded-xl bg-slate-100 dark:bg-slate-800">
+                        <li >
+                            <x-subNav-Link :href="route('students.index')" :active="request()->routeIs('students.index')">
+                                <span class="ms-8">Students</span>
+                            </x-subNav-Link>
+                        </li>
+                        <li >
+                            <x-subNav-Link :href="route('employees.index')" :active="request()->routeIs('employees.index')">
+                                <span class="ms-8">Employees</span>
+                            </x-subNav-Link>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <button type="button" class="flex items-center w-full p-2 px-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:text-white hover:bg-red-800 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-registrations" data-collapse-toggle="dropdown-registrations">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor">
+                            <path d="M560-680v-80h320v80H560Zm0 160v-80h320v80H560Zm0 160v-80h320v80H560Zm-240-40q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM80-160v-76q0-21 10-40t28-30q45-27 95.5-40.5T320-360q56 0 106.5 13.5T522-306q18 11 28 30t10 40v76H80Zm86-80h308q-35-20-74-30t-80-10q-41 0-80 10t-74 30Zm154-240q17 0 28.5-11.5T360-520q0-17-11.5-28.5T320-560q-17 0-28.5 11.5T280-520q0 17 11.5 28.5T320-480Zm0-40Zm0 280Z"/>
+                        </svg>
                         <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Registrations</span>
                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
@@ -100,7 +123,7 @@
                             </x-subNav-Link>
                         </li>
                         <li >
-                            <x-subNav-Link :href="route('schedules.overall')" :active="request()->routeIs('schedules.overall')">
+                            <x-subNav-Link :href="route('scheduleApplicants.index')" :active="request()->routeIs('scheduleApplicants.index')">
                                 <span class="ms-8">Applicants</span>
                             </x-subNav-Link>
                         </li>
