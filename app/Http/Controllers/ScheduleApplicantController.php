@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Employee;
+use App\Models\Term;
 use App\Models\ScheduleApplicants;
 use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
@@ -14,11 +15,13 @@ class ScheduleApplicantController extends Controller
 {
     public function index()
     {
-        $query = ScheduleApplicants::select('appNo', 'testScheduleCode', 'testCenterID', 'testDateID', 'testTimeID', 'testSessionID', 'testRoomID', 'termID')
-                ->limit(100)
-                ->orderBy('appNo', 'desc');
-        return view('Schedules.Applicants.Index', compact('applicants'));
-        // return view('Schedules.Applicants.Search', compact('applicants', 'search'));
+
+        $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
+            //->where('IsForAdmission', 1)
+            ->limit(100)
+            ->orderBy('TermID', 'desc')->get();
+
+        return view('Schedules.Applicants.Index', compact('terms'));
     }
 
 
@@ -39,20 +42,6 @@ class ScheduleApplicantController extends Controller
         return view('Employees.Edit', compact('employee'));
     }
 
-
-    // public function update(Request $request, Employee $employee)
-    // {
-    //     $request->validate([
-    //         'smartcardid' => 'required|unique:HR_Employees,SmartCardID,' . $employee->EmployeeID . ',EmployeeID',
-    //     ]);
-
-    //     $employee->update([
-    //         'SmartCardID' => $request->smartcardid,
-    //     ]);
-
-    //     return redirect()->route('employees.show', $employee->EmployeeID)
-    //                      ->with('success', 'SmartCard ID is Updated Successfully.');
-    // }
 
     public function update(Request $request, $employeeID)
     {
@@ -77,70 +66,59 @@ class ScheduleApplicantController extends Controller
 
     public function search(Request $request)
     {
+        $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
+            //->where('IsForAdmission', 1)
+            ->limit(10)
+            ->orderBy('TermID', 'desc')->get();
 
-        $search = $request->input('rfid');
+        $search = $request->input('applicant');
+        $termId = $request->input('termID');
 
         try {
-                $query = ScheduleApplicants::select('appNo', 'testScheduleCode', 'testCenterID', 'testDateID', 'testTimeID', 'testSessionID', 'testRoomID', 'termID')
+            $query = ScheduleApplicants::from('CUSTOM_AdmissionApplicantTestSchedule as sa')
+                ->select(
+                    'sa.appNo',
+                    'sa.testScheduleCode',
+                    'sa.testCenterID',
+                    'sa.testDateID',
+                    'sa.testTimeID',
+                    'sa.testSessionID',
+                    'sa.testRoomID',
+                    'sa.termID',
+                    'reg.AppNo',
+                    'reg.LastName',
+                    'reg.FirstName',
+                    'reg.MiddleName'
+                )
+                ->leftJoin('ES_Admission as reg', 'reg.AppNO', '=', 'sa.appNo')
                 ->limit(100)
-                ->orderBy('appNo', 'desc');
+                ->orderBy('sa.appNo', 'desc');
 
-                if ($search) {
-                    $query->where(function($q) use ($search) {
-                        $q->where('appNo', 'LIKE', '%' . $search . '%')
-                        ->orWhere('testCenterID', 'LIKE', '%' . $search . '%');
-                    });
-                }
-
-                $applicants = $query->get();
-
-                foreach ($applicants as $applicant) {
-                    // if ($employee->Photo) {
-                    //     $employee->Photo_base64 = 'data:image/png;base64,' . base64_encode($employee->Photo);
-                    // } else {
-                    //     $employee->Photo_base64 = null;
-                    // }
-                    $applicant->Photo_base64 = null;
-                }
-
-                return view('Schedules.Applicants.Search', compact('applicants', 'search'));
-
-            } catch (Exception $e) {
-                return redirect()->route('Schedules.Applicants.Search')
-                        ->with('notfound', 'Applicant not found!!');
+            if ($search) {
+                $query->where(function($q) use ($search) {
+                    $q->where('sa.appNo', 'LIKE', '%' . $search . '%')
+                    ->orWhere('sa.testCenterID', 'LIKE', '%' . $search . '%')
+                    ->orWhere('reg.LastName', 'LIKE', '%' . $search . '%')
+                    ->orWhere('reg.FirstName', 'LIKE', '%' . $search . '%')
+                    ->orWhere('reg.MiddleName', 'LIKE', '%' . $search . '%');
+                });
             }
+
+            if ($termId) {
+                $query->where('sa.termID', '=', $termId);
+            }
+
+            $applicants = $query->get();
+
+            return view('Schedules.Applicants.Search', compact('applicants', 'search', 'terms'));
+
+        } catch (Exception $e) {
+            return redirect()->route('Schedules.Applicants.Search')
+                ->with('notfound', 'Applicant not found!!');
+        }
     }
 
-    public function table(Request $request)
-    {
-        $employees = Employee::select('EmployeeID', 'Prefix', 'LastName', 'FirstName', 'MiddleName', 'Email', 'Photo', 'SmartCardID')
-            // ->where('StudentNo', 'LIKE', '%%')
-            // ->orderBy('EmployeeID', 'desc');
-            ->where('EmployeeID', 'LIKE', '%202%')
-            ->orderBy('EmployeeID', 'desc')
-            // ->limit(200)
-            ->get();
 
-        if ($request->has('search')) {
-            $search = $request->input('search');
-            $employees->where(function($q) use ($search) {
-                $q->where('EmployeeID', 'like', "%$search%")
-                  ->orWhere('LastName', 'like', "%$search%")
-                  ->orWhere('FirstName', 'like', "%$search%")
-                  ->orWhere('Email', 'like', "%$search%");
-            });
-        }
 
-        // $employees = $query->limit(200)->get();
 
-        foreach ($employees as $employee) {
-            if ($employee->Photo) {
-                $employee->Photo_base64 = 'data:image/png;base64,' . base64_encode($employee->Photo);
-            } else {
-                $employee->Photo_base64 = null;
-            }
-        }
-
-        return view('Employees.Table', compact('employees'));
-    }
 }

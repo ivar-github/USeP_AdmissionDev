@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use App\Models\ActionLogs;
 
 class LoginRequest extends FormRequest
 {
@@ -44,6 +45,15 @@ class LoginRequest extends FormRequest
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
+            ActionLogs::create([
+                'type' => 'Login',
+                'userID' => 0,
+                'userEmail' => $this->input('email'),
+                'module' => 'Login',
+                'description' => 'Login failed',
+                'status' => 0,
+            ]);
+
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
             ]);
@@ -51,7 +61,26 @@ class LoginRequest extends FormRequest
 
         $user = Auth::user();
 
+        ActionLogs::create([
+            'type' => 'Login',
+            'userID' => $user->id,
+            'userEmail' => $user->email,
+            'module' => 'Login',
+            'description' => 'Login successfull',
+            'status' => 1,
+        ]);
+
+
         if ($user->status == 0) {
+            ActionLogs::create([
+                'type' => 'Login',
+                'userID' => $user->id,
+                'userEmail' => $user->email,
+                'module' => 'Login',
+                'description' => 'Deactivated account attempted',
+                'status' => 0,
+            ]);
+
             Auth::logout();
 
             throw ValidationException::withMessages([
