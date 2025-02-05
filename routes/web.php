@@ -41,6 +41,7 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     Route::resource('students', StudentController::class);
     Route::resource('employees', EmployeeController::class);
     Route::resource('users', UserController::class);
+    Route::patch('user/resetPassword', [UserController::class, 'resetPassword'])->name('users.resetPassword');
     // Route::resource('questions', QuestionController::class);
     // Route::resource('datas', DataController::class);
     Route::resource('registers', RegistrationController ::class);

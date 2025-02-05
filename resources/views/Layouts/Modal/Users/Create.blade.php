@@ -31,7 +31,7 @@
                         <x-Input-Field id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required  />
                     </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 mt-4 gap-4">
+                {{-- <div class="grid grid-cols-1 md:grid-cols-2 mt-4 gap-4">
                     <div class=" text-white">
                         <x-Input-Label for="password">Password</x-Input-Label>
                         <x-Input-Field id="password" class="block mt-1 w-full"
@@ -44,6 +44,21 @@
                         <x-Input-Field id="password_confirmation" class="block mt-1 w-full"
                                         type="password"
                                         name="password_confirmation" required autocomplete="new-password" />
+                    </div>
+                </div> --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 mt-4 gap-4">
+                    <div class=" text-white">
+                        <x-Input-Label for="password">Password</x-Input-Label>
+                        <button type="button" id="generatePassword" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 w-full">
+                            Generate Password
+                        </button>
+                    </div>
+                    <div class=" text-white">
+                        <x-Input-Label>&nbsp;</x-Input-Label>
+                        <x-Input-Field id="password" class="block mt-1 w-full"
+                                        type="text"
+                                        name="password"
+                                        required autocomplete="new-password" />
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 mt-4 gap-4">
@@ -74,3 +89,10 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('generatePassword').addEventListener('click', function () {
+        const password = Math.random().toString(36).slice(-8);
+        document.getElementById('password').value = password;
+    });
+</script>

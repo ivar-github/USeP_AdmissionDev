@@ -54,12 +54,12 @@ class UserController extends Controller
                 // 'password' => ['required', 'confirmed', Rules\Password::defaults()],
                 'password' => [
                     'required',
-                    'confirmed',
+                    // 'confirmed',
                     Password::min(8)
-                        ->mixedCase()
-                        ->letters()
-                        ->numbers()
-                        ->symbols()
+                        //->mixedCase()
+                        // ->letters()
+                        // ->numbers()
+                        // ->symbols()
                         ->uncompromised(),
                 ],
                 'type' => ['required', 'integer', 'in:0,1'],
@@ -177,6 +177,73 @@ class UserController extends Controller
                 'status' => 'error',
             ], 500);
         }
+    }
+
+    public function resetPassword(Request $request)
+    {
+
+        try {
+
+            $userId = $request->input('userIdPw');
+            $user = User::where('id', $userId)->firstOrFail();
+
+            $request->validate([
+                'password' => [
+                    'required',
+                    Password::min(8)
+                        ->uncompromised(),
+                ],
+            ]);
+
+            // $user = User::create([
+            //     'name' => $request->name,
+            //     'email' => $request->email,
+            //     'password' => Hash::make($request->password),
+            //     'type' => $request->type,
+            //     'status' => $request->status,
+            // ]);
+
+
+            $user->password = Hash::make($request->password);
+            $user->default_pw = 1;
+            $user->save();
+
+
+            $status = 0;
+            $desc = 'Password reset failed';
+            if ($user->wasChanged()) {
+                $status = 1;
+                $desc = 'Password reset successfull';
+            }
+
+            ActionLogs::create([
+                'type' => 'Update',
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'module' => 'Users',
+                'affectedID' => $user->id,
+                'affectedItem' => $user->name,
+                'description' => $desc,
+                'status' => $status,
+            ]);
+
+            return response()->json([
+                'message' => 'Password reset successfull!',
+                'status' => 'success',
+            ], 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $e->errors(),
+                'status' => 'error',
+            ], 422);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'An unexpected error occurred!',
+                'status' => 'error',
+            ], 500);
+        }
+
     }
 
     public function destroy(string $id)

@@ -33,6 +33,7 @@ class PasswordController extends Controller
 
         $request->user()->update([
             'password' => Hash::make($validated['password']),
+            'default_pw' => 0,
         ]);
 
         $status = 0;

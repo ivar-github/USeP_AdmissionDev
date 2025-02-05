@@ -54,10 +54,20 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <a href="javascript:void(0)" onclick="openEditModal({{ $user->id }})" data-modal-target="editUserModal" data-modal-toggle="editUserModal" >
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" height="24px" viewBox="0 -960 960 960" width="24px"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
-                                            </a>
+                                            <div class="flex items-center space-x-4">
+                                                <a href="javascript:void(0)" onclick="openEditModal({{ $user->id }})" data-modal-target="editUserModal" data-modal-toggle="editUserModal">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24px" viewBox="0 -960 960 960" width="24px">
+                                                        <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+                                                    </svg>
+                                                </a>
+                                                <a href="javascript:void(0)" onclick="openPasswordModal({{ $user->id }})" data-modal-target="editPasswordModal" data-modal-toggle="editPasswordModal">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343">
+                                                        <path d="M280-400q-33 0-56.5-23.5T200-480q0-33 23.5-56.5T280-560q33 0 56.5 23.5T360-480q0 33-23.5 56.5T280-400Zm0 160q-100 0-170-70T40-480q0-100 70-170t170-70q67 0 121.5 33t86.5 87h352l120 120-180 180-80-60-80 60-85-60h-47q-32 54-86.5 87T280-240Zm0-80q56 0 98.5-34t56.5-86h125l58 41 82-61 71 55 75-75-40-40H435q-14-52-56.5-86T280-640q-66 0-113 47t-47 113q0 66 47 113t113 47Z"/>
+                                                    </svg>
+                                                </a>
+                                            </div>
                                         </td>
+
                                     </tr>
                                 @endforeach
 
@@ -79,6 +89,7 @@
 
             @include('Layouts.Modal.Users.Create')
             @include('Layouts.Modal.Users.Edit')
+            @include('Layouts.Modal.Users.Password')
         </div>
     </div>
 
@@ -176,6 +187,43 @@
                         });
                 });
 
+
+                // AXIOS RESET PASSWORD
+                document.getElementById('editPasswordForm').addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(this);
+                    const userIdPw = document.getElementById('userIdPw').value;
+
+                    axios.post(`/user/resetPassword`, formData)
+                        .then(response => {
+                            closePasswordModal();
+                            this.reset();
+                            document.getElementById('p_errorMessage').innerHTML = '';
+                            swalGenericUpdate(response.data.message);
+                        })
+                        .catch(error => {
+                            if (error.response && error.response.status === 422) {
+                                const errors = error.response.data.errors;
+                                const errorList = document.getElementById('p_errorMessage');
+                                errorList.innerHTML = '';
+
+                                for (const key in errors) {
+                                    if (errors.hasOwnProperty(key)) {
+                                        const errorMessage = document.createElement('li');
+                                        errorMessage.innerText = errors[key][0];
+                                        errorList.appendChild(errorMessage);
+                                    }
+                                }
+                            } else {
+                                const errorMsg = error.response.data.message;
+                                console.log('ErrorMsg',errorMsg);
+                                console.log('Error',error);
+                                swalGenericError('An unexpected error occurred!',error);
+                            }
+                        });
+                });
+
             });
 
 
@@ -197,6 +245,22 @@
                     });
             }
 
+
+            // FUNCTION TO SHOW PASSWORD TO EDIT
+            function openPasswordModal(userId) {
+                axios.get(`/users/${userId}/edit`)
+                    .then(response => {
+                        const user = response.data;
+                        document.getElementById('userIdPw').value = user.id;
+                        document.getElementById('p_name').value = user.name;
+                        document.getElementById('p_email').value = user.email;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching user data:', error);
+                        swalGenericError('An unexpected error occurred!',error);
+                    });
+            }
+
             // FUNCTION TO CLOSE MODALS
             function closeAddModal() {
                 document.getElementById('addUserModal').classList.add('hidden');
@@ -205,6 +269,10 @@
             function closeEditModal() {
                 document.getElementById('editUserModal').classList.add('hidden');
                 document.getElementById('e_errorMessage').innerHTML = '';
+            }
+            function closePasswordModal() {
+                document.getElementById('editPasswordModal').classList.add('hidden');
+                document.getElementById('p_errorMessage').innerHTML = '';
             }
 
         </script>
