@@ -40,10 +40,10 @@
         });
 
         function renderAreaChart(data) {
-            const qualifiedData = data.map(item => ({ x: `Term ${item.TermID}`, y: item.appQualified }));
-            const wavedslotData = data.map(item => ({ x: `Term ${item.TermID}`, y: item.appWaivedSlot }));
-            const confirmedData = data.map(item => ({ x: `Term ${item.TermID}`, y: item.appConfirmed }));
-            const totalData = data.map(item => ({ x: `Term ${item.TermID}`, y: item.appTotal }));
+            const qualifiedData = data.map(item => ({ x: `(${item.TermID})${item.AYear} ${item.STerm}`, y: item.appQualified }));
+            const wavedslotData = data.map(item => ({ x: `(${item.TermID})${item.AYear} ${item.STerm}`, y: item.appWaivedSlot }));
+            const confirmedData = data.map(item => ({ x: `(${item.TermID})${item.AYear} ${item.STerm}`, y: item.appConfirmed }));
+            const totalData = data.map(item => ({ x: `(${item.TermID})${item.AYear} ${item.STerm}`, y: item.appTotal }));
 
             const options = {
                 colors: ["#E3A008", "#F98080", "#31C48D", "#76A9FA"],

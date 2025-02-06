@@ -35,7 +35,7 @@ class ResultController extends Controller
                 (object) ['id' => 10, 'name' => 'Malabog'],
             ]);
 
-        return view('Results.Analytics', compact('terms', 'campuses'));
+        return view('Results.Dashboard', compact('terms', 'campuses'));
     }
 
     public function data()
@@ -129,30 +129,36 @@ class ResultController extends Controller
 
         $data = $prefRowQuery->paginate($perPage);
 
-
-        $results = Result::select(
-            'TermID',
-            DB::raw("SUM(CASE WHEN Status = 'Qualified' THEN 1 ELSE 0 END) as AppQualified"),
-            DB::raw("SUM(CASE WHEN Status = 'WaivedSlot' THEN 1 ELSE 0 END) as AppWaivedSlot"),
-            DB::raw("SUM(CASE WHEN IsEnlisted = '1' THEN 1 ELSE 0 END) as AppConfirmed"),
-            DB::raw("SUM(CASE WHEN AppNo != '' THEN 1 ELSE 0 END) as AppTotal")
-        )
-        ->groupBy('TermID')
-        ->orderBy('TermID', 'desc')
-        ->take(10)
-        ->get();
+        $results = DB::connection('sqlsrv2')
+            ->table('CUSTOM_AdmissionQualifiedApplicantsOfficial as results')
+            ->select(
+                'results.TermID',
+                'terms.AcademicYear',
+                'terms.SchoolTerm',
+                DB::raw("SUM(CASE WHEN results.Status = 'Qualified' THEN 1 ELSE 0 END) as AppQualified"),
+                DB::raw("SUM(CASE WHEN results.Status = 'WaivedSlot' THEN 1 ELSE 0 END) as AppWaivedSlot"),
+                DB::raw("SUM(CASE WHEN results.IsEnlisted = '1' THEN 1 ELSE 0 END) as AppConfirmed"),
+                DB::raw("SUM(CASE WHEN results.AppNo != '' THEN 1 ELSE 0 END) as AppTotal")
+            )
+            ->join('ES_AYTerm as terms', 'terms.TermID', '=', 'results.TermID')
+            ->groupBy('results.TermID', 'terms.AcademicYear', 'terms.SchoolTerm')
+            ->orderBy('results.TermID', 'desc')
+            ->take(10)
+            ->get();
 
         $dataGraph = [];
         foreach ($results as $item) {
             $dataGraph[] = [
                 'TermID' => $item->TermID,
-                // 'TermID' => $item->AcademicYear . '-' . substr($item->SchoolTerm, 0, 3),
+                'AYear' => $item->AcademicYear,
+                'STerm' => substr($item->SchoolTerm, 0, 3),
                 'appQualified' => $item->AppQualified,
                 'appConfirmed' => $item->AppConfirmed,
                 'appWaivedSlot' => $item->AppWaivedSlot,
                 'appTotal' => $item->AppTotal,
             ];
         }
+
 
         return response()->json([
             'data' => $data->items(),
@@ -174,15 +180,20 @@ class ResultController extends Controller
         $columns = explode(',', $request->input('columns', ''));
         $filters = $request->only(['termID', 'campus', 'program', 'major', 'status', 'search']);
 
+        $termID = $filters['termID'] ?? 'N/A';
+        $campus = $filters['campus'] ?? 'N/A';
+        $program = $filters['program'] ?? 'N/A';
+        $major = $filters['major'] ?? 'N/A';
+        $status = $filters['status'] ?? 'N/A';
+        $search = $filters['search'] ?? 'N/A';
 
         ActionLogs::create([
             'type' => 'Read',
             'userID' => Auth::user()->id,
             'userEmail' => Auth::user()->email,
             'module' => 'USePAT Result',
-            // 'affectedID' => $parameter->id,
             'affectedItem' => 'Applicants List',
-            'description' => 'Applicants Result List Exported',
+            'description' => "Term: $termID, Campus: $campus, Program: $program, Major: $major, Status: $status, Searched: $search Result List Exported",
             'status' => 1,
         ]);
 

@@ -115,6 +115,7 @@
         function renderStudentPie(gender) {
             const femaleData = gender.StudentFemaleCurrent;
             const maleData = gender.StudentMaleCurrent;
+            const currentTerm = gender.CurrentTerm;
 
 
             const option = {
@@ -123,7 +124,8 @@
                     chart: {
                     height: 320,
                     width: "100%",
-                    type: "pie",
+                    // type: "pie",
+                    type: "donut",
                     },
                     stroke: {
                     colors: ["transparent"],
@@ -142,7 +144,7 @@
                             total: {
                             showAlways: true,
                             show: true,
-                            label: "Students",
+                            label: currentTerm,
                             fontFamily: "Inter, sans-serif",
                             formatter: function (w) {
                                 const sum = w.globals.seriesTotals.reduce((a, b) => {

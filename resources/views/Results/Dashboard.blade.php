@@ -6,7 +6,7 @@
     @endif
 
     <x-Breadcrumbs>
-        <a  href="{{route('results.index')}}" class="text-lg font-medium text-gray-700  hover:text-red-900 dark:text-gray-400 dark:hover:text-white">RESULTS / Analytics</a>
+        <a  href="{{route('results.index')}}" class="text-lg font-medium text-gray-700  hover:text-red-900 dark:text-gray-400 dark:hover:text-white">RESULTS > Dashboard</a>
     </x-Breadcrumbs>
     <div class="mx-auto h-full">
         <div class="overflow-hidden py-5 lg:py-10">

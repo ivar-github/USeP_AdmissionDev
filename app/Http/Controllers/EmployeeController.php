@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 use Illuminate\Validation\Rule;
+use Exception;
 
 class EmployeeController extends Controller
 {
@@ -16,25 +17,25 @@ class EmployeeController extends Controller
 
     public function index()
     {
-        return view('Employees.Index');
+        return view('RFIDs.Employee.Index');
     }
 
 
     public function create()
     {
-       // return view('Employees.Create');
+       // return view('RFIDs.Employees.Create');
     }
 
 
     public function show(Employee $employee)
     {
-        return view('Employees.Show', compact('employee'));
+        return view('RFIDs.Employee.Show', compact('employee'));
     }
 
 
     public function edit(Employee $employee)
     {
-        return view('Employees.Edit', compact('employee'));
+        return view('RFIDs.Employee.Edit', compact('employee'));
     }
 
 
@@ -72,14 +73,14 @@ class EmployeeController extends Controller
                          ->with('success', 'SmartCard ID is Updated Successfully.');
     }
 
-    
+
     public function search(Request $request)
     {
 
         $search = $request->input('rfid');
-        
+
         try {
-                $query = Employee::select('EmployeeID', 'Prefix', 'LastName', 'FirstName', 'MiddleName', 'Email', 'Photo', 'SmartCardID')    
+                $query = Employee::select('EmployeeID', 'Prefix', 'LastName', 'FirstName', 'MiddleName', 'Email', 'Photo', 'SmartCardID')
                 ->limit(100)
                 ->orderBy('EmployeeID', 'desc');
 
@@ -102,9 +103,9 @@ class EmployeeController extends Controller
                     }
                 }
 
-                return view('Employees.Search', compact('employees', 'search'));
-                
-            } catch (error_log $e) {
+                return view('RFIDs.Employee.Search', compact('employees', 'search'));
+
+            } catch (Exception $e) {
                 return redirect()->route('employees.search')
                         ->with('notfound', 'Employee not found!!');
             }
@@ -140,7 +141,7 @@ class EmployeeController extends Controller
             }
         }
 
-        return view('Employees.Table', compact('employees'));
+        return view('RFIDs.Employee.Table', compact('employees'));
     }
 
 }

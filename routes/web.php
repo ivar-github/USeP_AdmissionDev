@@ -38,8 +38,16 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
+    Route::get('/rfids', function () {
+        return view('RFIDs.Dashboard');
+    })->name('rfids');
     Route::resource('students', StudentController::class);
     Route::resource('employees', EmployeeController::class);
+    Route::post('employee/search', [EmployeeController::class, 'search'])->name('employees.search');
+    Route::get('employee/table', [EmployeeController::class, 'table'])->name('employees.table');
+    Route::get('student/table', [StudentController::class, 'table'])->name('students.table');
+    Route::post('student/search', [StudentController::class, 'search'])->name('students.search');
+
     Route::resource('users', UserController::class);
     Route::patch('user/resetPassword', [UserController::class, 'resetPassword'])->name('users.resetPassword');
     // Route::resource('questions', QuestionController::class);
@@ -53,14 +61,6 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     Route::get('schedule/overall', [ScheduleController::class, 'overall'])->name('schedules.overall');
     Route::resource('scheduleApplicants', ScheduleApplicantController ::class);
     Route::post('scheduleApplicant/search', [ScheduleApplicantController::class, 'search'])->name('scheduleApplicants.search');
-
-
-
-
-    Route::post('employee/search', [EmployeeController::class, 'search'])->name('employees.search');
-    Route::get('employee/table', [EmployeeController::class, 'table'])->name('employees.table');
-    Route::get('student/table', [StudentController::class, 'table'])->name('students.table');
-    Route::post('student/search', [StudentController::class, 'search'])->name('students.search');
 
     Route::resource('courseEvals', CourseEvalController::class);
     Route::resource('courseEvalParameters', CourseEvalParameterController::class);

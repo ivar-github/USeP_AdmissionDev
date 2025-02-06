@@ -10,25 +10,26 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Exception;
 
 class StudentController extends Controller
 {
 
     public function index()
     {
-        return view('Students.Index');
+        return view('RFIDs.Student.Index');
     }
 
 
     public function show(Student $student)
     {
-            return view('Students.Show', compact('student'));
+            return view('RFIDs.Student.Show', compact('student'));
     }
 
 
     public function edit(Student $student)
     {
-            return view('Students.Edit', compact('student'));
+            return view('RFIDs.Student.Edit', compact('student'));
     }
 
 
@@ -51,15 +52,15 @@ class StudentController extends Controller
         return redirect()->route('students.show', $student->StudentNo)
                          ->with('success', 'SmartCard ID updated successfully.');
     }
-    
+
 
     public function search(Request $request)
     {
-        
+
         $search = $request->input('rfid');
-        
+
         try {
-                $query = Student::select('StudentNo', 'AppNo', 'TermID', 'LastName', 'FirstName', 'Middlename', 'Email', 'StudentPicture', 'SmartCardID', 'Fullname')    
+                $query = Student::select('StudentNo', 'AppNo', 'TermID', 'LastName', 'FirstName', 'Middlename', 'Email', 'StudentPicture', 'SmartCardID', 'Fullname')
                 ->limit(100)
                 ->orderBy('LastName', 'desc');
 
@@ -82,9 +83,9 @@ class StudentController extends Controller
                     }
                 }
 
-                return view('students.search', compact('students', 'search'));
-                
-            } catch (error_log $e) {
+                return view('RFIDs.Student.search', compact('students', 'search'));
+
+            } catch (Exception $e) {
                 return redirect()->route('students.search')
                         ->with('notfound', 'Student not found!!');
             }
@@ -106,7 +107,7 @@ class StudentController extends Controller
                 $student->StudentPicture_base64 = null;
             }
         }
-        return view('Students.Table', compact('students'));
+        return view('RFIDs.Student.Table', compact('students'));
     }
 
 }

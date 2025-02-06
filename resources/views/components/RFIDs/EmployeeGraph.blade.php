@@ -9,7 +9,7 @@
                 </div>
                 <div>
                 <h5 class="leading-none text-2xl font-bold text-gray-900 dark:text-white pb-1">Students</h5>
-                <p class="text-sm font-normal text-gray-500 dark:text-gray-400">Students with RFID last ten terms</p>
+                <p class="text-sm font-normal text-gray-500 dark:text-gray-400">Area Graph Analytics</p>
             </div>
         </div>
         <div>
@@ -33,13 +33,13 @@
         </dl>
     </div> --}}
 
-    <div id="student-chart">
+    <div id="employee-chart">
 
     </div>
-    <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
+    {{-- <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
         <div class="flex justify-between items-center pt-5">
             <!-- Button -->
-            {{-- <button
+            <button
                 id="dropdownDefaultButton"
                 data-dropdown-toggle="lastDaysdropdown"
                 data-dropdown-placement="bottom"
@@ -69,7 +69,7 @@
                     <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Last 90 days</a>
                     </li>
                 </ul>
-            </div> --}}
+            </div>
             <a
                 href="#"
                 class="uppercase text-sm font-semibold inline-flex items-center rounded-lg text-blue-600 hover:text-blue-700 dark:hover:text-blue-500  hover:bg-gray-100 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 px-3 py-2">
@@ -79,7 +79,7 @@
                 </svg>
             </a>
         </div>
-    </div>
+    </div> --}}
 </div>
 
 @push('scripts')
@@ -88,17 +88,17 @@
             axios.get('{{ route('api.dashboard.data') }}')
                 .then(response => {
                     const data = response.data;
-                    renderStudentChart(data);
+                    renderChart(data);
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
                 });
         });
 
-        function renderStudentChart(data) {
-            const maleData = data.map(item => ({ x: `Term ${item.TermID}`, y: item.StudentMale }));
-            const femaleData = data.map(item => ({ x: `Term ${item.TermID}`, y: item.StudentFemale }));
-            const noRFID = data.map(item => ({ x: `Term ${item.TermID}`, y: item.StudentsWoutSmartCard }));
+        function renderChart(data) {
+            const maleData = data.map(item => ({ x: `(${item.TermID})${item.AYear} ${item.STerm}`, y: item.StudentMale }));
+            const femaleData = data.map(item => ({ x: `(${item.TermID})${item.AYear} ${item.STerm}`, y: item.StudentFemale }));
+            const noRFID = data.map(item => ({ x: `(${item.TermID})${item.AYear} ${item.STerm}`, y: item.StudentsWoutSmartCard }));
 
 
             const options = {
@@ -121,7 +121,7 @@
                     },
                 ],
                 chart: {
-                    type: "bar",
+                    type: "area",
                     height: "320px",
                     fontFamily: "Inter, sans-serif",
                     toolbar: {
@@ -195,8 +195,8 @@
                 },
             }
 
-            if(document.getElementById("student-chart") && typeof ApexCharts !== 'undefined') {
-                const chart = new ApexCharts(document.getElementById("student-chart"), options);
+            if(document.getElementById("employee-chart") && typeof ApexCharts !== 'undefined') {
+                const chart = new ApexCharts(document.getElementById("employee-chart"), options);
                 chart.render();
             }
         }
