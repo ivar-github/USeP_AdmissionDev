@@ -41,7 +41,7 @@ class PasswordController extends Controller
 
         if ($request->user()->wasChanged('password')) {
             $status = 1;
-            $desc = 'Password updated successfully';
+            $desc = 'Password Update Successful';
         }
 
         ActionLogs::create([

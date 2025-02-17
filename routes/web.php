@@ -22,7 +22,7 @@ use App\Http\Middleware\CheckUserStatus;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PDFController;
 use App\Exports\ResultsExport;
-use App\Http\Controllers\ScheduleApplicantController;
+use App\Http\Controllers\ScheduleRescheduleController;
 use Maatwebsite\Excel\Facades\Excel;
 
 Route::middleware(['auth', CheckUserStatus::class])->group(function () {
@@ -59,8 +59,8 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
 
     Route::resource('schedules', ResultController ::class);
     Route::get('schedule/overall', [ScheduleController::class, 'overall'])->name('schedules.overall');
-    Route::resource('scheduleApplicants', ScheduleApplicantController ::class);
-    Route::post('scheduleApplicant/search', [ScheduleApplicantController::class, 'search'])->name('scheduleApplicants.search');
+    Route::resource('scheduleApplicants', ScheduleRescheduleController ::class);
+    Route::post('scheduleApplicant/search', [ScheduleRescheduleController::class, 'search'])->name('scheduleApplicants.search');
 
     Route::resource('courseEvals', CourseEvalController::class);
     Route::resource('courseEvalParameters', CourseEvalParameterController::class);
@@ -84,6 +84,9 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     Route::get('/api/schedulesData', [ScheduleController::class, 'getData'])->name('api.schedules.data');
     Route::get('/api/schedulesData/getDates', [ScheduleController::class, 'getDates']);
     Route::get('/api/schedulesData/getTimes', [ScheduleController::class, 'getTimes']);
+
+    Route::get('/api/scheduleApplicant/getAvailableScheds', [ScheduleRescheduleController::class, 'getAvailableScheds']);
+    Route::get('/api/scheduleApplicant/selectSchedDetails', [ScheduleRescheduleController::class, 'selectSchedDetails']);
 
     // Route::get('/api/resultsData', [CourseEvalParameterController::class, 'getData'])->name('api.results.data');
     // Route::get('/api/parameterData/getDataByStatus', [CourseEvalParameterController::class, 'getDataByStatus']);

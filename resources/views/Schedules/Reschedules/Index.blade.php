@@ -32,6 +32,9 @@
                     </div>
                 </form>
             </div>
+
+            {{-- @include('Layouts.Modal.ScheduleReschedules.Create') --}}
+            @include('Layouts.Modal.ScheduleReschedules.Edit')
         </div>
     </div>
 </x-Main-layout>

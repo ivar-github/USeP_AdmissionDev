@@ -32,9 +32,10 @@ class ProfileController extends Controller
 
         $status = 0;
         $desc = 'No changes were made';
+        
         if ($request->user()->wasChanged()) {
             $status = 1;
-            $desc = 'Fullname and Email updated successfully';
+            $desc = 'Profile Update Successful';
         }
 
         ActionLogs::create([

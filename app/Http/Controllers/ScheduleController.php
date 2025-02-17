@@ -17,6 +17,9 @@ use Maatwebsite\Excel\Facades\Excel;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\ActionLogs;
+use Illuminate\Validation\ValidationException;
+use Exception;
+use Throwable;
 
 class ScheduleController extends Controller
 {
@@ -26,110 +29,160 @@ class ScheduleController extends Controller
     public function index()
     {
 
-        $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
-            ->where('IsForAdmission', 1)
-            ->limit(100)
-            ->orderBy('TermID', 'desc')->get();
+        try {
 
-        $campuses = collect([
-                (object) ['id' => 1, 'name' => 'Obrero'],
-                (object) ['id' => 6, 'name' => 'Mintal'],
-                (object) ['id' => 7, 'name' => 'Tagum'],
-                (object) ['id' => 8, 'name' => 'Mabini'],
-                (object) ['id' => 10, 'name' => 'Malabog'],
-            ]);
+            $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
+                ->where('IsForAdmission', 1)
+                ->limit(100)
+                ->orderBy('TermID', 'desc')->get();
 
-        return view('Schedules.Analytics', compact('terms', 'campuses'));
+            $campuses = collect([
+                    (object) ['id' => 1, 'name' => 'Obrero'],
+                    (object) ['id' => 6, 'name' => 'Mintal'],
+                    (object) ['id' => 7, 'name' => 'Tagum'],
+                    (object) ['id' => 8, 'name' => 'Mabini'],
+                    (object) ['id' => 10, 'name' => 'Malabog'],
+                ]);
+
+            return view('Schedules.Analytics', compact('terms', 'campuses'));
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
+
 
     public function overall()
     {
 
-        $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
-            ->where('IsForAdmission', 1)
-            ->limit(1)
-            ->orderBy('TermID', 'desc')->get();
+        try {
 
-        $centers = ScheduleCenter::select('id', 'campusID', 'testCenterName')
-            ->orderBy('campusID', 'asc')->get();
+            $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
+                ->where('IsForAdmission', 1)
+                ->limit(1)
+                ->orderBy('TermID', 'desc')->get();
 
-        return view('Schedules.Overall', compact('terms', 'centers' ));
+            $centers = ScheduleCenter::select('id', 'campusID', 'testCenterName')
+                ->orderBy('campusID', 'asc')->get();
+
+            return view('Schedules.Overall', compact('terms', 'centers' ));
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
 
     public function getDates(Request $request)
     {
-        $centerId = $request->input('centerID');
-        $termId = $request->input('termID');
+        try {
 
-        $dates = ScheduleViewSlot::select('testDateID', 'testDate')
-            ->distinct()
-            ->when($centerId != 0, fn($query) => $query->where('testCenterID', $centerId))
-            ->where('termID', $termId)
-            ->orderBy('testDate', 'asc')
-            ->get();
+            $centerId = $request->input('centerID');
+            $termId = $request->input('termID');
 
-        return response()->json($dates);
+            $dates = ScheduleViewSlot::select('testDateID', 'testDate')
+                ->distinct()
+                ->when($centerId != 0, fn($query) => $query->where('testCenterID', $centerId))
+                ->where('termID', $termId)
+                ->orderBy('testDate', 'asc')
+                ->get();
+
+            return response()->json($dates);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+
     }
 
 
     public function getData(Request $request)
     {
 
-        $columns = explode(',', $request->input('columns', ''));
-        $perPage = $request->input('limit', 10);
-        $termId = $request->input('termID');
-        $centerId = $request->input('centerID');
-        $dateFromId = $request->input('dateFromID');
-        $dateToId = $request->input('dateToID');
-        $search = $request->input('search');
+        try {
 
-        $prefRowQuery = ScheduleView::select($columns)
-            ->where('TermID', $termId)
-            ->when($centerId != 0, fn($query) => $query->where('testCenterID', $centerId))
-            ->when($dateFromId && $dateToId, fn($query) => $query->whereBetween('testDate', [$dateFromId, $dateToId]))
-            ->when($dateFromId && !$dateToId, fn($query) => $query->where('testDate', '>=', $dateFromId))
-            ->when(!$dateFromId && $dateToId, fn($query) => $query->where('testDate', '<=', $dateToId))
-            ->orderBy('Name', 'asc') ;
+            $columns = explode(',', $request->input('columns', ''));
+            $perPage = $request->input('limit', 10);
+            $termId = $request->input('termID');
+            $centerId = $request->input('centerID');
+            $dateFromId = $request->input('dateFromID');
+            $dateToId = $request->input('dateToID');
+            $search = $request->input('search');
+
+            $prefRowQuery = ScheduleView::select($columns)
+                ->where('TermID', $termId)
+                ->when($centerId != 0, fn($query) => $query->where('testCenterID', $centerId))
+                ->when($dateFromId && $dateToId, fn($query) => $query->whereBetween('testDate', [$dateFromId, $dateToId]))
+                ->when($dateFromId && !$dateToId, fn($query) => $query->where('testDate', '>=', $dateFromId))
+                ->when(!$dateFromId && $dateToId, fn($query) => $query->where('testDate', '<=', $dateToId))
+                ->orderBy('Name', 'asc') ;
 
 
-        if ($search) {
-            $prefRowQuery->where(function($q) use ($search) {
-                $q->where('Name', 'LIKE', '%' . $search . '%')
-                ->orWhere('appNo', 'LIKE', '%' . $search . '%');
-            });
+            if ($search) {
+                $prefRowQuery->where(function($q) use ($search) {
+                    $q->where('Name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('appNo', 'LIKE', '%' . $search . '%');
+                });
+            }
+
+            $data = $prefRowQuery->paginate($perPage);
+
+            return response()->json([
+                'data' => $data->items(),
+                'current_page' => $data->currentPage(),
+                'last_page' => $data->lastPage(),
+                'total' => $data->total()
+            ]);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
         }
 
-        $data = $prefRowQuery->paginate($perPage);
-
-        return response()->json([
-            'data' => $data->items(),
-            'current_page' => $data->currentPage(),
-            'last_page' => $data->lastPage(),
-            'total' => $data->total()
-        ]);
     }
 
 
     public function exportOverallScheds(Request $request)
     {
-        $columns = explode(',', $request->input('columns', ''));
-        $filters = $request->only(['termID', 'centerID', 'dateFromID', 'dateToID', 'search']);
+        try {
+
+            $columns = explode(',', $request->input('columns', ''));
+            $filters = $request->only(['termID', 'centerID', 'dateFromID', 'dateToID', 'search']);
+
+            $termID = $filters['termID'] ?? 'N/A';
+            $centerID = $filters['centerID'] ?? 'N/A';
+            $search = $filters['search'] ?? 'N/A';
+
+            ActionLogs::create([
+                'type' => 'Read',
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'module' => 'USePAT Schedule - Applicant',
+                'affectedItem' => 'Applicants List',
+                'description' => "Term: $termID, Center: $centerID, Searched: $search, Schedule List Exported",
+                'status' => 1,
+            ]);
 
 
-        ActionLogs::create([
-            'type' => 'Read',
-            'userID' => Auth::user()->id,
-            'userEmail' => Auth::user()->email,
-            'module' => 'Examinees Schedule',
-            // 'affectedID' => $parameter->id,
-            'affectedItem' => 'Examinees List',
-            'description' => 'Examinees Schedule List Exported',
-            'status' => 1,
-        ]);
+            return Excel::download(new ScheduleOverallExport($columns, $filters), 'OverallScheds-data.xlsx');
 
-
-        return Excel::download(new ScheduleOverallExport($columns, $filters), 'OverallScheds-data.xlsx');
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**

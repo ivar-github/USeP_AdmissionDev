@@ -14,10 +14,12 @@ use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 use Illuminate\Validation\Rules\Password;
-use Illuminate\Validation\ValidationException;
+
 use Illuminate\Support\Facades\Auth;
 use App\Models\ActionLogs;
+use Illuminate\Validation\ValidationException;
 use Exception;
+use Throwable;
 
 use App\Exports\UsersExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -28,14 +30,23 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::all();
 
-        return view('Users.Index', compact('users'));
+        try {
+
+            $users = User::all();
+            return view('Users.Index', compact('users'));
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function create()
     {
-        return view('Users.Create');
+        // return view('Users.Create');
     }
 
     /**
@@ -48,6 +59,7 @@ class UserController extends Controller
     {
 
         try {
+
             $request->validate([
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
@@ -81,26 +93,27 @@ class UserController extends Controller
                 'module' => 'Users',
                 'affectedID' => $user->id,
                 'affectedItem' => $user->name,
-                'description' => 'User created successfully',
+                'description' => 'User Creation Successful',
                 'status' => 1,
             ]);
 
             event(new Registered($user));
 
             return response()->json([
-                'message' => 'User created successfully!',
+                'message' => 'User Creation Successful',
                 'status' => 'success',
             ], 200);
+
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation error',
                 'errors' => $e->errors(),
                 'status' => 'error',
             ], 422);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             return response()->json([
-                'message' => 'An unexpected error occurred!',
-                'status' => 'error',
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
             ], 500);
         }
 
@@ -109,15 +122,23 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        return view('Users.Show', compact('user'));
+        // return view('Users.Show', compact('user'));
     }
 
 
     public function edit($user)
     {
+        try {
 
-        $user = User::findOrFail($user);
-        return response()->json($user);
+            $user = User::findOrFail($user);
+            return response()->json($user);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
 
     }
 
@@ -145,7 +166,7 @@ class UserController extends Controller
             $desc = 'No changes were made';
             if ($user->wasChanged()) {
                 $status = 1;
-                $desc = 'User updated successfully';
+                $desc = 'User Update Successful';
             }
 
             ActionLogs::create([
@@ -171,10 +192,10 @@ class UserController extends Controller
                 'errors' => $e->errors(),
                 'status' => 'error',
             ], 422);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             return response()->json([
-                'message' => 'An unexpected error occurred!',
-                'status' => 'error',
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
@@ -195,25 +216,16 @@ class UserController extends Controller
                 ],
             ]);
 
-            // $user = User::create([
-            //     'name' => $request->name,
-            //     'email' => $request->email,
-            //     'password' => Hash::make($request->password),
-            //     'type' => $request->type,
-            //     'status' => $request->status,
-            // ]);
-
-
             $user->password = Hash::make($request->password);
             $user->default_pw = 1;
             $user->save();
 
 
             $status = 0;
-            $desc = 'Password reset failed';
+            $desc = 'Password Reset Failed';
             if ($user->wasChanged()) {
                 $status = 1;
-                $desc = 'Password reset successfull';
+                $desc = 'Password Reset Successful';
             }
 
             ActionLogs::create([
@@ -228,19 +240,20 @@ class UserController extends Controller
             ]);
 
             return response()->json([
-                'message' => 'Password reset successfull!',
+                'message' =>   $desc,
                 'status' => 'success',
             ], 200);
+
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation error',
                 'errors' => $e->errors(),
                 'status' => 'error',
             ], 422);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             return response()->json([
-                'message' => 'An unexpected error occurred!',
-                'status' => 'error',
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
             ], 500);
         }
 

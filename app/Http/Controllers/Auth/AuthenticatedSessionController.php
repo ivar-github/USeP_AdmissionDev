@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
         LoginLogs::create([
             'userID' => $user->id,
             'userEmail' => $user->email,
-            'description' => 'Login successfull',
+            'description' => 'Login Successful',
         ]);
 
         return redirect()->intended(route('dashboard', absolute: false));

@@ -142,6 +142,9 @@
 
     @push('scripts')
 
+        {{-- SWEETALERTS --}}
+        <script src="{{ asset('JS/SweetAlerts/SwalGeneric.js') }}"></script>
+        
         <script>
             let selectedColumns = ['Name']; 
             let currentPage = 1;
@@ -176,10 +179,11 @@
                     const url = window.URL.createObjectURL(new Blob([response.data]));
                     const link = document.createElement('a');
                     link.href = url;
-                    link.setAttribute('download', 'OverallSched-data.xlsx');
+                    link.setAttribute('download', 'applicantsSchedules-data.xlsx');
                     document.body.appendChild(link);
                     link.click();
                     link.remove();
+                    swalGenericExport();
                 })
                 .catch(error => console.error('Error exporting to Excel:', error));
             }

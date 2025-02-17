@@ -47,7 +47,7 @@ class LoginRequest extends FormRequest
 
             LoginLogs::create([
                 'userEmail' => $this->input('email'),
-                'description' => 'Login failed',
+                'description' => 'Login Failed',
                 'status' => 0,
             ]);
 
@@ -62,7 +62,7 @@ class LoginRequest extends FormRequest
             LoginLogs::create([
                 'userID' => $user->id,
                 'userEmail' => $user->email,
-                'description' => 'Deactivated account attempted',
+                'description' => 'Deactivated Account Attempted',
                 'status' => 0,
             ]);
 

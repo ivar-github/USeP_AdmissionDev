@@ -10,7 +10,14 @@ class ScheduleApplicants extends Model
     protected $connection = 'sqlsrv2';
     protected $table = 'CUSTOM_AdmissionApplicantTestSchedule';
 
+    public $timestamps = false;
+    
     protected $fillable = [
-        // 'MobileNo'
+        'termID',
+        'testCenterID',
+        'testDateID',
+        'testTimeID',
+        'testRoomID',
+        'testSessionID',
     ];
 }
