@@ -8,7 +8,11 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ActionLogs;
 use Exception;
+use Throwable;
 
 class EmployeeController extends Controller
 {
@@ -69,8 +73,25 @@ class EmployeeController extends Controller
         $employee->SmartCardID = $request->input('smartcardid');
         $employee->save();
 
+        $status = 0;
+        $desc = 'No changes were made';
+        if ($employee->wasChanged()) {
+            $status = 1;
+            $desc = 'RFID Update Successful';
+        }
+
+        ActionLogs::create([
+            'type' => 'Update',
+            'userID' => Auth::user()->id,
+            'userEmail' => Auth::user()->email,
+            'module' => 'RFID - Employee',
+            'affectedItem' => $employee->EmployeeID,
+            'description' => $desc,
+            'status' => $status,
+        ]);
+
         return redirect()->route('employees.show', $employee->EmployeeID)
-                         ->with('success', 'SmartCard ID is Updated Successfully.');
+                         ->with('success', $desc);
     }
 
 

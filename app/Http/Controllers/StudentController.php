@@ -10,7 +10,11 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ActionLogs;
 use Exception;
+use Throwable;
 
 class StudentController extends Controller
 {
@@ -49,8 +53,25 @@ class StudentController extends Controller
         $student->SmartCardID = $request->input('smartcardid');
         $student->save();
 
+        $status = 0;
+        $desc = 'No changes were made';
+        if ($student->wasChanged()) {
+            $status = 1;
+            $desc = 'RFID Update Successful';
+        }
+
+        ActionLogs::create([
+            'type' => 'Update',
+            'userID' => Auth::user()->id,
+            'userEmail' => Auth::user()->email,
+            'module' => 'RFID - Student',
+            'affectedItem' => $student->StudentNo,
+            'description' => $desc,
+            'status' => $status,
+        ]);
+
         return redirect()->route('students.show', $student->StudentNo)
-                         ->with('success', 'SmartCard ID updated successfully.');
+                         ->with('success', $desc);
     }
 
 
