@@ -67,6 +67,7 @@ class ScheduleRescheduleController extends Controller
                     'sa.testRoomID',
                     'sa.termID',
                     'reg.AppNo',
+                    'reg.Choice1_CampusID as campusID',
                     'reg.LastName',
                     'reg.FirstName',
                     'reg.MiddleName',
@@ -126,6 +127,7 @@ class ScheduleRescheduleController extends Controller
             $applicantSched->testDateID = $request->input('Date');
             $applicantSched->testTimeID = $request->input('Time');
             $applicantSched->testRoomID = $request->input('Room');
+            $applicantSched->testSessionID = $request->input('Session');
             $applicantSched->dateModified = now();
             $applicantSched->save();
 
