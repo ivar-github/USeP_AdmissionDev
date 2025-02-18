@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->integer('type')->default(0);
             $table->integer('status')->default(0);
-            $table->integer('default_pw')->default(1);
+            $table->integer('force_pass')->default(1);
+            $table->string('restrictions')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
