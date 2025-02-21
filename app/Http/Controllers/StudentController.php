@@ -48,8 +48,6 @@ class StudentController extends Controller
             ],
         ]);
 
-        // $student->setConnection('sqlsrv2');
-
         $student->SmartCardID = $request->input('smartcardid');
         $student->save();
 
@@ -65,7 +63,8 @@ class StudentController extends Controller
             'userID' => Auth::user()->id,
             'userEmail' => Auth::user()->email,
             'module' => 'RFID - Student',
-            'affectedItem' => $student->StudentNo,
+            'affectedID' => $student->StudentNo,
+            'affectedItem' => $student->LastName.', '.$student->LastName,
             'description' => $desc,
             'status' => $status,
         ]);

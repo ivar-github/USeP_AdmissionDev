@@ -217,7 +217,7 @@ class UserController extends Controller
             ]);
 
             $user->password = Hash::make($request->password);
-            $user->default_pw = 1;
+            $user->force_pass = 1;
             $user->save();
 
 

@@ -85,7 +85,8 @@ class EmployeeController extends Controller
             'userID' => Auth::user()->id,
             'userEmail' => Auth::user()->email,
             'module' => 'RFID - Employee',
-            'affectedItem' => $employee->EmployeeID,
+            'affectedID' => $employee->EmployeeID,
+            'affectedItem' => $employee->LastName.', '.$employee->FirstName,
             'description' => $desc,
             'status' => $status,
         ]);

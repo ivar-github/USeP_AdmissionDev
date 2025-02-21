@@ -1,4 +1,34 @@
-function swalGenericAdd(message){
+// function swalGenericAdd(message){
+//   Swal.fire({
+//     title: message,
+//     icon: 'success',
+//     showCancelButton: false,
+//     confirmButtonColor: '#3085d6',
+//     cancelButtonColor: '#d33',
+//   }).then((result) => {
+//     if (result.isConfirmed) {
+//       location.reload();
+//     }
+//   });
+// }
+
+function swalGenericAdd(message) {
+  Swal.fire({
+    title: message,
+    icon: 'success',
+    showCancelButton: false,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    background: document.documentElement.classList.contains('dark') ? '#1e1e1e' : '#ffffff',
+    color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#000000',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      location.reload();
+    }
+  });
+}
+
+function swalGenericSinglePageAdd(message){
   Swal.fire({
     title: message,
     icon: 'success',
@@ -7,12 +37,29 @@ function swalGenericAdd(message){
     cancelButtonColor: '#d33',
   }).then((result) => {
     if (result.isConfirmed) {
-      location.reload();
+      // location.reload();
     }
   });
 }
 
 function swalGenericUpdate(message){
+
+  Swal.fire({
+    title: message,
+    icon: 'success',
+    showCancelButton: false,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    background: document.documentElement.classList.contains('dark') ? '#1e1e1e' : '#ffffff',
+    color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#000000',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      location.reload();
+    }
+  });
+}
+
+function swalGenericSinglePageUpdate(message){
   Swal.fire({
     title: message,
     icon: 'success',
@@ -21,15 +68,14 @@ function swalGenericUpdate(message){
     cancelButtonColor: '#d33',
   }).then((result) => {
     if (result.isConfirmed) {
-      location.reload();
+      // location.reload();
     }
   });
 }
 
-
 function swalGenericDelete(){
     Swal.fire({
-    title: 'Deleted Successfully?',
+    title: 'Deletion Successful',
     icon: 'success',
     showCancelButton: false,
     confirmButtonColor: '#3085d6',
@@ -40,7 +86,7 @@ function swalGenericDelete(){
 
 function swalGenericExport(){
   Swal.fire({
-    title: 'Exported and Downloaded Successfully!',
+    text: 'Exported and Downloaded Successfully!',
     icon: 'success',
     showCancelButton: false,
     confirmButtonColor: '#3085d6',

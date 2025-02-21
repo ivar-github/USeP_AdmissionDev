@@ -29,15 +29,6 @@
                     </x-Nav-Link>
                 </li>
                 <li>
-                    <x-Nav-Link :href="route('registers.index')" :active="request()->routeIs('registers.index')">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor">
-                            <path d="M160-80q-33 0-56.5-23.5T80-160v-440q0-33 23.5-56.5T160-680h200v-120q0-33 23.5-56.5T440-880h80q33 0 56.5 23.5T600-800v120h200q33 0 56.5 23.5T880-600v440q0 33-23.5 56.5T800-80H160Zm0-80h640v-440H600q0 33-23.5 56.5T520-520h-80q-33 0-56.5-23.5T360-600H160v440Zm80-80h240v-18q0-17-9.5-31.5T444-312q-20-9-40.5-13.5T360-330q-23 0-43.5 4.5T276-312q-17 8-26.5 22.5T240-258v18Zm320-60h160v-60H560v60Zm-200-60q25 0 42.5-17.5T420-420q0-25-17.5-42.5T360-480q-25 0-42.5 17.5T300-420q0 25 17.5 42.5T360-360Zm200-60h160v-60H560v60ZM440-600h80v-200h-80v200Zm40 220Z"/>
-                        </svg>
-                        <span class="flex-1 ms-3 whitespace-nowrap">Registrations</span>
-                        <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">31</span>
-                    </x-Nav-Link>
-                </li>
-                <li>
                     <button type="button" class="flex items-center w-full p-2 px-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:text-white hover:bg-red-800 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-rfids" data-collapse-toggle="dropdown-rfids">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor">
                             <path d="M560-680v-80h320v80H560Zm0 160v-80h320v80H560Zm0 160v-80h320v80H560Zm-240-40q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM80-160v-76q0-21 10-40t28-30q45-27 95.5-40.5T320-360q56 0 106.5 13.5T522-306q18 11 28 30t10 40v76H80Zm86-80h308q-35-20-74-30t-80-10q-41 0-80 10t-74 30Zm154-240q17 0 28.5-11.5T360-520q0-17-11.5-28.5T320-560q-17 0-28.5 11.5T280-520q0 17 11.5 28.5T320-480Zm0-40Zm0 280Z"/>
@@ -66,6 +57,15 @@
                     </ul>
                 </li>
                 <li>
+                    <x-Nav-Link :href="route('registers.index')" :active="request()->routeIs('registers.index')">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor">
+                            <path d="M160-80q-33 0-56.5-23.5T80-160v-440q0-33 23.5-56.5T160-680h200v-120q0-33 23.5-56.5T440-880h80q33 0 56.5 23.5T600-800v120h200q33 0 56.5 23.5T880-600v440q0 33-23.5 56.5T800-80H160Zm0-80h640v-440H600q0 33-23.5 56.5T520-520h-80q-33 0-56.5-23.5T360-600H160v440Zm80-80h240v-18q0-17-9.5-31.5T444-312q-20-9-40.5-13.5T360-330q-23 0-43.5 4.5T276-312q-17 8-26.5 22.5T240-258v18Zm320-60h160v-60H560v60Zm-200-60q25 0 42.5-17.5T420-420q0-25-17.5-42.5T360-480q-25 0-42.5 17.5T300-420q0 25 17.5 42.5T360-360Zm200-60h160v-60H560v60ZM440-600h80v-200h-80v200Zm40 220Z"/>
+                        </svg>
+                        <span class="flex-1 ms-3 whitespace-nowrap">Registrations</span>
+                        <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">31</span>
+                    </x-Nav-Link>
+                </li>
+                <li>
                     <button type="button" class="flex items-center w-full p-2 px-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:text-white hover:bg-red-800 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-registrations" data-collapse-toggle="dropdown-registrations">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor">
                             <path d="M560-680v-80h320v80H560Zm0 160v-80h320v80H560Zm0 160v-80h320v80H560Zm-240-40q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM80-160v-76q0-21 10-40t28-30q45-27 95.5-40.5T320-360q56 0 106.5 13.5T522-306q18 11 28 30t10 40v76H80Zm86-80h308q-35-20-74-30t-80-10q-41 0-80 10t-74 30Zm154-240q17 0 28.5-11.5T360-520q0-17-11.5-28.5T320-560q-17 0-28.5 11.5T280-520q0 17 11.5 28.5T320-480Zm0-40Zm0 280Z"/>
@@ -89,29 +89,6 @@
                     </ul>
                 </li>
                 <li>
-                    <button type="button" class="flex items-center w-full p-2 px-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:text-white hover:bg-red-800 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-courseEvals" data-collapse-toggle="dropdown-courseEvals">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor">
-                            <path d="M560-680v-80h320v80H560Zm0 160v-80h320v80H560Zm0 160v-80h320v80H560Zm-240-40q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM80-160v-76q0-21 10-40t28-30q45-27 95.5-40.5T320-360q56 0 106.5 13.5T522-306q18 11 28 30t10 40v76H80Zm86-80h308q-35-20-74-30t-80-10q-41 0-80 10t-74 30Zm154-240q17 0 28.5-11.5T360-520q0-17-11.5-28.5T320-560q-17 0-28.5 11.5T280-520q0 17 11.5 28.5T320-480Zm0-40Zm0 280Z"/>
-                        </svg>
-                        <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Course Evaluation</span>
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                        </svg>
-                    </button>
-                    <ul id="dropdown-courseEvals" class="hidden mx-1 p-2 mt-1 space-y-2 rounded-xl bg-slate-100 dark:bg-slate-800">
-                        <li >
-                            <x-subNav-Link :href="route('courseEvals.index')" :active="request()->routeIs('courseEvals.index')">
-                                <span class="ms-8">Form</span>
-                            </x-subNav-Link>
-                        </li>
-                        <li >
-                            <x-subNav-Link :href="route('courseEvalParameters.index')" :active="request()->routeIs('courseEvalParameters.index')">
-                                <span class="ms-8">Management</span>
-                            </x-subNav-Link>
-                        </li>
-                    </ul>
-                </li>
-                <li>
                     <button type="button" class="flex items-center w-full p-2 px-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:text-white hover:bg-red-800 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-schedules" data-collapse-toggle="dropdown-schedules">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor">
                             <path d="M560-680v-80h320v80H560Zm0 160v-80h320v80H560Zm0 160v-80h320v80H560Zm-240-40q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM80-160v-76q0-21 10-40t28-30q45-27 95.5-40.5T320-360q56 0 106.5 13.5T522-306q18 11 28 30t10 40v76H80Zm86-80h308q-35-20-74-30t-80-10q-41 0-80 10t-74 30Zm154-240q17 0 28.5-11.5T360-520q0-17-11.5-28.5T320-560q-17 0-28.5 11.5T280-520q0 17 11.5 28.5T320-480Zm0-40Zm0 280Z"/>
@@ -124,12 +101,12 @@
                     <ul id="dropdown-schedules" class="hidden mx-1 p-2 mt-1 space-y-2 rounded-xl bg-slate-100 dark:bg-slate-800">
                         <li >
                             <x-subNav-Link :href="route('schedules.overall')" :active="request()->routeIs('schedules.overall')">
-                                <span class="ms-8">Overall</span>
+                                <span class="ms-8">Applicants</span>
                             </x-subNav-Link>
                         </li>
                         <li >
                             <x-subNav-Link :href="route('scheduleApplicants.index')" :active="request()->routeIs('scheduleApplicants.index')">
-                                <span class="ms-8">Applicants</span>
+                                <span class="ms-8">Reschedule</span>
                             </x-subNav-Link>
                         </li>
                     </ul>
@@ -152,7 +129,30 @@
                         </li>
                         <li >
                             <x-subNav-Link :href="route('results.data')" :active="request()->routeIs('results.data')">
-                                <span class="ms-8">Data</span>
+                                <span class="ms-8">Applicants</span>
+                            </x-subNav-Link>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <button type="button" class="flex items-center w-full p-2 px-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:text-white hover:bg-red-800 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-courseEvals" data-collapse-toggle="dropdown-courseEvals">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor">
+                            <path d="M560-680v-80h320v80H560Zm0 160v-80h320v80H560Zm0 160v-80h320v80H560Zm-240-40q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM80-160v-76q0-21 10-40t28-30q45-27 95.5-40.5T320-360q56 0 106.5 13.5T522-306q18 11 28 30t10 40v76H80Zm86-80h308q-35-20-74-30t-80-10q-41 0-80 10t-74 30Zm154-240q17 0 28.5-11.5T360-520q0-17-11.5-28.5T320-560q-17 0-28.5 11.5T280-520q0 17 11.5 28.5T320-480Zm0-40Zm0 280Z"/>
+                        </svg>
+                        <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Course Evaluation</span>
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                        </svg>
+                    </button>
+                    <ul id="dropdown-courseEvals" class="hidden mx-1 p-2 mt-1 space-y-2 rounded-xl bg-slate-100 dark:bg-slate-800">
+                        <li >
+                            <x-subNav-Link :href="route('courseEvals.index')" :active="request()->routeIs('courseEvals.index')">
+                                <span class="ms-8">Form</span>
+                            </x-subNav-Link>
+                        </li>
+                        <li >
+                            <x-subNav-Link :href="route('courseEvalParameters.index')" :active="request()->routeIs('courseEvalParameters.index')">
+                                <span class="ms-8">Management</span>
                             </x-subNav-Link>
                         </li>
                     </ul>
