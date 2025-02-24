@@ -12,7 +12,7 @@ use App\Models\ScheduleView;
 use App\Models\ScheduleViewSlot;
 use Illuminate\Support\Facades\DB;
 
-use App\Exports\ScheduleOverallExport;
+use App\Exports\ExportApplicantsSchedule;
 use Maatwebsite\Excel\Facades\Excel;
 
 use Illuminate\Support\Facades\Auth;
@@ -55,7 +55,7 @@ class ScheduleController extends Controller
     }
 
 
-    public function overall()
+    public function scheduleApplicants()
     {
 
         try {
@@ -68,7 +68,7 @@ class ScheduleController extends Controller
             $centers = ScheduleCenter::select('id', 'campusID', 'testCenterName')
                 ->orderBy('campusID', 'asc')->get();
 
-            return view('Schedules.Overall', compact('terms', 'centers' ));
+            return view('Schedules.Applicants', compact('terms', 'centers' ));
 
         } catch (Throwable $e) {
             return response()->json([
@@ -153,7 +153,7 @@ class ScheduleController extends Controller
     }
 
 
-    public function exportOverallScheds(Request $request)
+    public function exportApplicantsScheds(Request $request)
     {
         try {
 
@@ -175,7 +175,7 @@ class ScheduleController extends Controller
             ]);
 
 
-            return Excel::download(new ScheduleOverallExport($columns, $filters), 'OverallScheds-data.xlsx');
+            return Excel::download(new ExportApplicantsSchedule($columns, $filters), 'applicantsSchedules-data.xlsx');
 
         } catch (Throwable $e) {
             return response()->json([

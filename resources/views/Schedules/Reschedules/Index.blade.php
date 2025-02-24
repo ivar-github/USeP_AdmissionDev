@@ -1,6 +1,6 @@
 <x-Main-layout>
     <x-Breadcrumbs>
-        <a  href="{{route('scheduleApplicants.index')}}" class="ms-1 text-lg font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">SCHEDULES</a>
+        <a  href="{{route('scheduleReschedules.index')}}" class="ms-1 text-lg font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">SCHEDULES - Rescheduling</a>
     </x-Breadcrumbs>
     <div class="mx-auto h-full">
         <div class="overflow-hidden py-5 lg:py-10">
@@ -12,7 +12,7 @@
                         <div class="px-2 md-px-2 mx-auto max-w-xl py-3 rounded-xl shadow-1xl">
                             <h1 class="text-slate-700 dark:text-white mx-auto my-2 lg:my-5 text-2xl lg:text-3xl font-extrabold tracking-tight ">Search Examinee</h1>
                             <hr class="mb-3">
-                            <form method="POST" action="{{ route('scheduleApplicants.search')}}">
+                            <form method="POST" action="{{ route('scheduleReschedules.search')}}">
                                 @csrf
                                 <div class="dark:text-gray-200   mb-2">
                                     <label for="termID" class="block text-md text-gray-700  dark:text-gray-300">Term </label>

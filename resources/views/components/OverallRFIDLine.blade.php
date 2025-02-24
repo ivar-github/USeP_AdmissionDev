@@ -88,7 +88,7 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            axios.get('{{ route('api.dashboard.data') }}')
+            axios.get('{{ route('api.rfids.data') }}')
                 .then(response => {
                     const data = response.data;
                     renderChartOverallRFIDLine(data);

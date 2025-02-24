@@ -20,4 +20,10 @@ class Employee extends Model
     protected $fillable = [
         'SmartCardID'
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'EmployeeID';
+    }
+
 }

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 use Illuminate\Validation\Rule;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ActionLogs;
@@ -31,31 +32,46 @@ class EmployeeController extends Controller
     }
 
 
-    public function show(Employee $employee)
+    public function show(Employee $employeesRFID)
     {
-        return view('RFIDs.Employee.Show', compact('employee'));
+        return view('RFIDs.Employee.Show', compact('employeesRFID'));
     }
 
 
-    public function edit(Employee $employee)
+    public function edit(string $id): JsonResponse
     {
-        return view('RFIDs.Employee.Edit', compact('employee'));
+        try {
+            
+            $employee = Employee::select(
+                    'EmployeeID',
+                    'Prefix',
+                    'LastName',
+                    'FirstName',
+                    'MiddleName',
+                    'Email',
+                    'Photo',
+                    'SmartCardID'
+                )
+                ->where('EmployeeID', (string) $id)
+                ->first(); 
+
+            if (!$employee) {
+                return response()->json([
+                    'error' => 'Employee not found'
+                ], 404);
+            }
+
+            $employee->Photo = $employee->Photo ? base64_encode($employee->Photo) : null;
+            return response()->json($employee);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
-
-    // public function update(Request $request, Employee $employee)
-    // {
-    //     $request->validate([
-    //         'smartcardid' => 'required|unique:HR_Employees,SmartCardID,' . $employee->EmployeeID . ',EmployeeID',
-    //     ]);
-
-    //     $employee->update([
-    //         'SmartCardID' => $request->smartcardid,
-    //     ]);
-
-    //     return redirect()->route('employees.show', $employee->EmployeeID)
-    //                      ->with('success', 'SmartCard ID is Updated Successfully.');
-    // }
 
     public function update(Request $request, $employeeID)
     {
@@ -91,7 +107,7 @@ class EmployeeController extends Controller
             'status' => $status,
         ]);
 
-        return redirect()->route('employees.show', $employee->EmployeeID)
+        return redirect()->route('employeesRFIDs.show', $employee->EmployeeID)
                          ->with('success', $desc);
     }
 

@@ -40,17 +40,17 @@
                     </button>
                     <ul id="dropdown-rfids" class="hidden mx-1 p-2 mt-1 space-y-2 rounded-xl bg-slate-100 dark:bg-slate-800">
                         <li >
-                            <x-subNav-Link :href="route('rfids')" :active="request()->routeIs('rfids')">
+                            <x-subNav-Link :href="route('rfid.dashboard')" :active="request()->routeIs('rfid.dashboard')">
                                 <span class="ms-8">Dashboard</span>
                             </x-subNav-Link>
                         </li>
                         <li >
-                            <x-subNav-Link :href="route('students.index')" :active="request()->routeIs('students.index')">
+                            <x-subNav-Link :href="route('studentsRFIDs.index')" :active="request()->routeIs('studentsRFIDs.index')">
                                 <span class="ms-8">Students</span>
                             </x-subNav-Link>
                         </li>
                         <li >
-                            <x-subNav-Link :href="route('employees.index')" :active="request()->routeIs('employees.index')">
+                            <x-subNav-Link :href="route('employeesRFIDs.index')" :active="request()->routeIs('employeesRFIDs.index')">
                                 <span class="ms-8">Employees</span>
                             </x-subNav-Link>
                         </li>
@@ -100,12 +100,12 @@
                     </button>
                     <ul id="dropdown-schedules" class="hidden mx-1 p-2 mt-1 space-y-2 rounded-xl bg-slate-100 dark:bg-slate-800">
                         <li >
-                            <x-subNav-Link :href="route('schedules.overall')" :active="request()->routeIs('schedules.overall')">
+                            <x-subNav-Link :href="route('schedules.applicants')" :active="request()->routeIs('schedules.applicants')">
                                 <span class="ms-8">Applicants</span>
                             </x-subNav-Link>
                         </li>
                         <li >
-                            <x-subNav-Link :href="route('scheduleApplicants.index')" :active="request()->routeIs('scheduleApplicants.index')">
+                            <x-subNav-Link :href="route('scheduleReschedules.index')" :active="request()->routeIs('scheduleReschedules.index')">
                                 <span class="ms-8">Reschedule</span>
                             </x-subNav-Link>
                         </li>
@@ -128,7 +128,7 @@
                             </x-subNav-Link>
                         </li>
                         <li >
-                            <x-subNav-Link :href="route('results.data')" :active="request()->routeIs('results.data')">
+                            <x-subNav-Link :href="route('results.applicants')" :active="request()->routeIs('results.applicants')">
                                 <span class="ms-8">Applicants</span>
                             </x-subNav-Link>
                         </li>

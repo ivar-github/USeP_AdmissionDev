@@ -5,7 +5,7 @@
     use Maatwebsite\Excel\Concerns\FromQuery;
     use Maatwebsite\Excel\Concerns\WithHeadings;
 
-    class ResultsExport implements FromQuery, WithHeadings
+    class ExportApplicantsResult implements FromQuery, WithHeadings
     {
         protected $columns;
         protected $filters;

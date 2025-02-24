@@ -101,8 +101,6 @@
 
     @push('scripts')
 
-        {{-- DATATABLES --}}
-        {{-- <script src="{{ asset('JS/Tables/Datatables.js') }}"></script> --}}
         {{-- SWEETALERTS --}}
         <script src="{{ asset('JS/SweetAlerts/SwalUnique.js') }}"></script>
         <script src="{{ asset('JS/SweetAlerts/SwalGeneric.js') }}"></script>

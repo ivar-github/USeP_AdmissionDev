@@ -93,8 +93,6 @@ class ScheduleRescheduleController extends Controller
                 ->leftJoin('ES_Admission as reg', 'reg.AppNO', '=', 'sa.appNo')
                 ->leftJoin('vw_CUSTOM_AdmissionApplicantTestSchedules as sa_view', 'sa_view.AppNO', '=', 'sa.appNo')
                 ->where('sa.id', $id)
-                ->limit(1)
-                ->orderBy('sa.appNo', 'desc')
                 ->first(); 
 
             if (!$applicant) {
@@ -354,10 +352,10 @@ class ScheduleRescheduleController extends Controller
                 'status' => 1,
             ]);
 
-            return redirect()->route('scheduleApplicants.index')->with('success', 'Deletion Successful');
+            return redirect()->route('scheduleReschedules.index')->with('success', 'Deletion Successful');
 
         } catch (Throwable $e) {
-            return redirect()->route('scheduleApplicants.search')
+            return redirect()->route('scheduleReschedules.search')
             ->with('error', 'An unexpected error occurred: ' . $e->getMessage());
         }
     }

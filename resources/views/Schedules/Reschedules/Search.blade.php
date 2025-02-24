@@ -1,6 +1,6 @@
 <x-Main-layout>
     <x-Breadcrumbs>
-        <a  href="{{route('scheduleApplicants.index')}}" class="ms-1 text-lg font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">SCHEDULES</a>
+        <a  href="{{route('scheduleReschedules.index')}}" class="ms-1 text-lg font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">SCHEDULES - Rescheduling</a>
     </x-Breadcrumbs>
     <div class="mx-auto h-full">
         <div class="overflow-hidden py-5 lg:py-10">
@@ -12,7 +12,7 @@
                         <div class="px-2 md-px-2 mx-auto max-w-xl py-3 rounded-xl shadow-1xl">
                             <h1 class="text-slate-700 dark:text-white mx-auto my-2 lg:my-5 text-2xl lg:text-3xl font-extrabold tracking-tight ">Search Examinee</h1>
                             <hr class="mb-3">
-                            <form method="POST" action="{{ route('scheduleApplicants.search')}}">
+                            <form method="POST" action="{{ route('scheduleReschedules.search')}}">
                                 @csrf
                                 <div class="dark:text-gray-200   mb-2">
                                     <label for="termID" class="block text-md text-gray-700  dark:text-gray-300">Term </label>
@@ -204,7 +204,7 @@
                     const formData = new FormData(this);
                     const applicantID = document.getElementById('applicantID').value;
 
-                    axios.post(`/scheduleApplicants/${applicantID}`, formData)
+                    axios.post(`/admission/schedule/scheduleReschedules/${applicantID}`, formData)
                     .then(response => {
                             // this.reset();
                             document.getElementById('e_errorMessage').innerHTML = '';
@@ -241,7 +241,7 @@
 
             // FUNCTION TO GET AVAILABLE SCHEDULES
             function getAvailableScheds() {
-                axios.get('/api/scheduleApplicant/getAvailableScheds', {
+                axios.get('/api/admission/schedule/reschedule/getAvailableScheds', {
                         params: {
                             centerID: document.getElementById('centerID').value,
                         },
@@ -276,7 +276,7 @@
 
             // FUNCTION TO SELECT SCHED DETAILS
             function selectSchedDetails() {
-                axios.get('/api/scheduleApplicant/selectSchedDetails', {
+                axios.get('/api/admission/schedule/reschedule/selectSchedDetails', {
                         params: {
                             e_slotID: document.getElementById('e_slots').value,
                         },
@@ -302,7 +302,7 @@
 
             // FUNCTION TO SHOW SCHEDULE TO EDIT
             function openEditModal(appID) {
-                axios.get(`/scheduleApplicants/${appID}/edit`)
+                axios.get(`/admission/schedule/scheduleReschedules/${appID}/edit`)
                     .then(response => {
                         const applicant = response.data;
                         document.getElementById('applicantID').value = applicant.id;
@@ -340,11 +340,13 @@
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#3085d6',
                     confirmButtonText: "Yes, Delete It",
-                    cancelButtonText: 'No, Cancel'
+                    cancelButtonText: 'No, Cancel',
+                    background: document.documentElement.classList.contains('dark') ? '#1F2937' : '#ffffff',
+                    color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#000000',
                 }).then((result) => {
                     if (result.isConfirmed) {
                         let form = document.createElement('form');
-                        form.action = `{{ route('scheduleApplicants.destroy', '') }}/${id}`;
+                        form.action = `{{ route('scheduleReschedules.destroy', '') }}/${id}`;
                         form.method = 'POST';
                         form.innerHTML = `
                             @csrf

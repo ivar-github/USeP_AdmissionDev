@@ -8,7 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\ScheduleController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RFIDController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\ModalController;
 use App\Http\Controllers\QuestionController;
@@ -38,29 +38,35 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    Route::get('/rfids', function () {
+    Route::get('/rfid/dashboard', function () {
         return view('RFIDs.Dashboard');
-    })->name('rfids');
-    Route::resource('students', StudentController::class);
-    Route::resource('employees', EmployeeController::class);
-    Route::post('employee/search', [EmployeeController::class, 'search'])->name('employees.search');
-    Route::get('employee/table', [EmployeeController::class, 'table'])->name('employees.table');
-    Route::get('student/table', [StudentController::class, 'table'])->name('students.table');
-    Route::post('student/search', [StudentController::class, 'search'])->name('students.search');
+    })->name('rfid.dashboard');
+
+    Route::resource('rfid/studentsRFIDs', StudentController::class);
+    // Route::resource('rfid/employeesRFIDs', EmployeeController::class);
+    Route::resource('rfid/employeesRFIDs', EmployeeController::class)->where(['employeesRFIDs' => '.*']);
+    // Route::resource('rfid/employeesRFIDs', EmployeeController::class)->where(['employeesRFIDs' => '[a-zA-Z0-9_]+']);
+
+    Route::post('rfid/employee/search', [EmployeeController::class, 'search'])->name('employeesRFIDs.search');
+    Route::get('rfid/employee/table', [EmployeeController::class, 'table'])->name('employeesRFIDs.table');
+    Route::get('rfid/student/table', [StudentController::class, 'table'])->name('students.table');
+    Route::post('rfid/student/search', [StudentController::class, 'search'])->name('students.search');
 
     Route::resource('users', UserController::class);
     Route::patch('user/resetPassword', [UserController::class, 'resetPassword'])->name('users.resetPassword');
+
     // Route::resource('questions', QuestionController::class);
     // Route::resource('datas', DataController::class);
     Route::resource('registers', RegistrationController ::class);
 
-    Route::resource('results', ResultController ::class);
-    Route::get('result/data', [ResultController::class, 'data'])->name('results.data');
+    // Route::resource('admission/results', ResultController ::class);
+    Route::get('admission/result/dashboard', [ResultController::class, 'index'])->name('results.index');
+    Route::get('admission/result/applicants', [ResultController::class, 'applicants'])->name('results.applicants');
 
-    Route::resource('schedules', ResultController ::class);
-    Route::get('schedule/overall', [ScheduleController::class, 'overall'])->name('schedules.overall');
-    Route::resource('scheduleApplicants', ScheduleRescheduleController ::class);
-    Route::post('scheduleApplicant/search', [ScheduleRescheduleController::class, 'search'])->name('scheduleApplicants.search');
+    // Route::resource('schedules', ResultController ::class);
+    Route::get('admission/schedule/scheduleApplicants', [ScheduleController::class, 'scheduleApplicants'])->name('schedules.applicants');
+    Route::resource('admission/schedule/scheduleReschedules', ScheduleRescheduleController ::class);
+    Route::post('admission/schedule/reschedules/search', [ScheduleRescheduleController::class, 'search'])->name('scheduleReschedules.search');
 
     Route::resource('courseEvals', CourseEvalController::class);
     Route::resource('courseEvalParameters', CourseEvalParameterController::class);
@@ -70,37 +76,34 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
 
 
     //API
-    Route::get('/api/data', [DataController::class, 'fetchData']);
+    // Route::get('/api/data', [DataController::class, 'fetchData']);
     Route::get('/api/registrationsData', [RegistrationController::class, 'fetchData']);
 
-    Route::get('/api/dashboard-data', [DashboardController::class, 'getData'])->name('api.dashboard.data');
-    Route::get('/api/dashboard-genderStudent', [DashboardController::class, 'getStudentGender'])->name('api.dashboard.genderStudent');
-    Route::get('/api/dashboard-genderEmployee', [DashboardController::class, 'getEmployeeGender'])->name('api.dashboard.genderEmployee');
+    Route::get('/api/rfid/data', [RFIDController::class, 'getData'])->name('api.rfids.data');
+    Route::get('/api/rfid/genderStudent', [RFIDController::class, 'getStudentGender'])->name('api.rfids.genderStudent');
+    Route::get('/api/rfid/genderEmployee', [RFIDController::class, 'getEmployeeGender'])->name('api.rfids.genderEmployee');
 
-    Route::get('/api/resultsData', [ResultController::class, 'getData'])->name('api.results.data');
-    Route::get('/api/resultsData/getPrograms', [ResultController::class, 'getPrograms']);
-    Route::get('/api/resultsData/getMajors', [ResultController::class, 'getMajors']);
+    Route::get('/api/admission/result/applicants', [ResultController::class, 'getData'])->name('api.results.data');
+    Route::get('/api/admission/result/getPrograms', [ResultController::class, 'getPrograms']);
+    Route::get('/api/admission/result/getMajors', [ResultController::class, 'getMajors']);
 
-    Route::get('/api/schedulesData', [ScheduleController::class, 'getData'])->name('api.schedules.data');
-    Route::get('/api/schedulesData/getDates', [ScheduleController::class, 'getDates']);
-    Route::get('/api/schedulesData/getTimes', [ScheduleController::class, 'getTimes']);
+    Route::get('/api/admission/schedule/applicants', [ScheduleController::class, 'getData'])->name('api.schedulesApplicants.data');
+    Route::get('/api/admission/schedule/applicants/getDates', [ScheduleController::class, 'getDates']);
+    Route::get('/api/admission/schedule/applicants/getTimes', [ScheduleController::class, 'getTimes']);
 
-    Route::get('/api/scheduleApplicant/getAvailableScheds', [ScheduleRescheduleController::class, 'getAvailableScheds']);
-    Route::get('/api/scheduleApplicant/selectSchedDetails', [ScheduleRescheduleController::class, 'selectSchedDetails']);
+    Route::get('/api/admission/schedule/reschedule/getAvailableScheds', [ScheduleRescheduleController::class, 'getAvailableScheds']);
+    Route::get('/api/admission/schedule/reschedule/selectSchedDetails', [ScheduleRescheduleController::class, 'selectSchedDetails']);
 
-    // Route::get('/api/resultsData', [CourseEvalParameterController::class, 'getData'])->name('api.results.data');
-    // Route::get('/api/parameterData/getDataByStatus', [CourseEvalParameterController::class, 'getDataByStatus']);
-    // Route::get('/api/resultsData/getMajors', [CourseEvalParameterController::class, 'getMajors']);
 
     //EXPORT
-    Route::get('/export-users', [UserController::class, 'exportUsers'])->name('export.users');
-    Route::post('/results/export', [ResultController::class, 'exportResults'])->name('results.export');
-    Route::post('/schedules/exportOverallScheds', [ScheduleController::class, 'exportOverallScheds'])->name('overallSchedules.export');
+    // Route::get('/export-users', [UserController::class, 'exportUsers'])->name('export.users');
+    Route::post('/admission/results/exportApplicantsResults', [ResultController::class, 'exportApplicantsResults'])->name('export.applicantsResults');
+    Route::post('/admission/schedule/exportApplicantsScheds', [ScheduleController::class, 'exportApplicantsScheds'])->name('export.applicantsSchedules');
 
 
     // MODAL
-    Route::get('modal/index', [ModalController::class, 'index'])->name('modal.index');
-    Route::get('modal/create', [ModalController::class, 'create'])->name('modal.create');
+    // Route::get('modal/index', [ModalController::class, 'index'])->name('modal.index');
+    // Route::get('modal/create', [ModalController::class, 'create'])->name('modal.create');
 
 
     //PDF

@@ -224,7 +224,9 @@
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#3085d6',
                     confirmButtonText: "Yes, Delete It",
-                    cancelButtonText: 'No, Cancel'
+                    cancelButtonText: 'No, Cancel',
+                    background: document.documentElement.classList.contains('dark') ? '#1F2937' : '#ffffff',
+                    color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#000000',
                 }).then((result) => {
                     if (result.isConfirmed) {
                         let form = document.createElement('form');

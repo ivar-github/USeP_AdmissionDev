@@ -101,7 +101,7 @@
 
     <script>
        document.addEventListener('DOMContentLoaded', function () {
-            axios.get('{{ route('api.dashboard.genderStudent') }}')
+            axios.get('{{ route('api.rfids.genderStudent') }}')
                 .then(response => {
                     const gender = response.data;
                     renderStudentPie(gender);

@@ -9,7 +9,7 @@ use App\Models\Program;
 use App\Models\Major;
 use Illuminate\Support\Facades\DB;
 
-use App\Exports\ResultsExport;
+use App\Exports\ExportApplicantsResult;
 use Maatwebsite\Excel\Facades\Excel;
 
 use Illuminate\Support\Facades\Auth;
@@ -25,32 +25,10 @@ class ResultController extends Controller
      */
     public function index()
     {
-
-        try {
-
-            $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
-                ->limit(100)
-                ->orderBy('TermID', 'desc')->get();
-
-            $campuses = collect([
-                    (object) ['id' => 1, 'name' => 'Obrero'],
-                    (object) ['id' => 6, 'name' => 'Mintal'],
-                    (object) ['id' => 7, 'name' => 'Tagum'],
-                    (object) ['id' => 8, 'name' => 'Mabini'],
-                    (object) ['id' => 10, 'name' => 'Malabog'],
-                ]);
-
-            return view('Results.Dashboard', compact('terms', 'campuses'));
-
-        } catch (Throwable $e) {
-            return response()->json([
-                'error' => 'An unexpected error occurred',
-                'message' => $e->getMessage(),
-            ], 500);
-        }
+         return view('Results.Dashboard');
     }
 
-    public function data()
+    public function applicants()
     {
 
         try {
@@ -67,7 +45,7 @@ class ResultController extends Controller
                     (object) ['id' => 10, 'name' => 'Malabog'],
                 ]);
 
-            return view('Results.Table', compact('terms', 'campuses'));
+            return view('Results.Applicants', compact('terms', 'campuses'));
 
         } catch (Throwable $e) {
             return response()->json([
@@ -223,7 +201,7 @@ class ResultController extends Controller
         }
     }
 
-    public function exportResults(Request $request)
+    public function exportApplicantsResults(Request $request)
     {
         try {
 
@@ -247,7 +225,7 @@ class ResultController extends Controller
                 'status' => 1,
             ]);
 
-            return Excel::download(new ResultsExport($columns, $filters), 'results-data.xlsx');
+            return Excel::download(new ExportApplicantsResult($columns, $filters), 'applicantsResults-data.xlsx');
 
         } catch (Throwable $e) {
             return response()->json([
@@ -272,31 +250,7 @@ class ResultController extends Controller
 
     public function show(string $id)
     {
-
-        try {
-
-            $results = Result::select(
-                'terms.TermID',
-                'terms.AcademicYear',
-                'terms.SchoolTerm',
-                DB::raw("SUM(CASE WHEN results.Status = 'Qualified' THEN 1 ELSE 0 END) as AppQualified"),
-                DB::raw("SUM(CASE WHEN results.Status = 'WaivedSlot' THEN 1 ELSE 0 END) as AppWaivedSlot"),
-                DB::raw("SUM(CASE WHEN results.IsEnlisted = '1' THEN 1 ELSE 0 END) as AppConfirmed"),
-                DB::raw("SUM(CASE WHEN results.AppNo != '' THEN 1 ELSE 0 END) as AppTotal")
-            )
-            ->join('ay_term as terms', 'results.TermID', '=', 'terms.TermID') 
-            ->groupBy('terms.TermID', 'terms.AcademicYear', 'terms.SchoolTerm')
-            ->orderBy('terms.TermID', 'desc')
-            ->take(10)
-            ->get();
-
-        } catch (Throwable $e) {
-            return response()->json([
-                'error' => 'An unexpected error occurred',
-                'message' => $e->getMessage(),
-            ], 500);
-        }
-
+        //      
     }
 
     

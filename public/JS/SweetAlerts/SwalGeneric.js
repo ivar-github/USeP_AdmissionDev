@@ -1,16 +1,3 @@
-// function swalGenericAdd(message){
-//   Swal.fire({
-//     title: message,
-//     icon: 'success',
-//     showCancelButton: false,
-//     confirmButtonColor: '#3085d6',
-//     cancelButtonColor: '#d33',
-//   }).then((result) => {
-//     if (result.isConfirmed) {
-//       location.reload();
-//     }
-//   });
-// }
 
 function swalGenericAdd(message) {
   Swal.fire({
@@ -19,7 +6,7 @@ function swalGenericAdd(message) {
     showCancelButton: false,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
-    background: document.documentElement.classList.contains('dark') ? '#1e1e1e' : '#ffffff',
+    background: document.documentElement.classList.contains('dark') ? '#1F2937' : '#ffffff',
     color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#000000',
   }).then((result) => {
     if (result.isConfirmed) {
@@ -35,6 +22,8 @@ function swalGenericSinglePageAdd(message){
     showCancelButton: false,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
+    background: document.documentElement.classList.contains('dark') ? '#1F2937' : '#ffffff',
+    color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#000000',
   }).then((result) => {
     if (result.isConfirmed) {
       // location.reload();
@@ -50,7 +39,7 @@ function swalGenericUpdate(message){
     showCancelButton: false,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
-    background: document.documentElement.classList.contains('dark') ? '#1e1e1e' : '#ffffff',
+    background: document.documentElement.classList.contains('dark') ? '#1F2937' : '#ffffff',
     color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#000000',
   }).then((result) => {
     if (result.isConfirmed) {
@@ -66,6 +55,8 @@ function swalGenericSinglePageUpdate(message){
     showCancelButton: false,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
+    background: document.documentElement.classList.contains('dark') ? '#1F2937' : '#ffffff',
+    color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#000000',
   }).then((result) => {
     if (result.isConfirmed) {
       // location.reload();
@@ -79,8 +70,14 @@ function swalGenericDelete(){
     icon: 'success',
     showCancelButton: false,
     confirmButtonColor: '#3085d6',
-    confirmButtonText: 'Ok'
-  })
+    confirmButtonText: 'Ok',
+    background: document.documentElement.classList.contains('dark') ? '#1F2937' : '#ffffff',
+    color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#000000',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // location.reload();
+    }
+  });
 }
 
 
@@ -90,6 +87,8 @@ function swalGenericExport(){
     icon: 'success',
     showCancelButton: false,
     confirmButtonColor: '#3085d6',
+    background: document.documentElement.classList.contains('dark') ? '#1F2937' : '#ffffff',
+    color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#000000',
   })
 }
 
@@ -101,6 +100,8 @@ function swalGenericError(message,msg){
     icon: 'error',
     showCancelButton: false,
     confirmButtonColor: '#d33',
+    background: document.documentElement.classList.contains('dark') ? '#1F2937' : '#ffffff',
+    color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#000000',
   })
 }
 

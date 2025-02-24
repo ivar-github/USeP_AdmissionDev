@@ -1,6 +1,6 @@
 <x-Main-layout>
     <x-Breadcrumbs>
-        <a  href="{{route('students.index')}}" class="text-lg font-medium text-gray-700  hover:text-red-900 dark:text-gray-400 dark:hover:text-white">STUDENT</a>
+        <a  href="{{route('studentsRFIDs.index')}}" class="text-lg font-medium text-gray-700  hover:text-red-900 dark:text-gray-400 dark:hover:text-white">STUDENT</a>
     </x-Breadcrumbs>
     <div class="mx-auto h-full">
         <div class="py-10 px-2">

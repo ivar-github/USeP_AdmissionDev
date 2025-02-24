@@ -1,19 +1,25 @@
 <x-Main-layout>
+    @if (session('success'))
+        <x-Alert-success>
+            {{ session('success') }}
+        </x-Alert-success>
+    @endif
+
     <x-Breadcrumbs>
-        <a  href="{{route('results.index')}}" class="text-lg font-medium text-gray-700  hover:text-red-900 dark:text-gray-400 dark:hover:text-white">RESULTS - Data</a>
+        <a  href="{{route('results.index')}}" class="text-lg font-medium text-gray-700  hover:text-red-900 dark:text-gray-400 dark:hover:text-white">SCHEDULES - Applicants</a>
     </x-Breadcrumbs>
     <div class="mx-auto h-full">
-        <div class="overflow-hidden py-5 lg:py-10">
+        <div class="overflow-hidden py-5 lg:py-10 mb-10 ">
             <div id="displayCards" class="flex gap-5 lg:gap-10">
-                <x-Cards.ResultCards />
+                {{-- <x-Cards.ResultCards /> --}}
             </div>
 
             <label class="block text-md text-gray-700  dark:text-gray-300">FILTER: </label>
             <hr class="my-2 mx-2">
-            <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1">
+            <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 mb-10">
                 <div class="dark:text-gray-200 mx-2 mb-2">
                     <label for="termID" class="block text-md text-gray-700  dark:text-gray-300">Term </label>
-                    <select id="termID" name="termID" onchange="getDataByTerm()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
+                    <select id="termID" name="termID" onchange="getDataByTerm()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"> 
                         @foreach ($terms as $term)
                             <option value="{{ $term->TermID }}">({{ $term->TermID }}) &nbsp; {{ $term->AcademicYear }} &nbsp;&nbsp;{{ $term->SchoolTerm }}</option>
                         @endforeach
@@ -21,49 +27,31 @@
                 </div>
                 <div class="dark:text-gray-200 mx-2 mb-2">
                     <div class="rounded-lg">
-                        <label for="campus" class="block text-md text-gray-700  dark:text-gray-300">Campus</label>
-                        <select id="campus" name="campus" onchange="getProgramByCampus()" onclick="getDataRows()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
+                        <label for="centerID" class="block text-md text-gray-700  dark:text-gray-300">Center</label>
+                        <select id="centerID" name="centerID" onchange="getDateByCenter()" onclick="getDataRows()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"> 
                             <option value="0">All </option>
-                            @foreach ($campuses as $campus)
-                                <option value="{{ $campus->id }}">{{ $campus->name }}</option>
+                            @foreach ($centers as $center)
+                                <option value="{{ $center->id }}">{{ $center->testCenterName }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
                 <div class="dark:text-gray-200 mx-2 mb-2"> 
                     <div class="rounded-lg">
-                        <label for="program" class="block text-md text-gray-700  dark:text-gray-300">Program</label>
-                        <select id="program" name="program" onchange="getMajorByProgram()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
+                        <label for="dateFromID" class="block text-md text-gray-700  dark:text-gray-300">Date From</label>
+                        <select id="dateFromID" name="dateFromID" onchange="getDataByDate()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option value="0">All </option>
                         </select>
                     </div>
                 </div>
-                <div class="dark:text-gray-200 mx-2 mb-2">
+                <div class="dark:text-gray-200 mx-2 mb-2"> 
                     <div class="rounded-lg">
-                        <label for="major" class="block text-md text-gray-700  dark:text-gray-300">Major</label>
-                        <select id="major" name="major" onchange="getDataByMajor()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
+                        <label for="dateToID" class="block text-md text-gray-700  dark:text-gray-300">Date From</label>
+                        <select id="dateToID" name="dateToID" onchange="getDataByDate()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option value="0">All </option>
                         </select>
                     </div>
                 </div>
-            </div>
-            
-            <div class="mb-10 mt-3 mx-2">
-                <form id="filterForm ">
-                    <label class="text-gray-700  dark:text-gray-300 mx-1">
-                        <input type="radio" name="status" id="filterAll" value="all" onclick="filterByStatus(this.value)" > All
-                    </label>
-                    <label class="text-gray-700  dark:text-gray-300 mx-1" >
-                        <input type="radio" name="status" id="filterQualified" value="Qualified" onclick="filterByStatus(this.value)"> Qualified
-                    </label>
-                    <label class="text-gray-700  dark:text-gray-300 mx-1">
-                        <input type="radio" name="status" id="filterWaivedSlot" value="WaivedSlot" onclick="filterByStatus(this.value)"> WaivedSlot
-                    </label>
-                    <label class="text-gray-700  dark:text-gray-300 mx-1">
-                        <input type="radio" name="status" id="filterConfirmed" value="1" onclick="filterByStatus(this.value)"> Confirmed
-                    </label>
-                </form>
-                <hr class="my-3">
             </div>
            
 
@@ -96,7 +84,7 @@
                             <div id="filterDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
                                 <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Columns</h6>
                                 <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
-                                    @foreach(['AppNo', 'Status', 'CampusID', 'QualifiedCourse', 'QualifiedMajor', 'IsEnlisted', 'EnlistmentDate', 'IsPreviouslyWaitlisted', 'FinalRating'] as $column)
+                                    @foreach(['appNo', 'termID', 'appDate', 'testCenterName', 'testDate', 'testTimeStartString', 'testTimeEndString', 'testRoomName'] as $column)
                                         <li class="flex items-center">
                                             <input type="checkbox" value="{{ $column }}"  onchange="updateColumns(this)" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                             <label for="apple" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{ ucfirst($column) }}</label>
@@ -106,7 +94,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <button type="button"  onclick="exportToExcel()" class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-primary-800">
+                        <button type="button" onclick="exportToExcel()" class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-primary-800">
                             <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                 <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
                             </svg>
@@ -156,14 +144,14 @@
 
         {{-- SWEETALERTS --}}
         <script src="{{ asset('JS/SweetAlerts/SwalGeneric.js') }}"></script>
-
+        
         <script>
-            let selectedColumns = ['Applicant']; 
+            let selectedColumns = ['Name']; 
             let currentPage = 1;
             let pageLimit = 10; 
             let selectedStatus = 'all'; 
 
-            getProgramByCampus();
+            getDateByCenter();
 
 
             function handleInputChange(event) {
@@ -175,14 +163,13 @@
             function exportToExcel() {
                 const filters = {
                     termID: document.getElementById('termID').value,
-                    campus: document.getElementById('campus').value,
-                    program: document.getElementById('program').value,
-                    major: document.getElementById('major').value,
-                    status: selectedStatus,
+                    centerID: document.getElementById('centerID').value,
+                    dateFromID: document.getElementById('dateFromID').value,
+                    dateToID: document.getElementById('dateToID').value,
                     search: document.getElementById('searchInput').value,
                 };
 
-                axios.post('/results/export', {
+                axios.post('/admission/schedule/exportApplicantsScheds', {
                     columns:  selectedColumns.join(','),
                     ...filters,
                 }, {
@@ -192,13 +179,16 @@
                     const url = window.URL.createObjectURL(new Blob([response.data]));
                     const link = document.createElement('a');
                     link.href = url;
-                    link.setAttribute('download', 'applicantsResults-data.xlsx');
+                    link.setAttribute('download', 'applicantsSchedules-data.xlsx');
                     document.body.appendChild(link);
                     link.click();
                     link.remove();
                     swalGenericExport();
                 })
-                .catch(error => console.error('Error exporting to Excel:', error));
+                .catch(error => {
+                    console.error('Error exporting to Excel:', error);
+                    swalGenericError('An unexpected error occurred!', error.message || 'Please try again.');
+                });
             }
 
             function updateColumns(checkbox) {
@@ -223,60 +213,45 @@
             }
 
             function getDataByTerm() {
+                getDateByCenter();
+                getDataRows();
+            }
+
+            function getDataByDate() {
                 getDataRows();
             }
             
-            function getProgramByCampus() {
-                axios.get('/api/resultsData/getPrograms', {
+            function getDateByCenter() {
+                axios.get('/api/admission/schedule/applicants/getDates', {
                         params: {
-                            campusId: document.getElementById('campus').value,
+                            centerID: document.getElementById('centerID').value,
+                            termID: document.getElementById('termID').value,
                         },
                         headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
                     }).then(response => {
-                        const programSelect = document.getElementById('program');
-                        programSelect.innerHTML = '<option value="0">All</option>';
-                        response.data.forEach(program => {
+                        const dateFromSelect = document.getElementById('dateFromID');
+                        dateFromSelect.innerHTML = '<option value="0">All</option>';
+                        response.data.forEach(date => {
                             const option = document.createElement('option');
-                            option.value = program.ProgID;
-                            option.text = program.ProgName;
-                            programSelect.appendChild(option);
+                            // option.value = date.testDateID;
+                            option.value = date.testDate;
+                            option.text = date.testDate;
+                            dateFromSelect.appendChild(option);
                         });
-                        document.getElementById('major').innerHTML = '<option value="0">All</option>';
-                        getDataRows(); 
-                    })
-                    .catch(error => console.error('Error fetching programs:', error));
-            }
-            
-            function getMajorByProgram() {
-                axios.get('/api/resultsData/getMajors', {
-                        params: {
-                            campusId: document.getElementById('campus').value,
-                            programId: document.getElementById('program').value,
-                        },
-                        headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
-                    })
-                    .then(response => {
-                        const majorSelect = document.getElementById('major');
-                        majorSelect.innerHTML = '<option value="0">All</option>';
-                        response.data.forEach(major => {
-                            const option = document.createElement('option');
-                            option.value = major.MajorID;
-                            option.text = major.Major;
-                            majorSelect.appendChild(option);
-                        });
-                        getDataRows(); 
-                    })
-                    .catch(error => console.error('Error fetching majors:', error));
-            }
 
-            function getDataByMajor() {
-                getDataRows(); 
-            }
-            
-            function filterByStatus(status) {
-                selectedStatus = status;
-                currentPage = 1; 
-                getDataRows(); 
+                            
+                        const dateToSelect = document.getElementById('dateToID');
+                        dateToSelect.innerHTML = '<option value="0">All</option>';
+                        response.data.forEach(date => {
+                            const option = document.createElement('option');
+                            option.value = date.testDate;
+                            option.text = date.testDate;
+                            dateToSelect.appendChild(option);
+                        });
+
+                        getDataRows(); 
+                    })
+                    .catch(error => console.error('Error fetching dates:', error));
             }
 
             function getDataRows(page = currentPage, limit = pageLimit) {
@@ -288,16 +263,15 @@
                     return;
                 }
 
-                axios.get('/api/resultsData', {
+                axios.get('/api/admission/schedule/applicants', {
                     params: {
                         columns: selectedColumns.join(','),
                         page,
                         limit,
-                        status: selectedStatus !== 'all' ? selectedStatus : null,
                         termID: document.getElementById('termID').value,
-                        campus: document.getElementById('campus').value,
-                        program: document.getElementById('program').value,
-                        major: document.getElementById('major').value,
+                        centerID: document.getElementById('centerID').value,
+                        dateFromID: document.getElementById('dateFromID').value,
+                        dateToID: document.getElementById('dateToID').value,
                         search: document.getElementById('searchInput').value,
                     },
                     headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
@@ -306,10 +280,6 @@
                     renderTable(data.data, data.current_page, pageLimit);
                     renderPagination(data);
                     document.getElementById('totalRows').textContent = `${data.total.toLocaleString()}`;
-                    document.getElementById('countTotalStatus').textContent = data.counts.total.toLocaleString();
-                    document.getElementById('countQualified').textContent = data.counts.qualified.toLocaleString();
-                    document.getElementById('countWaivedSlot').textContent = data.counts.waivedslot.toLocaleString();
-                    document.getElementById('countConfirmed').textContent = data.counts.confirmed.toLocaleString();
                     
                 })
                 .catch(console.error);
@@ -328,20 +298,9 @@
                     let rowNumber = (currentPage - 1) * limit + index + 1; 
                     tableHTML += `<tr><td class="py-2 px-4 border">${rowNumber}</td>`; 
                     selectedColumns.forEach(column => {
-                        if (column === 'CampusID') {
-                            tableHTML += `<td class="py-2 px-4 border">${row[column] === '1' ? 'Obrero' 
-                                : row[column] === '6'  ? 'Mintal' 
-                                : row[column] === '7'  ? 'Tagum' 
-                                : row[column] === '8'  ? 'Mabini' 
-                                : row[column] === '10' ? 'Malabog' 
-                                : ''}</td>`; 
-                        }else if (column === 'IsEnlisted') {
-                            tableHTML += `<td class="py-2 px-4 border">${row[column] === '1' ? 'Yes' 
-                                : row[column] === '0'  ? 'No' 
-                                : ''}</td>`; 
-                        } else {
-                            tableHTML += `<td class="py-2 px-4 border">${row[column] || ''}</td>`;
-                        }
+
+                        tableHTML += `<td class="py-2 px-4 border">${row[column] || ''}</td>`;
+
                     });
                     tableHTML += '</tr>';
                 });

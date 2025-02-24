@@ -5,7 +5,7 @@
     use Maatwebsite\Excel\Concerns\FromQuery;
     use Maatwebsite\Excel\Concerns\WithHeadings;
 
-    class ScheduleOverallExport implements FromQuery, WithHeadings
+    class ExportApplicantsSchedule implements FromQuery, WithHeadings
     {
         protected $columns;
         protected $filters;

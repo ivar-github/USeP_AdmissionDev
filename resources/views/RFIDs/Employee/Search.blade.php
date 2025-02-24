@@ -10,7 +10,7 @@
     @endif
     <div class="py-5 ">
         <x-Breadcrumbs>
-            <a  href="{{route('employees.index')}}" class="ms-1 text-lg font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">EMPLOYEES</a>
+            <a  href="{{route('employeesRFIDs.index')}}" class="ms-1 text-lg font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">EMPLOYEES</a>
         </x-Breadcrumbs>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg  py-10 px-2">
@@ -19,7 +19,7 @@
                         Search Employee
                     </h1>
                     <x-Validation-error :messages="session('notfound')" class="mt-2" />
-                    <form method="POST" action="{{ route('employees.search')}}">
+                    <form method="POST" action="{{ route('employeesRFIDs.search')}}">
                         @csrf
                         <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                         <div class="relative">
@@ -57,8 +57,11 @@
                                                     </p>
                                                 </div>
                                                 <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                                    <a href="{{ route('employees.show', $employee->EmployeeID)}}">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" height="24px" viewBox="0 -960 960 960" width="24px"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
+                                                    <a href="javascript:void(0)" onclick="openEditModal({{ $employee->EmployeeID }})" data-modal-target="editEmployeeModal" data-modal-toggle="editEmployeeModal"  class="hover:text-blue-700">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor"  
+                                                            viewBox="0 -960 960 960" class="w-5 h-5">
+                                                            <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+                                                        </svg>
                                                     </a>
                                                 </div>
                                             </div>
@@ -70,10 +73,48 @@
                     </div>
                 </div>
             </div>
+
+            
+            @include('Layouts.Modal.RFIDEmployees.Edit')
         </div>
     </div>
 
     @push('scripts')
+
+        {{-- SWEETALERTS --}}
+        <script src="{{ asset('JS/SweetAlerts/SwalUnique.js') }}"></script>
+        <script src="{{ asset('JS/SweetAlerts/SwalGeneric.js') }}"></script>
+
+        <script>
+
+            // FUNCTION TO SHOW EMPLOYEE TO EDIT
+            function openEditModal(id) {
+                console.log("Fetching Employee ID:", id);
+                console.log(typeof id);
+
+                // axios.get(`/rfid/employeesRFIDs/${id}/edit`)
+                axios.get(`/rfid/employeesRFIDs/${String(id)}/edit`)
+
+                    .then(response => {
+                        const employee = response.data;
+                        document.getElementById('employeeID').value = employee.EmployeeID;
+                        document.getElementById('i_employeeid').textContent = employee.EmployeeID;
+                        document.getElementById('e_rfid').value = employee.SmartCardID;
+                        document.getElementById('i_email').textContent = employee.Email;
+                        document.getElementById('i_name').textContent = `${employee.Prefix} ${employee.LastName} ${employee.FirstName} ${employee.MiddleName}`;
+                        if (employee.Photo) {
+                            document.getElementById('i_photo').src = `data:image/png;base64,${employee.Photo}`;
+                        } else {
+                            document.getElementById('i_photo').src = "/img_assets/avatar.png";   
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching user data:', error);
+                        swalGenericError('An unexpected error occurred!', error);
+                    });
+            }
+
+        </script>
 
     @endpush
 

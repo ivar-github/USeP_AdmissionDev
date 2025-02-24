@@ -1,15 +1,15 @@
 <x-Main-layout>
     <x-Breadcrumbs>
-        <a  href="{{route('employees.index')}}" class="text-lg font-medium text-gray-700  hover:text-red-900 dark:text-gray-400 dark:hover:text-white">EMPLOYEE</a>
+        <a  href="{{route('employeesRFIDs.index')}}" class="text-lg font-medium text-gray-700  hover:text-red-900 dark:text-gray-400 dark:hover:text-white">RFID - Employee</a>
     </x-Breadcrumbs>
     <div class="mx-auto h-full">
-        <div class="py-10 px-2">
+        <div class="overflow-hidden py-5 lg:py-10">
             <div class="px-2 md-px-10 mx-auto max-w-lg py-10 ">
                 <h1 class="text-2xl text-center bg-red-800 mb-10 font-semibold text-gray-100 p-3 rounded-xl dark:text-gray-100">
                     Search Employee
                 </h1>
                 <x-Validation-error :messages="session('notfound')" class="mt-2" />
-                <form method="POST" action="{{ route('employees.search')}}">
+                <form method="POST" action="{{ route('employeesRFIDs.search')}}">
                     @csrf
                     <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                     <div class="relative">
