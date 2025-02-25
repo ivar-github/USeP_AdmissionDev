@@ -1,9 +1,9 @@
 <x-Main-layout>
     <x-Breadcrumbs>
-        <a  href="{{route('users.index')}}" class="text-lg font-medium text-gray-700  hover:text-red-900 dark:text-gray-400 dark:hover:text-white">USERS</a>
+        <a  href="{{route('users.index')}}" class="ms-1 text-lg font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">USERS</a>
     </x-Breadcrumbs>
     <div class="mx-auto h-full">
-        <div class="overflow-hidden py-5">
+        <div class="overflow-hidden py-5 lg:py-10">
             <div class="md:p-6 text-gray-900 dark:text-gray-100  ">
 
                 <h1 class="text-3xl font-medium text-gray-800 dark:text-gray-100">

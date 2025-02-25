@@ -20,7 +20,6 @@ class EmployeeController extends Controller
 {
 
 
-
     public function index()
     {
         try {
@@ -40,7 +39,6 @@ class EmployeeController extends Controller
         }
     }
 
-
     public function create()
     {
        // 
@@ -57,8 +55,7 @@ class EmployeeController extends Controller
     {
         try {
             
-            $employee = Employee::select(
-                    'EmployeeID',
+            $employee = Employee::select('EmployeeID',
                     'Prefix',
                     'LastName',
                     'FirstName',
@@ -93,6 +90,13 @@ class EmployeeController extends Controller
         try {
 
             $employeeID = $request->input('employeeID');
+
+            if ($employeeID == 0) {
+                return response()->json([
+                    'error' => 'Please select an employee',
+                    'message' => 'Please select an employee before proceeding.',
+                ], 400);
+            }
 
             $employee = Employee::where('EmployeeID', $employeeID)->firstOrFail();
 
@@ -154,60 +158,60 @@ class EmployeeController extends Controller
     public function search(Request $request)
     {
 
-        try {
+        // try {
 
-            $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
-                ->limit(10)
-                ->orderBy('TermID', 'desc')
-                ->get();
+        //     $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
+        //         ->limit(10)
+        //         ->orderBy('TermID', 'desc')
+        //         ->get();
 
-            $search = $request->input('employee');
+        //     $search = $request->input('employee');
 
-            $query = Employee::select('EmployeeID', 
-                'Prefix', 
-                'LastName', 
-                'FirstName', 
-                'MiddleName', 
-                'Email', 
-                'Photo', 
-                'SmartCardID')
-                ->limit(10)
-                ->orderBy('EmployeeID', 'desc');
+        //     $query = Employee::select('EmployeeID', 
+        //         'Prefix', 
+        //         'LastName', 
+        //         'FirstName', 
+        //         'MiddleName', 
+        //         'Email', 
+        //         'Photo', 
+        //         'SmartCardID')
+        //         ->limit(10)
+        //         ->orderBy('EmployeeID', 'desc');
 
-            if ($search) {
-                $query->where(function($q) use ($search) {
-                    $q->where('EmployeeID', 'LIKE', '%' . $search . '%')
-                    ->orWhere('FirstName', 'LIKE', '%' . $search . '%')
-                    ->orWhere('MiddleName', 'LIKE', '%' . $search . '%')
-                    ->orWhere('LastName', 'LIKE', '%' . $search . '%');
-                });
-            }
+        //     if ($search) {
+        //         $query->where(function($q) use ($search) {
+        //             $q->where('EmployeeID', 'LIKE', '%' . $search . '%')
+        //             ->orWhere('FirstName', 'LIKE', '%' . $search . '%')
+        //             ->orWhere('MiddleName', 'LIKE', '%' . $search . '%')
+        //             ->orWhere('LastName', 'LIKE', '%' . $search . '%');
+        //         });
+        //     }
 
-            $employees = $query->get();
+        //     $employees = $query->get();
 
-            foreach ($employees as $employee) {
-                if ($employee->Photo) {
-                    $employee->Photo_base64 = 'data:image/png;base64,' . base64_encode($employee->Photo);
-                } else {
-                    $employee->Photo_base64 = null;
-                }
-            }
+        //     foreach ($employees as $employee) {
+        //         if ($employee->Photo) {
+        //             $employee->Photo_base64 = 'data:image/png;base64,' . base64_encode($employee->Photo);
+        //         } else {
+        //             $employee->Photo_base64 = null;
+        //         }
+        //     }
 
-            // return view('RFIDs.Employee.Search', compact('employees', 'search', 'terms'));
-            return response()->json([
-                'employees' => $employees,
-                'terms' => $terms
-            ]);
+        //     // return view('RFIDs.Employee.Search', compact('employees', 'search', 'terms'));
+        //     return response()->json([
+        //         'employees' => $employees,
+        //         'terms' => $terms
+        //     ]);
 
+        // // } catch (Throwable $e) {
+        // //     return redirect()->route('employeesRFIDs.search')
+        // //         ->with('error', 'An unexpected error occurred: ' . $e->getMessage());
         // } catch (Throwable $e) {
-        //     return redirect()->route('employeesRFIDs.search')
-        //         ->with('error', 'An unexpected error occurred: ' . $e->getMessage());
-        } catch (Throwable $e) {
-            return response()->json([
-                'error' => 'An unexpected error occurred',
-                'message' => $e->getMessage(),
-            ], 500);
-        }
+        //     return response()->json([
+        //         'error' => 'An unexpected error occurred',
+        //         'message' => $e->getMessage(),
+        //     ], 500);
+        // }
     }
 
 

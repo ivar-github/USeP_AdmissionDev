@@ -42,9 +42,7 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
         return view('RFIDs.Dashboard');
     })->name('rfid.dashboard');
 
-    // Route::resource('rfid/studentsRFIDs', StudentController::class);
-    Route::resource('rfid/studentsRFIDs', StudentController::class)
-    ->where(['employeesRFIDs' => '[a-zA-Z0-9_]+']);
+    Route::resource('rfid/studentsRFIDs', StudentController::class);
     // Route::resource('rfid/employeesRFIDs', EmployeeController::class);
     // Route::resource('rfid/employeesRFIDs', EmployeeController::class)->where(['employeesRFIDs' => '.*']);
     Route::resource('rfid/employeesRFIDs', EmployeeController::class)
@@ -96,8 +94,6 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     Route::get('/api/admission/schedule/applicants/getTimes', [ScheduleController::class, 'getTimes']);
 
     Route::get('/api/rfid/employees', [EmployeeController::class, 'getData'])->name('api.rfidEmployees.data');
-    Route::get('/api/rfid/students', [StudentController::class, 'getData'])->name('api.rfidStudents.data');
-    Route::get('/api/rfid/applicantSchedules', [ScheduleRescheduleController::class, 'getData'])->name('api.applicantSchedules.data');
 
     Route::get('/api/admission/schedule/reschedule/getAvailableScheds', [ScheduleRescheduleController::class, 'getAvailableScheds']);
     Route::get('/api/admission/schedule/reschedule/selectSchedDetails', [ScheduleRescheduleController::class, 'selectSchedDetails']);

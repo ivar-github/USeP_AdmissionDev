@@ -165,7 +165,7 @@
 
                     axios.post(`/courseEvalRatings/${ratingId}`, formData)
                         .then(response => {
-                            closeEditModal();
+                            closeEditModal();z
                             this.reset();
                             document.getElementById('e_errorMessage').innerHTML = '';
                             swalGenericUpdate(response.data.message);

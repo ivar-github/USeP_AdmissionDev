@@ -199,78 +199,78 @@ class ScheduleRescheduleController extends Controller
     public function search(Request $request)
     {
  
-        try {
+        // try {
 
-            $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
-                ->limit(10)
-                ->orderBy('TermID', 'desc')
-                ->get();
+        //     $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
+        //         ->limit(10)
+        //         ->orderBy('TermID', 'desc')
+        //         ->get();
 
             
-            $testCenters = ScheduleCenter::select('id', 'campusID', 'testCenterName', 'description')
-                ->where('isActive',1)
-                ->limit(10)
-                ->orderBy('id', 'asc')
-                ->get();
+        //     $testCenters = ScheduleCenter::select('id', 'campusID', 'testCenterName', 'description')
+        //         ->where('isActive',1)
+        //         ->limit(10)
+        //         ->orderBy('id', 'asc')
+        //         ->get();
 
-            $search = $request->input('applicant');
-            $termId = $request->input('termID');
+        //     $search = $request->input('applicant');
+        //     $termId = $request->input('termID');
 
-            $query = ScheduleApplicants::from('CUSTOM_AdmissionApplicantTestSchedule as sa')
-                ->select(
-                    'sa.id',
-                    'sa.appNo',
-                    'sa.testScheduleCode',
-                    'sa.testCenterID',
-                    'sa.testDateID',
-                    'sa.testTimeID',
-                    'sa.testSessionID',
-                    'sa.testRoomID',
-                    'sa.termID',
-                    'reg.AppNo',
-                    'reg.Choice1_CampusID as campusID',
-                    'reg.LastName',
-                    'reg.FirstName',
-                    'reg.MiddleName',
-                    'reg.ExtName',
-                    'sa_view.AppNo',
-                    'sa_view.Name',
-                    'sa_view.testCenterName',
-                    'sa_view.testDate',
-                    'sa_view.testTimeStartString',
-                    'sa_view.testTimeEndString',
-                    'sa_view.testRoomName'
-                )
-                ->leftJoin('ES_Admission as reg', 'reg.AppNo', '=', 'sa.appNo')
-                ->leftJoin('vw_CUSTOM_AdmissionApplicantTestSchedules as sa_view', function ($join) {
-                    $join->on('sa_view.AppNo', '=', 'sa.appNo')
-                         ->on('sa_view.testScheduleCode', '=', 'sa.testScheduleCode');
-                })
-                ->orderBy('sa.appNo', 'desc')
-                ->limit(100);
+        //     $query = ScheduleApplicants::from('CUSTOM_AdmissionApplicantTestSchedule as sa')
+        //         ->select(
+        //             'sa.id',
+        //             'sa.appNo',
+        //             'sa.testScheduleCode',
+        //             'sa.testCenterID',
+        //             'sa.testDateID',
+        //             'sa.testTimeID',
+        //             'sa.testSessionID',
+        //             'sa.testRoomID',
+        //             'sa.termID',
+        //             'reg.AppNo',
+        //             'reg.Choice1_CampusID as campusID',
+        //             'reg.LastName',
+        //             'reg.FirstName',
+        //             'reg.MiddleName',
+        //             'reg.ExtName',
+        //             'sa_view.AppNo',
+        //             'sa_view.Name',
+        //             'sa_view.testCenterName',
+        //             'sa_view.testDate',
+        //             'sa_view.testTimeStartString',
+        //             'sa_view.testTimeEndString',
+        //             'sa_view.testRoomName'
+        //         )
+        //         ->leftJoin('ES_Admission as reg', 'reg.AppNo', '=', 'sa.appNo')
+        //         ->leftJoin('vw_CUSTOM_AdmissionApplicantTestSchedules as sa_view', function ($join) {
+        //             $join->on('sa_view.AppNo', '=', 'sa.appNo')
+        //                  ->on('sa_view.testScheduleCode', '=', 'sa.testScheduleCode');
+        //         })
+        //         ->orderBy('sa.appNo', 'desc')
+        //         ->limit(100);
 
-            if ($search) {
-                $query->where(function($q) use ($search) {
-                    $q->where('sa.appNo', 'LIKE', '%' . $search . '%')
-                    ->orWhere('sa.testCenterID', 'LIKE', '%' . $search . '%')
-                    ->orWhere('reg.LastName', 'LIKE', '%' . $search . '%')
-                    ->orWhere('reg.FirstName', 'LIKE', '%' . $search . '%')
-                    ->orWhere('reg.MiddleName', 'LIKE', '%' . $search . '%');
-                });
-            }
+        //     if ($search) {
+        //         $query->where(function($q) use ($search) {
+        //             $q->where('sa.appNo', 'LIKE', '%' . $search . '%')
+        //             ->orWhere('sa.testCenterID', 'LIKE', '%' . $search . '%')
+        //             ->orWhere('reg.LastName', 'LIKE', '%' . $search . '%')
+        //             ->orWhere('reg.FirstName', 'LIKE', '%' . $search . '%')
+        //             ->orWhere('reg.MiddleName', 'LIKE', '%' . $search . '%');
+        //         });
+        //     }
 
-            if ($termId) {
-                $query->where('sa.termID', $termId);
-            }
+        //     if ($termId) {
+        //         $query->where('sa.termID', $termId);
+        //     }
 
-            $applicants = $query->get();
+        //     $applicants = $query->get();
 
-            return view('Schedules.Reschedules.Search', compact('applicants', 'search', 'terms', 'testCenters' ));
+        //     return view('Schedules.Reschedules.Search', compact('applicants', 'search', 'terms', 'testCenters' ));
 
-        } catch (Throwable $e) {  
-            return redirect()->route('scheduleApplicants.search')
-                ->with('error', 'An unexpected error occurred: ' . $e->getMessage());
-        }
+        // } catch (Throwable $e) {  
+        //     return redirect()->route('scheduleApplicants.search')
+        //         ->with('error', 'An unexpected error occurred: ' . $e->getMessage());
+        // }
     }
 
 
@@ -279,9 +279,24 @@ class ScheduleRescheduleController extends Controller
         try {
             $centerID = $request->input('centerID');
 
-            $ScheduleSlots = ScheduleViewSlot::select('id', 'termID', 'testCenterID', 'testDateID', 'testTimeID', 'testSessionID',
-                'testRoomID', 'termID', 'testCenterName', 'testDate', 'testTimeStartString', 'testTimeEndString', 'testRoomName',
-                'availableSlots', 'totalRegistered', 'isFull', 'isActive')
+            $ScheduleSlots = ScheduleViewSlot::select('id', 
+                    'termID', 
+                    'testCenterID', 
+                    'testDateID', 
+                    'testTimeID', 
+                    'testSessionID',
+                    'testRoomID', 
+                    'termID', 
+                    'testCenterName', 
+                    'testDate', 
+                    'testTimeStartString', 
+                    'testTimeEndString', 
+                    'testRoomName',
+                    'availableSlots', 
+                    'totalRegistered', 
+                    'isFull', 
+                    'isActive'
+                )
                 ->where('isFull', 'false')
                 ->where('isActive', 1)
                 ->where('testCenterID', $centerID)
@@ -324,6 +339,75 @@ class ScheduleRescheduleController extends Controller
             }
 
             return response()->json($ScheduleDetails, 200);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function getData(Request $request)
+    {
+
+        try {
+
+            $search = $request->input('examinee');
+            $termId = $request->input('termID');
+                
+            $query = ScheduleApplicants::from('CUSTOM_AdmissionApplicantTestSchedule as sa')
+            ->select(
+                'sa.id',
+                'sa.appNo',
+                'sa.testScheduleCode',
+                'sa.testCenterID',
+                'sa.testDateID',
+                'sa.testTimeID',
+                'sa.testSessionID',
+                'sa.testRoomID',
+                'sa.termID',
+                'reg.AppNo',
+                'reg.Choice1_CampusID as campusID',
+                'reg.LastName',
+                'reg.FirstName',
+                'reg.MiddleName',
+                'reg.ExtName',
+                'sa_view.AppNo',
+                'sa_view.Name',
+                'sa_view.testCenterName',
+                'sa_view.testDate',
+                'sa_view.testTimeStartString',
+                'sa_view.testTimeEndString',
+                'sa_view.testRoomName'
+            )
+            ->leftJoin('ES_Admission as reg', 'reg.AppNo', '=', 'sa.appNo')
+            ->leftJoin('vw_CUSTOM_AdmissionApplicantTestSchedules as sa_view', function ($join) {
+                $join->on('sa_view.AppNo', '=', 'sa.appNo')
+                        ->on('sa_view.testScheduleCode', '=', 'sa.testScheduleCode');
+            })
+            ->orderBy('sa.appNo', 'desc')
+            ->limit(10);
+
+            if ($search) {
+                $query->where(function($q) use ($search) {
+                    $q->where('sa.appNo', 'LIKE', '%' . $search . '%')
+                    ->orWhere('sa.testCenterID', 'LIKE', '%' . $search . '%')
+                    ->orWhere('reg.LastName', 'LIKE', '%' . $search . '%')
+                    ->orWhere('reg.FirstName', 'LIKE', '%' . $search . '%')
+                    ->orWhere('reg.MiddleName', 'LIKE', '%' . $search . '%');
+                });
+            }
+
+            if ($termId) {
+                $query->where('sa.termID', $termId);
+            }
+
+            $examinees = $query->get();
+
+            return response()->json([
+                'examinees' => $examinees
+            ]);
 
         } catch (Throwable $e) {
             return response()->json([

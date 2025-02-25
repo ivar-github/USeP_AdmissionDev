@@ -93,7 +93,7 @@
 
         document.addEventListener('DOMContentLoaded', function() {
 
-             // FUNCTION TO UPDATE SCHEDULE
+             // FUNCTION TO UPDATE EMPLOYEE RFID
              document.getElementById('editEmployeeRFIDForm').addEventListener('submit', function (e) {
                 e.preventDefault();
 
@@ -132,7 +132,7 @@
         });
 
 
-        //DAFAULT IMAGE SRC
+        //DAFAULT VALUE
         defaultIDValue();
 
 
@@ -142,9 +142,14 @@
 
         }
 
-        // FUNCTION TO GET AVALIABLE SCHEDS BY CENTER
+        // FUNCTION TO GET SET DAFAULT VALUE
         function defaultIDValue() {
             document.getElementById('i_photo').src = "/img_assets/avatar.png";   
+            document.getElementById('employeeID').value = 0;
+            document.getElementById('i_employeeid').textContent = 'Employee ID';
+            document.getElementById('e_rfid').value = '';
+            document.getElementById('i_email').textContent = 'Email';
+            document.getElementById('i_name').textContent = 'Employee Name';
         }
 
 
@@ -162,11 +167,9 @@
                     document.getElementById('e_rfid').value = employee.SmartCardID;
                     document.getElementById('i_email').textContent = employee.Email;
                     document.getElementById('i_name').textContent = `${employee.Prefix} ${employee.LastName} ${employee.FirstName} ${employee.MiddleName}`;
-                    if (employee.Photo) {
-                        document.getElementById('i_photo').src = `data:image/png;base64,${employee.Photo}`;
-                    } else {
-                        document.getElementById('i_photo').src = "/img_assets/avatar.png";   
-                    }
+                    document.getElementById('i_photo').src = employee.Photo 
+                        ? `data:image/png;base64,${employee.Photo}`
+                        : "/img_assets/avatar.png";
                 })
                 .catch(error => {
                     console.error('Error fetching user data:', error);
@@ -182,6 +185,8 @@
                 headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
             })
             .then(response => {
+                defaultIDValue();
+                document.getElementById('e_errorMessage').innerHTML = '';
                 const employeeList = document.getElementById('employeeList');
                 const noResult = document.getElementById('noResult');
                 employeeList.innerHTML = '';
