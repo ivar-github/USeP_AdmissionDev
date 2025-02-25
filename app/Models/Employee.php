@@ -21,6 +21,7 @@ class Employee extends Model
         'SmartCardID'
     ];
 
+    //TO ALLOW ID AS STRING
     public function getRouteKeyName()
     {
         return 'EmployeeID';

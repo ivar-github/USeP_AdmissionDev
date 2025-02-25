@@ -235,8 +235,7 @@
             });
 
 
-            //GET AVAILABL SCHEDS
-            // getAvailableScheds();
+            //DAFAULT VALUE 0
             defaultIDValue();
 
             // FUNCTION TO GET AVAILABLE SCHEDULES

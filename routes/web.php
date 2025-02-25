@@ -44,10 +44,12 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
 
     Route::resource('rfid/studentsRFIDs', StudentController::class);
     // Route::resource('rfid/employeesRFIDs', EmployeeController::class);
-    Route::resource('rfid/employeesRFIDs', EmployeeController::class)->where(['employeesRFIDs' => '.*']);
-    // Route::resource('rfid/employeesRFIDs', EmployeeController::class)->where(['employeesRFIDs' => '[a-zA-Z0-9_]+']);
+    // Route::resource('rfid/employeesRFIDs', EmployeeController::class)->where(['employeesRFIDs' => '.*']);
+    Route::resource('rfid/employeesRFIDs', EmployeeController::class)
+    ->where(['employeesRFIDs' => '[a-zA-Z0-9_]+']);
 
-    Route::post('rfid/employee/search', [EmployeeController::class, 'search'])->name('employeesRFIDs.search');
+    // Route::post('rfid/employee/search', [EmployeeController::class, 'search'])->name('employeesRFIDs.search');
+    Route::get('rfid/employee/search', [EmployeeController::class, 'search'])->name('employeesRFIDs.search');
     Route::get('rfid/employee/table', [EmployeeController::class, 'table'])->name('employeesRFIDs.table');
     Route::get('rfid/student/table', [StudentController::class, 'table'])->name('students.table');
     Route::post('rfid/student/search', [StudentController::class, 'search'])->name('students.search');
@@ -90,6 +92,8 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     Route::get('/api/admission/schedule/applicants', [ScheduleController::class, 'getData'])->name('api.schedulesApplicants.data');
     Route::get('/api/admission/schedule/applicants/getDates', [ScheduleController::class, 'getDates']);
     Route::get('/api/admission/schedule/applicants/getTimes', [ScheduleController::class, 'getTimes']);
+
+    Route::get('/api/rfid/employees', [EmployeeController::class, 'getData'])->name('api.rfidEmployees.data');
 
     Route::get('/api/admission/schedule/reschedule/getAvailableScheds', [ScheduleRescheduleController::class, 'getAvailableScheds']);
     Route::get('/api/admission/schedule/reschedule/selectSchedDetails', [ScheduleRescheduleController::class, 'selectSchedDetails']);
