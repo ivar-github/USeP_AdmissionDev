@@ -8,13 +8,17 @@ class ActionLogs extends Model
 {
     protected $fillable = [
         'type',
-        'userID',
-        'userEmail',
         'module',
         'affectedID',
         'affectedItem',
         'description',
         'status',
+        'userID',
+        'userEmail',
+        'hostName',
+        'localIP',
+        'location',
+        'platform',
     ];
 
 

@@ -11,6 +11,10 @@ class LoginLogs extends Model
         'userEmail',
         'description',
         'status',
+        'hostName',
+        'localIP',
+        'location',
+        'platform',
     ];
 
 

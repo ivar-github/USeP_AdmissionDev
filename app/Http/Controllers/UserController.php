@@ -23,6 +23,7 @@ use Throwable;
 
 use App\Exports\UsersExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Jenssegers\Agent\Agent;
 
 class UserController extends Controller
 {
@@ -86,15 +87,20 @@ class UserController extends Controller
                 'status' => $request->status,
             ]);
 
+            $agent = new Agent();
+            $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
+            
             ActionLogs::create([
                 'type' => 'Create',
-                'userID' => Auth::user()->id,
-                'userEmail' => Auth::user()->email,
                 'module' => 'Users',
                 'affectedID' => $user->id,
                 'affectedItem' => $user->name,
                 'description' => 'User Creation Successful',
                 'status' => 1,
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'hostName' => gethostname(),
+                'platform' => $agentInfo,
             ]);
 
             event(new Registered($user));
@@ -168,16 +174,20 @@ class UserController extends Controller
                 $status = 1;
                 $desc = 'User Update Successful';
             }
-
+            
+            $agent = new Agent();
+            $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
             ActionLogs::create([
                 'type' => 'Update',
-                'userID' => Auth::user()->id,
-                'userEmail' => Auth::user()->email,
                 'module' => 'Users',
                 'affectedID' => $user->id,
                 'affectedItem' => $request->name,
                 'description' => $desc,
                 'status' => $status,
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'hostName' => gethostname(),
+                'platform' => $agentInfo,
             ]);
 
             return response()->json([
@@ -228,15 +238,19 @@ class UserController extends Controller
                 $desc = 'Password Reset Successful';
             }
 
+            $agent = new Agent();
+            $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
             ActionLogs::create([
                 'type' => 'Update',
-                'userID' => Auth::user()->id,
-                'userEmail' => Auth::user()->email,
                 'module' => 'Users',
                 'affectedID' => $user->id,
                 'affectedItem' => $user->name,
                 'description' => $desc,
                 'status' => $status,
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'hostName' => gethostname(),
+                'platform' => $agentInfo,
             ]);
 
             return response()->json([
@@ -261,7 +275,48 @@ class UserController extends Controller
 
     public function destroy(string $id)
     {
-        //
+        try {
+
+            $isActive = ActionLogs::where('userID', $id)
+                ->exists();
+
+            if ($isActive) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'User has action logs.'
+                ], 422);
+            }
+
+            $user = User::findOrFail($id);
+            $user->delete();
+
+            $agent = new Agent();
+            $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
+
+            ActionLogs::create([
+                'type' => 'Delete',
+                'module' => 'Users',
+                'affectedID' => $user->id,
+                'affectedItem' => $user->name,
+                'description' => 'Deletion Successful',
+                'status' => 1,
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'hostName' => gethostname(),
+                'platform' => $agentInfo,
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Deletion Successful'
+            ]);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
 

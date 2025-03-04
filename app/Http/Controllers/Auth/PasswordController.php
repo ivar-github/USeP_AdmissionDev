@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use App\Models\ActionLogs;
+use Jenssegers\Agent\Agent;
 
 class PasswordController extends Controller
 {
@@ -44,15 +45,20 @@ class PasswordController extends Controller
             $desc = 'Password Update Successful';
         }
 
+        $agent = new Agent();
+        $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
+
         ActionLogs::create([
             'type' => 'Update',
-            'userID' => Auth::user()->id,
-            'userEmail' => Auth::user()->email,
             'module' => 'Users Password',
             'affectedID' => Auth::user()->id,
             'affectedItem' => Auth::user()->email,
             'description' => $desc,
             'status' => $status,
+            'userID' => Auth::user()->id,
+            'userEmail' => Auth::user()->email,
+            'hostName' => gethostname(),
+            'platform' => $agentInfo,
         ]);
 
 

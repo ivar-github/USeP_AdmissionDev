@@ -1,7 +1,8 @@
 
 function swalGenericAdd(message) {
   Swal.fire({
-    title: message,
+    title: "Added",
+    text: message,
     icon: 'success',
     showCancelButton: false,
     confirmButtonColor: '#3085d6',
@@ -17,7 +18,8 @@ function swalGenericAdd(message) {
 
 function swalGenericSinglePageAdd(message){
   Swal.fire({
-    title: message,
+    title: "Added",
+    text: message,
     icon: 'success',
     showCancelButton: false,
     confirmButtonColor: '#3085d6',
@@ -34,7 +36,8 @@ function swalGenericSinglePageAdd(message){
 function swalGenericUpdate(message){
 
   Swal.fire({
-    title: message,
+    title: "Updated",
+    text: message,
     icon: 'success',
     showCancelButton: false,
     confirmButtonColor: '#3085d6',
@@ -50,7 +53,8 @@ function swalGenericUpdate(message){
 
 function swalGenericSinglePageUpdate(message){
   Swal.fire({
-    title: message,
+    title: "Updated",
+    text: message,
     icon: 'success',
     showCancelButton: false,
     confirmButtonColor: '#3085d6',
@@ -66,7 +70,8 @@ function swalGenericSinglePageUpdate(message){
 
 function swalGenericDelete(){
     Swal.fire({
-    title: 'Deletion Successful',
+    title: 'Deleted',
+    text: 'Deletion Successful',
     icon: 'success',
     showCancelButton: false,
     confirmButtonColor: '#3085d6',
@@ -83,6 +88,7 @@ function swalGenericDelete(){
 
 function swalGenericExport(){
   Swal.fire({
+    title: 'Exported',
     text: 'Exported and Downloaded Successfully!',
     icon: 'success',
     showCancelButton: false,

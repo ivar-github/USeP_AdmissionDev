@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ActionLogs;
 use Exception;
 use Throwable;
+use Jenssegers\Agent\Agent;
 
 class ScheduleRescheduleController extends Controller
 {
@@ -158,15 +159,20 @@ class ScheduleRescheduleController extends Controller
                 $desc = 'Rescheduling Successful';
             }
 
+            $agent = new Agent();
+            $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
+
             ActionLogs::create([
                 'type' => 'Update',
-                'userID' => Auth::user()->id,
-                'userEmail' => Auth::user()->email,
                 'module' => 'USePAT Schedule - Applicant',
                 'affectedID' => $applicantSched->id,
                 'affectedItem' => $applicantSched->appNo,
                 'description' => $desc,
                 'status' => $status,
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'hostName' => gethostname(),
+                'platform' => $agentInfo,
             ]);
 
             return response()->json([
@@ -418,29 +424,52 @@ class ScheduleRescheduleController extends Controller
     }
 
 
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
         try {
+            
+            $appNo = $request->input('appNo');
+    
+            $hasMoreThanOneRow = ScheduleApplicants::where('appNo', $appNo)
+                ->havingRaw('COUNT(*) > 1')
+                ->exists();
+    
+            if (!$hasMoreThanOneRow) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Applicant schedule could not be deleted!'
+                ], 422);
+            }
 
             $applicantSched = ScheduleApplicants::findOrFail($id);
             $applicantSched->delete();
 
+            $agent = new Agent();
+            $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
+
             ActionLogs::create([
                 'type' => 'Delete',
-                'userID' => Auth::user()->id,
-                'userEmail' => Auth::user()->email,
                 'module' => 'USePAT Schedule - Applicant',
                 'affectedID' => $applicantSched->id,
                 'affectedItem' => $applicantSched->appNo,
                 'description' => 'Deletion Successful',
                 'status' => 1,
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'hostName' => gethostname(),
+                'platform' => $agentInfo,
             ]);
 
-            return redirect()->route('scheduleReschedules.index')->with('success', 'Deletion Successful');
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Deletion Successful'
+            ]);
 
         } catch (Throwable $e) {
-            return redirect()->route('scheduleReschedules.search')
-            ->with('error', 'An unexpected error occurred: ' . $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An unexpected error occurred: ' . $e->getMessage()
+            ], 500);
         }
     }
 

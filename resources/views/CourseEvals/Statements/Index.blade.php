@@ -4,7 +4,7 @@
     </x-Breadcrumbs>
     <div class="mx-auto h-full">
         <div class="overflow-hidden py-5">
-            <x-CourseEvalTab />
+            <x-Tabs.CourseEvalTab />
             <div class=" text-gray-900 dark:text-gray-100 mt-3">
 
                 <h1 class="text-2xl font-medium text-gray-800 dark:text-gray-100 mt-5  xl:px-5">

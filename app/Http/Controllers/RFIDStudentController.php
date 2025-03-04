@@ -17,8 +17,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ActionLogs;
 use Exception;
 use Throwable;
+use Jenssegers\Agent\Agent;
 
-class StudentController extends Controller
+class RFIDStudentController extends Controller
 {
 
     public function index()
@@ -118,15 +119,20 @@ class StudentController extends Controller
                 $desc = 'RFID Update Successful';
             }
 
+            $agent = new Agent();
+            $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
+
             ActionLogs::create([
                 'type' => 'Update',
-                'userID' => Auth::user()->id,
-                'userEmail' => Auth::user()->email,
                 'module' => 'RFID - Student',
                 'affectedID' => $student->StudentNo,
-                'affectedItem' => $student->LastName.', '.$student->LastName,
+                'affectedItem' => $student->LastName.', '.$student->FirstName,
                 'description' => $desc,
                 'status' => $status,
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'hostName' => gethostname(),
+                'platform' => $agentInfo,
             ]);
 
             return response()->json([

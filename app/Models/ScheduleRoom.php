@@ -10,7 +10,11 @@ class ScheduleRoom extends Model
     protected $connection = 'sqlsrv2'; 
     protected $table = 'CUSTOM_AdmissionTestRoom';
 
+    public $timestamps = false;
+    
     protected $fillable = [
-        // 'MobileNo'
+          'testRoomName',
+          'description',
+          'isActive',
     ];
 }

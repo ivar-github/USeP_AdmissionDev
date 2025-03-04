@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\LoginLogs;
 use Illuminate\View\View;
+use Jenssegers\Agent\Agent;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -33,10 +34,15 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
 
+        $agent = new Agent();
+        $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
+
         LoginLogs::create([
             'userID' => $user->id,
             'userEmail' => $user->email,
             'description' => 'Login Successful',
+            'hostName' => gethostname(),
+            'platform' => $agentInfo,
         ]);
 
         return redirect()->intended(route('dashboard', absolute: false));

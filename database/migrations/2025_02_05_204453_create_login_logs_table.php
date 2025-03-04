@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string('userEmail', 100);
             $table->string('description', 100);
             $table->boolean('status')->default(1);
+            $table->string('hostName', 100)->nullable();
+            $table->string('localIP', 100)->nullable();
+            $table->string('location', 200)->nullable();
+            $table->string('platform', 200)->nullable();
             $table->timestamps();
         });
     }

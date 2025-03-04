@@ -22,7 +22,7 @@
                 <div class="dark:text-gray-200 mx-2 mb-2">
                     <div class="rounded-lg">
                         <label for="campus" class="block text-md text-gray-700  dark:text-gray-300">Campus</label>
-                        <select id="campus" name="campus" onchange="getProgramByCampus()" onclick="getDataRows()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
+                        <select id="campus" name="campus" onchange="getProgramByCampus()" onclick="getDataByCampus()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
                             <option value="0">All </option>
                             @foreach ($campuses as $campus)
                                 <option value="{{ $campus->id }}">{{ $campus->name }}</option>
@@ -66,6 +66,13 @@
                 <hr class="my-3">
             </div>
            
+            
+            <button type="button"  onclick="generateData()" class="mb-4 flex items-center justify-center text-white bg-red-900 hover:bg-red-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-900 dark:hover:bg-red-800 focus:outline-none dark:focus:ring-primary-800">
+                <svg aria-hidden="true" class="w-5 h-5 me-1" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                </svg>
+                Generate
+            </button>
 
             <div class="border border-gray-300 rounded-xl p-5">
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-2">
@@ -163,12 +170,12 @@
             let pageLimit = 10; 
             let selectedStatus = 'all'; 
 
-            getProgramByCampus();
+            // getProgramByCampus();
 
 
             function handleInputChange(event) {
                 const searchValue = event.target.value;
-                getDataRows(); 
+                // getDataRows(); 
 
             }
 
@@ -211,7 +218,7 @@
                     selectedColumns = selectedColumns.filter(column => column !== checkbox.value);
                 }
                 currentPage = 1;  
-                getDataRows();
+                // getDataRows();
             }
 
             function changePage(page) {
@@ -225,8 +232,21 @@
                 getDataRows();
             }
 
+            
+
             function getDataByTerm() {
-                getDataRows();
+                // getDataRows();
+            }
+            function getDataByCampus() {
+                // getDataRows();
+            }
+
+            function getDataByMajor() {
+                // getDataRows(); 
+            }
+
+            function generateData() {
+                getDataRows(); 
             }
             
             function getProgramByCampus() {
@@ -245,7 +265,7 @@
                             programSelect.appendChild(option);
                         });
                         document.getElementById('major').innerHTML = '<option value="0">All</option>';
-                        getDataRows(); 
+                        // getDataRows(); 
                     })
                     .catch(error => console.error('Error fetching programs:', error));
             }
@@ -267,19 +287,15 @@
                             option.text = major.Major;
                             majorSelect.appendChild(option);
                         });
-                        getDataRows(); 
+                        // getDataRows(); 
                     })
                     .catch(error => console.error('Error fetching majors:', error));
-            }
-
-            function getDataByMajor() {
-                getDataRows(); 
             }
             
             function filterByStatus(status) {
                 selectedStatus = status;
                 currentPage = 1; 
-                getDataRows(); 
+                // getDataRows(); 
             }
 
             function getDataRows(page = currentPage, limit = pageLimit) {

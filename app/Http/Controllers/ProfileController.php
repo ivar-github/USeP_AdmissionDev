@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use App\Models\ActionLogs;
+use Jenssegers\Agent\Agent;
 
 class ProfileController extends Controller
 {
@@ -37,16 +38,21 @@ class ProfileController extends Controller
             $status = 1;
             $desc = 'Profile Update Successful';
         }
+        
+        $agent = new Agent();
+        $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
 
         ActionLogs::create([
             'type' => 'Update',
-            'userID' => Auth::user()->id,
-            'userEmail' => Auth::user()->email,
             'module' => 'Users Profile',
             'affectedID' => Auth::user()->id,
             'affectedItem' => $request->input('name').' - '.$request->input('email'),
             'description' => $desc,
             'status' => $status,
+            'userID' => Auth::user()->id,
+            'userEmail' => Auth::user()->email,
+            'hostName' => gethostname(),
+            'platform' => $agentInfo,
         ]);
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');

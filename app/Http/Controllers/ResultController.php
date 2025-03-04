@@ -17,6 +17,7 @@ use App\Models\ActionLogs;
 use Illuminate\Validation\ValidationException;
 use Exception;
 use Throwable;
+use Jenssegers\Agent\Agent;
 
 class ResultController extends Controller
 {
@@ -178,6 +179,20 @@ class ResultController extends Controller
                 ];
             }
 
+            $agent = new Agent();
+            $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
+
+            ActionLogs::create([
+                'type' => 'Read',
+                'module' => 'USePAT Result',
+                'affectedItem' => 'Generate Applicants List',
+                'description' => "Term: $termID, Campus: $campus, Program: $program, Major: $major, Status: $status, Searched: $search Result List Generated",
+                'status' => 1,
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'hostName' => gethostname(),
+                'platform' => $agentInfo,
+            ]);
 
             return response()->json([
                 'data' => $data->items(),
@@ -215,14 +230,20 @@ class ResultController extends Controller
             $status = $filters['status'] ?? 'N/A';
             $search = $filters['search'] ?? 'N/A';
 
+
+            $agent = new Agent();
+            $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
+
             ActionLogs::create([
                 'type' => 'Read',
-                'userID' => Auth::user()->id,
-                'userEmail' => Auth::user()->email,
                 'module' => 'USePAT Result',
-                'affectedItem' => 'Applicants List',
+                'affectedItem' => 'Export Applicants List',
                 'description' => "Term: $termID, Campus: $campus, Program: $program, Major: $major, Status: $status, Searched: $search, Result List Exported",
                 'status' => 1,
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'hostName' => gethostname(),
+                'platform' => $agentInfo,
             ]);
 
             return Excel::download(new ExportApplicantsResult($columns, $filters), 'applicantsResults-data.xlsx');

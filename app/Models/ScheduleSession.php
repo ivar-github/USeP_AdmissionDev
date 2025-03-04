@@ -10,7 +10,10 @@ class ScheduleSession extends Model
     protected $connection = 'sqlsrv2'; 
     protected $table = 'CUSTOM_AdmissionTestSession';
 
+    public $timestamps = false;
+    
     protected $fillable = [
-        // 'MobileNo'
+          'testSessionName',
+          'isActive',
     ];
 }

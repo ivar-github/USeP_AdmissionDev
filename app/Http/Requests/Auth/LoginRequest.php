@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Models\LoginLogs;
+use Jenssegers\Agent\Agent;
 
 class LoginRequest extends FormRequest
 {
@@ -42,6 +43,9 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
+        $agent = new Agent();
+        $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
+
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
@@ -49,6 +53,8 @@ class LoginRequest extends FormRequest
                 'userEmail' => $this->input('email'),
                 'description' => 'Login Failed',
                 'status' => 0,
+                'hostName' => gethostname(),
+                'platform' => $agentInfo,
             ]);
 
             throw ValidationException::withMessages([
@@ -59,11 +65,14 @@ class LoginRequest extends FormRequest
         $user = Auth::user();
 
         if ($user->status == 0) {
+            
             LoginLogs::create([
                 'userID' => $user->id,
                 'userEmail' => $user->email,
                 'description' => 'Deactivated Account Attempted',
                 'status' => 0,
+                'hostName' => gethostname(),
+                'platform' => $agentInfo,
             ]);
 
             Auth::logout();

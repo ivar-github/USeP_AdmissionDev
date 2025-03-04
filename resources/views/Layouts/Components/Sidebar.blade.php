@@ -105,6 +105,16 @@
                             </x-subNav-Link>
                         </li>
                         <li >
+                            <x-subNav-Link :href="route('schedules.management')" :active="request()->routeIs('schedules.management')">
+                                <span class="ms-8">Management</span>
+                            </x-subNav-Link>
+                        </li>
+                        <li >
+                            <x-subNav-Link :href="route('scheduleSlots.index')" :active="request()->routeIs('scheduleSlots.index')">
+                                <span class="ms-8">Slots</span>
+                            </x-subNav-Link>
+                        </li>
+                        <li >
                             <x-subNav-Link :href="route('scheduleReschedules.index')" :active="request()->routeIs('scheduleReschedules.index')">
                                 <span class="ms-8">Reschedule</span>
                             </x-subNav-Link>

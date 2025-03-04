@@ -10,7 +10,12 @@ class ScheduleCenter extends Model
     protected $connection = 'sqlsrv2'; 
     protected $table = 'CUSTOM_AdmissionTestCenter';
 
+    public $timestamps = false;
+    
     protected $fillable = [
-        // 'MobileNo'
+          'campusID',
+          'testCenterName',
+          'description',
+          'isActive',
     ];
 }
