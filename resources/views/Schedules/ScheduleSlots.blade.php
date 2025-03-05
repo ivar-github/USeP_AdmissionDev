@@ -21,9 +21,17 @@
                 </div>
                 <div class="flex items-center mt-5 ms-5">
                     <input type="checkbox" id="isVacant" onchange="getDataByVacant()" class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:bg-slate-800 dark:border-gray-600 dark:ring-offset-gray-800 dark:focus:ring-blue-500">
-                    <label for="isVacant" class="ms-2 text-gray-700 dark:text-gray-300 text-sm">Available</label>
-                    <input type="checkbox" id="inActive" onchange="getDataByActive()" class="ms-5  w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:bg-slate-800 dark:border-gray-600 dark:ring-offset-gray-800 dark:focus:ring-blue-500">
-                    <label for="inActive" class="ml-2 text-gray-700 dark:text-gray-300 text-sm">Inactive</label>
+                    <label for="isVacant" class="ms-2 text-gray-700 dark:text-gray-300 ">Available</label>
+                </div>
+                <div class="flex items-center mt-5 ms-5">
+                    <form id="filterForm ">
+                        <label class="text-gray-700  dark:text-gray-300 mx-1">
+                            <input checked type="radio" name="status"  id="filterActive" value="1" onclick="filterByStatus(this.value)" > Active
+                        </label>
+                        <label class="text-gray-700  dark:text-gray-300 mx-1" >
+                            <input type="radio" name="status" id="filterInactive" value="0" onclick="filterByStatus(this.value)"> Inactive
+                        </label>
+                    </form> 
                 </div>
             </div>
             <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 mb-10">
@@ -112,8 +120,10 @@
                         </div>
                         <div class="rounded-lg">
                             <select id="sort" name="sort" onchange="sortByColumn()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full   dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                @foreach(['testCenterName', 'testTimeStartString', 'testTimeEndString', 'testSessionName', 'testRoomName', 'totalRegistered', 'availableSlots', 'isFull'] as $sort)
-                                        <option value="{{ $sort }}">{{ $sort }} </option>
+                                <option value="" disabled selected>Sort</option>        
+                                <option value="" selected>None</option>    
+                                @foreach(['testTimeStartString', 'testTimeEndString', 'testSessionName', 'testRoomName', 'totalRegistered', 'availableSlots', 'isFull'] as $sort)    
+                                    <option value="{{ $sort }}">{{ $sort }} </option>
                                 @endforeach
                             </select>
                         </div>
@@ -175,7 +185,7 @@
             let selectedColumns = ['id', 'testCenterName', 'testDate', 'testSessionName', 'testTimeStartString', 'testTimeEndString',  'testRoomName',]; 
             let currentPage = 1;
             let pageLimit = 10; 
-            let selectedStatus = 'all'; 
+            let selectedStatus = '1'; 
 
             getDataByTerm();
 
@@ -265,6 +275,11 @@
             function getDataByVacant() {
                 getDataRows();
             }
+            
+            function filterByStatus(status) {
+                selectedStatus = status;
+                getDataRows(); 
+            }
 
             function generateData() {
                 getDataRows(); 
@@ -286,7 +301,6 @@
                         dateFromSelect.innerHTML = '<option value="0">All</option>';
                         response.data.forEach(date => {
                             const option = document.createElement('option');
-                            // option.value = date.testDateID;
                             option.value = date.testDate;
                             option.text = date.testDate;
                             dateFromSelect.appendChild(option);
@@ -351,9 +365,9 @@
                         dateToID: document.getElementById('dateToID').value,
                         roomID: document.getElementById('roomID').value,
                         search: document.getElementById('searchInput').value,
-                        sort: document.getElementById('sort').value,
-                        inActive: document.getElementById('inActive').checked,  
+                        sort: document.getElementById('sort').value, 
                         isVacant: document.getElementById('isVacant').checked,
+                        status: selectedStatus,
                     },
                     headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
                 })
@@ -372,7 +386,7 @@
                 tableHTML += '<th class="py-2 px-4 border">#</th>';  
                 selectedColumns.forEach(column => {
                     if (column === "id") { 
-                        tableHTML += `<th class="py-2 px-4 border hidden">${column.charAt(0).toUpperCase() + column.slice(1)}</th>`;
+                        tableHTML += `<th class="py-2 px-4 hidden">${column.charAt(0).toUpperCase() + column.slice(1)}</th>`;
                     } else {
                         tableHTML += `<th class="py-2 px-4 border">${column.charAt(0).toUpperCase() + column.slice(1)}</th>`;
                     }
@@ -397,17 +411,19 @@
                     });
  
                     tableHTML += `
-                        <td class="py-2 px-4 border text-center inline-flex">
-                            <a href="javascript:void(0)" onclick="openEditModal('${rowID}')" data-modal-target="editScheduleSlotModal" data-modal-toggle="editScheduleSlotModal" class="hover:text-blue-700">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" height="24px" viewBox="0 -960 960 960" width="24px">
-                                    <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
-                                </svg>
-                            </a>
-                            <button onclick="swalDelete('${rowID}')" class="hover:text-red-700">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/>
-                                </svg>
-                            </button>
+                        <td class="py-2 px-4  border">
+                            <div class="md:inline-flex gap-5 items-center text-base font-semibold  dark:text-white">
+                                <a href="javascript:void(0)" onclick="openEditModal('${rowID}')" class="hover:text-blue-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" height="24px" viewBox="0 -960 960 960" width="24px">
+                                        <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+                                    </svg>
+                                </a>
+                                <button onclick="swalDelete('${rowID}')" class="hover:text-red-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </td>
                     </tr>`;
                 });
@@ -416,21 +432,67 @@
                 document.getElementById('tableContainer').innerHTML = tableHTML;
             }
 
-            
+
+            // FUNCTION UPDATE SLOT
+            document.addEventListener('DOMContentLoaded', function() {
+                 document.getElementById('editScheduleSlotForm').addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(this);
+                    const slotID = document.getElementById('slotID').value;
+
+                    axios.post(`/admission/schedule/scheduleSlots/${slotID}`, formData)
+                    .then(response => {
+                            // this.reset();
+                            document.getElementById('e_errorMessageSlot').innerHTML = '';
+                            swalGenericSinglePageUpdate(response.data.message);
+                            closeEditModal();
+                            getDataRows();
+                        })
+                        .catch(error => {
+                            if (error.response && error.response.status === 422) {
+                                const errors = error.response.data.errors;
+                                const errorList = document.getElementById('e_errorMessageSlot');
+                                errorList.innerHTML = '';
+
+                                for (const key in errors) {
+                                    if (errors.hasOwnProperty(key)) {
+                                        const errorMessage = document.createElement('li');
+                                        errorMessage.innerText = errors[key][0];
+                                        errorList.appendChild(errorMessage);
+                                    }
+                                }
+                            } else {
+                                const errorMsg = error.response.data.message;
+                                console.log('ErrorMsg',errorMsg);
+                                console.log('Error',error);
+                                swalGenericError('An unexpected error occurred!',errorMsg);
+                            }
+                        });
+                });
+
+            });
+
+
             function openEditModal(id) {
-                alert(`Edit record with ID: ${id}`);
                 console.log("Slot ID Sent to Axios:", id, typeof id);
+                document.getElementById('e_errorMessageSlot').innerHTML = '';
+
+                const modal = document.getElementById('editScheduleSlotModal');
+                modal.classList.remove('hidden');
                 axios.get(`/admission/schedule/scheduleSlots/${id}/edit`)
                     .then(response => {
                         const slot = response.data;
                         document.getElementById('slotID').value = slot.id;
                         document.getElementById('campusID').value = slot.testCenterID;
-                        document.getElementById('e_term').value = slot.termID;
-                        document.getElementById('e_center').value = slot.testCenterID;
-                        document.getElementById('e_date').value = slot.testDateID;
-                        document.getElementById('e_time').value = slot.testTimeID;
-                        document.getElementById('e_session').value = slot.testSessionID;
-                        document.getElementById('e_room').value = slot.testRoomID;
+                        document.getElementById('e_slotTerm').value = slot.termID;
+                        document.getElementById('e_slotCenter').value = slot.testCenterID;
+                        document.getElementById('e_slotDate').value = slot.testDateID;
+                        document.getElementById('e_slotTime').value = slot.testTimeID;
+                        document.getElementById('e_slotSession').value = slot.testSessionID;
+                        document.getElementById('e_slotRoom').value = slot.testRoomID;
+                        document.getElementById('e_slotLimit').value = slot.maxExamineeSlots;
+                        document.getElementById('e_slotStatus').value = slot.isActive;
                     })
                     .catch(error => {
                         console.error('Error fetching Schedule Slot data:', error);
@@ -439,11 +501,15 @@
                  
             }
 
+            function closeEditModal() {
+                document.getElementById('editScheduleSlotModal').classList.add('hidden');
+                document.getElementById('e_errorMessageSlot').innerHTML = '';
+            }
+
 
             
             // FUNCTION TO DELETE ITEM
             function swalDelete(id) {
-                    // alert(`Deleted record with ID: ${id}`);
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",
@@ -463,14 +529,14 @@
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                                 'Accept': 'application/json',
                             },
-                            data: {
-                                appNo: appNo   
-                            }
+                            // data: {
+                            //     appNo: appNo   
+                            // }
                         })
                         .then(response => {
                             if (response.data.status === 'success') {
                                 swalGenericDelete(response.data.message);
-                                fetchExaminees();
+                                getDataRows();
                             } else {
                                 swalGenericError('Invalid Deletion!',response.data.message);
                             }

@@ -47,7 +47,23 @@ class ScheduleSlotsController extends Controller
                 ->where('isActive', 1)
                 ->orderBy('campusID', 'asc')->get();
 
-            return view('Schedules.ScheduleSlots', compact('terms', 'centers' ));
+            $dates = ScheduleDate::select('id', 'testDate')
+                ->where('isActive', 1)
+                ->orderBy('testDate', 'asc')->get();
+
+            $times = ScheduleTime::select('id', 'testTimeStartString', 'testTimeEndString')
+                ->where('isActive', 1)
+                ->orderBy('testTimeStartString', 'asc')->get();
+
+            $sessions = ScheduleSession::select('id', 'testSessionName' )
+                ->where('isActive', 1)
+                ->orderBy('testSessionName', 'asc')->get();
+
+            $rooms = ScheduleRoom::select('id', 'testRoomName' )
+                ->where('isActive', 1)
+                ->orderBy('testRoomName', 'asc')->get();
+
+            return view('Schedules.ScheduleSlots', compact('terms', 'centers', 'dates',  'times', 'sessions', 'rooms'  ));
 
         } catch (Throwable $e) {
             return response()->json([
@@ -72,9 +88,9 @@ class ScheduleSlotsController extends Controller
             $roomId = $request->input('roomID');
             $search = $request->input('search');
             $sort = $request->input('sort');
-
-            $inActive = $request->boolean('inActive', false);
-            $isVacant = $request->boolean('isVacant', false) ? 'False' : 'True';
+            $status = $request->input('status');
+            // $isVacant = $request->boolean('isVacant', false) ? 'False' : 'True';
+            $isVacant = $request->boolean('isVacant', false);
 
             $prefRowQuery = ScheduleViewSlot::select($columns)
                 ->where('TermID', $termId)
@@ -83,10 +99,12 @@ class ScheduleSlotsController extends Controller
                 ->when($dateFromId && $dateToId, fn($query) => $query->whereBetween('testDate', [$dateFromId, $dateToId]))
                 ->when($dateFromId && !$dateToId, fn($query) => $query->where('testDate', '>=', $dateFromId))
                 ->when(!$dateFromId && $dateToId, fn($query) => $query->where('testDate', '<=', $dateToId))
-                ->where('isActive', !$inActive)
-                ->where('isFull', '=', $isVacant)
+                ->when($isVacant, fn($query) => $query->where('isFull', 'False'))
+                ->where('isActive', $status)
+                // ->where('isFull', '=', $isVacant)
+                ->orderBy('testCenterName', 'asc') 
                 ->orderBy('testDate', 'asc') 
-                ->orderBy($sort, 'asc') ;
+                ->when($sort, fn($query) => $query->orderBy($sort, 'asc'));
 
 
             if ($search) {
@@ -211,13 +229,15 @@ class ScheduleSlotsController extends Controller
                     'testSessionID',
                     'testRoomID',
                     'termID',
+                    'maxExamineeSlots',
+                    'isActive',
                 )
                 ->where('id', $id)
                 ->first(); 
 
             if (!$slot) {
                 return response()->json([
-                    'message' => 'Applicant not found!',
+                    'message' => 'Schedule slot not found!',
                     'status' => 'error',
                 ], 404);
             }
@@ -232,19 +252,138 @@ class ScheduleSlotsController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+
+    public function update(Request $request)
     {
-        //
+
+        try {
+
+            $slotID = $request->input('slotID');
+
+            $scheduleSlot = ScheduleSlot::where('id', $slotID)->firstOrFail();
+
+            $request->validate([
+                'Term' => ['required', 'integer'],
+                'Center' => ['required', 'integer'],
+                'Date' => ['required', 'integer'],
+                'Time' => ['required', 'integer'],
+                'Session' => ['required', 'integer'],
+                'Room' => ['required', 'integer'],
+                'Slot' => ['required', 'integer', 'max:200'],
+                'Status' => ['required', 'integer', 'in:0,1'],
+            ]);
+
+            $scheduleSlot->testCenterID = $request->input('Center');
+            $scheduleSlot->testDateID = $request->input('Date');
+            $scheduleSlot->testTimeID = $request->input('Time');
+            $scheduleSlot->testRoomID = $request->input('Room');
+            $scheduleSlot->testSessionID = $request->input('Session');
+            $scheduleSlot->termID = $request->input('Term');
+            $scheduleSlot->maxExamineeSlots = $request->input('Slot');
+            // $scheduleSlot->createdBy = Auth::user()->email;
+            $scheduleSlot->isActive = $request->input('Status');
+            // $scheduleSlot->dateAdded = now();
+            $scheduleSlot->save();
+
+
+            $status = 0;
+            $desc = 'No changes were made';
+            if ($scheduleSlot->wasChanged()) {
+                $status = 1;
+                $desc = 'Slot Update Successful';
+            }
+
+            // $agent = new Agent();
+            // $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
+
+            // ActionLogs::create([
+            //     'type' => 'Update',
+            //     'module' => 'USePAT Schedule - Slot',
+            //     'affectedID' => $scheduleSlot->id,
+            //     'affectedItem' => $scheduleSlot->appNo,
+            //     'description' => $desc,
+            //     'status' => $status,
+            //     'userID' => Auth::user()->id,
+            //     'userEmail' => Auth::user()->email,
+            //     'hostName' => gethostname(),
+            //     'platform' => $agentInfo,
+            // ]);
+
+            return response()->json([
+                'message' => $desc,
+                'status' => 'success',
+            ], 200);
+
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $e->errors(),
+                'status' => 'error',
+            ], 422);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Applicant not found',
+                'message' => 'The requested applicant does not exist.',
+            ], 404);
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
-        //
+        try {
+            
+            // $appNo = $request->input('appNo');
+    
+            $hasValue = ScheduleViewSlot::where('id', $id)
+                ->where('totalRegistered', '>', 0)
+                ->exists();
+    
+            if ($hasValue) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Schedule Slot could not be deleted!'
+                ], 422);
+            }
+
+            $scheduleSlot = ScheduleSlot::findOrFail($id);
+            $scheduleSlot->delete();
+
+            $agent = new Agent();
+            $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
+
+            ActionLogs::create([
+                'type' => 'Delete',
+                'module' => 'USePAT Schedule - Slot',
+                'affectedID' => $scheduleSlot->id,
+                'affectedItem' => $scheduleSlot->id,
+                'description' => 'Deletion Successful',
+                'status' => 1,
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'hostName' => gethostname(),
+                'platform' => $agentInfo,
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Deletion Successful'
+            ]);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An unexpected error occurred: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }
