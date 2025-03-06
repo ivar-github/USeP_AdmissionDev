@@ -10,7 +10,7 @@
 
             <label class="block text-md text-gray-700  dark:text-gray-300">FILTER: </label>
             <hr class="my-2 mx-2">
-            <div class="grid grid-cols-2 lg:grid-cols-4 mb-2">
+            <div class="grid grid-cols-1 lg:grid-cols-4 mb-2">
                 <div class="dark:text-gray-200 mx-2 ">
                     <label for="termID" class="block text-md text-gray-700  dark:text-gray-300">Term </label>
                     <select id="termID" name="termID" onchange="getDataByTerm()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"> 
@@ -26,7 +26,7 @@
                 <div class="flex items-center mt-5 ms-5">
                     <form id="filterForm ">
                         <label class="text-gray-700  dark:text-gray-300 mx-1">
-                            <input checked type="radio" name="status"  id="filterActive" value="1" onclick="filterByStatus(this.value)" > Active
+                            <input checked type="radio" name="status"  id="filterActive" value="1" onclick="filterByStatus(this.value)"> Active
                         </label>
                         <label class="text-gray-700  dark:text-gray-300 mx-1" >
                             <input type="radio" name="status" id="filterInactive" value="0" onclick="filterByStatus(this.value)"> Inactive
@@ -72,14 +72,23 @@
                 </div>
             </div>
             
-            {{-- <button type="button"  onclick="generateData()" class="mb-4 flex items-center justify-center text-white bg-red-900 hover:bg-red-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-900 dark:hover:bg-red-800 focus:outline-none dark:focus:ring-primary-800">
-                <svg aria-hidden="true" class="w-5 h-5 me-1" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-                </svg>
-                Generate
-            </button> --}}
+            <div class="flex justify-between items-center my-2"> 
+                <button onclick="openAddModal()" type="button" id="addScheduleSlotModalButton"   class="flex items-center justify-center text-white bg-red-900 hover:bg-red-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-2 py-2 dark:bg-red-900 dark:hover:bg-red-800 focus:outline-none dark:focus:ring-primary-800">
+                    <svg class="h-3.5 w-3.5 mr-1" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                    </svg>
+                    Add Schedule
+                </button>
+             
+                <button type="button" onclick="exportToExcel()" class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-primary-800">
+                    <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                    </svg>
+                    Export
+                </button>
+            </div>
 
-            <div class="border border-gray-300 rounded-xl p-5">
+            <div class="border border-gray-300 rounded-xl p-2">
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-2">
                     <div class="w-full lg:w-4/12 justify-start">
                         <form class="flex items-center">
@@ -108,7 +117,7 @@
                             <div id="filterDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
                                 <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Columns</h6>
                                 <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
-                                    @foreach(['totalRegistered', 'availableSlots', 'isFull', 'isActive'] as $column)
+                                    @foreach([ 'testSessionName', 'maxExamineeSlots', 'totalRegistered', 'availableSlots', 'isFull', 'isActive'] as $column)
                                         <li class="flex items-center">
                                             <input type="checkbox" value="{{ $column }}"  onchange="updateColumns(this)" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                             <label for="apple" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{ ucfirst($column) }}</label>
@@ -127,12 +136,6 @@
                                 @endforeach
                             </select>
                         </div>
-                        {{-- <button type="button" onclick="exportToExcel()" class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-primary-800">
-                            <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
-                            </svg>
-                            Export
-                        </button> --}}
                         
                     </div>
                 </div>
@@ -160,10 +163,10 @@
                         </select>
                     </div>
                 </div>
-                <div class="flex items-center justify-center space-x-2 my-2">
+                <div class="flex items-center justify-center space-x-2">
                     <div class="w-60 items-center justify-center">
                         <div class="flex items-center justify-center text-center text-gray-700  dark:text-gray-300 mx-1">
-                            <p class="text-2xl w-full ms-1" id="totalRows"></p>
+                            <p class="text-xl w-full ms-1" id="totalRows"></p>
                         </div>
                     </div>
                 </div>
@@ -173,6 +176,7 @@
 
             {{-- MODALS --}}
             @include('Layouts.Modal.ScheduleSlots.Edit')
+            @include('Layouts.Modal.ScheduleSlots.Create')
         </div>
     </div>
 
@@ -182,7 +186,7 @@
         <script src="{{ asset('JS/SweetAlerts/SwalGeneric.js') }}"></script>
         
         <script>
-            let selectedColumns = ['id', 'testCenterName', 'testDate', 'testSessionName', 'testTimeStartString', 'testTimeEndString',  'testRoomName',]; 
+            let selectedColumns = ['id', 'testCenterName', 'testDate', 'testTimeStartString', 'testTimeEndString',  'testRoomName',]; 
             let currentPage = 1;
             let pageLimit = 10; 
             let selectedStatus = '1'; 
@@ -195,37 +199,6 @@
                 getDataRows(); 
 
             }
-
-            // function exportToExcel() {
-            //     const filters = {
-            //         termID: document.getElementById('termID').value,
-            //         centerID: document.getElementById('centerID').value,
-            //         dateFromID: document.getElementById('dateFromID').value,
-            //         dateToID: document.getElementById('dateToID').value,
-            //         search: document.getElementById('searchInput').value,
-            //     };
-
-            //     axios.post('/admission/schedule/exportApplicantsScheds', {
-            //         columns:  selectedColumns.join(','),
-            //         ...filters,
-            //     }, {
-            //         responseType: 'blob',  
-            //     })
-            //     .then(response => {
-            //         const url = window.URL.createObjectURL(new Blob([response.data]));
-            //         const link = document.createElement('a');
-            //         link.href = url;
-            //         link.setAttribute('download', 'applicantsSchedules-data.xlsx');
-            //         document.body.appendChild(link);
-            //         link.click();
-            //         link.remove();
-            //         swalGenericExport();
-            //     })
-            //     .catch(error => {
-            //         console.error('Error exporting to Excel:', error);
-            //         swalGenericError('An unexpected error occurred!', error.message || 'Please try again.');
-            //     });
-            // }
 
             function updateColumns(checkbox) {
                 if (checkbox.checked) {
@@ -382,43 +355,43 @@
 
 
             function renderTable(data, currentPage, limit) {
-                let tableHTML = '<table class="min-w-full border border-gray-300 rounded-xl text-gray-700  dark:text-gray-300"><thead><tr>';
-                tableHTML += '<th class="py-2 px-4 border">#</th>';  
+                let tableHTML = '<table class="min-w-full rounded-xl text-gray-700  dark:text-gray-300"><thead class="py-2"><tr>';
+                tableHTML += '<th class="py-2 px-4 border border-gray-300 dark:border-gray-700">#</th>';  
                 selectedColumns.forEach(column => {
                     if (column === "id") { 
                         tableHTML += `<th class="py-2 px-4 hidden">${column.charAt(0).toUpperCase() + column.slice(1)}</th>`;
                     } else {
-                        tableHTML += `<th class="py-2 px-4 border">${column.charAt(0).toUpperCase() + column.slice(1)}</th>`;
+                        tableHTML += `<th class="py-2 px-4 border border-gray-300 dark:border-gray-700">${column.charAt(0).toUpperCase() + column.slice(1)}</th>`;
                     }
                     
                 });
                 
-                tableHTML += `<th class="py-2 px-4 border">Actions</th>`;
+                tableHTML += `<th class="py-2 px-4 border border-gray-300 dark:border-gray-700">Actions</th>`;
                 tableHTML += `</tr></thead><tbody>`;
 
                 data.forEach((row, index) => {
                     let rowNumber = (currentPage - 1) * limit + index + 1; 
                     let rowID = row.id;    
 
-                    tableHTML += `<tr data-id="${rowID}"><td class="py-2 px-4 border">${rowNumber}</td>`;  
+                    tableHTML += `<tr data-id="${rowID}"><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">${rowNumber}</td>`;  
 
                     selectedColumns.forEach(column => {
                         if (column === "id") { 
                             tableHTML += `<td class="hidden">${rowID}</td>`;  
                         } else {
-                            tableHTML += `<td class="py-2 px-4 border">${row[column] || ''}</td>`;
+                            tableHTML += `<td class="py-2 px-4 border border-gray-300 dark:border-gray-700">${row[column] || ''}</td>`;
                         }
                     });
  
                     tableHTML += `
-                        <td class="py-2 px-4  border">
-                            <div class="md:inline-flex gap-5 items-center text-base font-semibold  dark:text-white">
-                                <a href="javascript:void(0)" onclick="openEditModal('${rowID}')" class="hover:text-blue-700">
+                        <td class="py-2 text-center border border-gray-300 dark:border-gray-700">
+                            <div class="inline-flex gap-3 items-center text-base font-semibold  dark:text-white">
+                                <a href="javascript:void(0)" onclick="openEditModal('${rowID}')" class="text-blue-800 hover:text-blue-400 dark:text-blue-500 dark:hover:text-blue-400 ">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" height="24px" viewBox="0 -960 960 960" width="24px">
                                         <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
                                     </svg>
                                 </a>
-                                <button onclick="swalDelete('${rowID}')" class="hover:text-red-700">
+                                <button onclick="swalDelete('${rowID}')" class="text-red-800 hover:text-red-400 dark:text-red-500 dark:hover:text-red-400 ">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/>
                                     </svg>
@@ -432,8 +405,79 @@
                 document.getElementById('tableContainer').innerHTML = tableHTML;
             }
 
+            
 
-            // FUNCTION UPDATE SLOT
+            /// EXPORT TO EXCEL
+            function exportToExcel() {
+                const filters = {
+                    termID: document.getElementById('termID').value,
+                    centerID: document.getElementById('centerID').value,
+                    dateFromID: document.getElementById('dateFromID').value,
+                    dateToID: document.getElementById('dateToID').value,
+                    roomID: document.getElementById('roomID').value,
+                    sort: document.getElementById('sort').value,
+                    search: document.getElementById('searchInput').value,
+                    status: selectedStatus,
+                };
+
+                axios.post('/admission/schedule/exportSchedulesSlots', {
+                    columns:  selectedColumns.join(','),
+                    ...filters,
+                }, {
+                    responseType: 'blob',  
+                })
+                .then(response => {
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', 'schedulesSlots-data.xlsx');
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    swalGenericExport();
+                })
+                .catch(error => {
+                    swalGenericError('An unexpected error occurred!', error.message || 'Please try again.');
+                });
+            }
+
+
+            // AXIOS ADD SCHEDULE SLOT
+            var submitFormUrl = "{{ route('scheduleSlots.store') }}";
+            document.getElementById('addScheduleForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+
+                axios.post(submitFormUrl, formData)
+                    .then(response => {
+                        this.reset();
+                        document.getElementById('errorMessageSlot').innerHTML = '';
+                        swalGenericSinglePageAdd(response.data.message);
+                        getDataRows();
+                        closeAddModal();
+                    })
+                    .catch(error => {
+                        if (error.response && error.response.status === 422) {
+                            const errors = error.response.data.errors;
+                            const errorList = document.getElementById('errorMessageSlot');
+                            errorList.innerHTML = '';
+
+                            for (const key in errors) {
+                                if (errors.hasOwnProperty(key)) {
+                                    const errorMessage = document.createElement('li');
+                                    errorMessage.innerText = errors[key][0];
+                                    errorList.appendChild(errorMessage);
+                                }
+                            }
+                        } else {
+                            const errorMsg = error.response.data.message;
+                            swalGenericError('An unexpected error occurred!',errorMsg);
+                        }
+                    });
+            });
+
+            /// AXIOS UPDATE SCHEDULE SLOT
             document.addEventListener('DOMContentLoaded', function() {
                  document.getElementById('editScheduleSlotForm').addEventListener('submit', function (e) {
                     e.preventDefault();
@@ -443,7 +487,7 @@
 
                     axios.post(`/admission/schedule/scheduleSlots/${slotID}`, formData)
                     .then(response => {
-                            // this.reset();
+                            this.reset();
                             document.getElementById('e_errorMessageSlot').innerHTML = '';
                             swalGenericSinglePageUpdate(response.data.message);
                             closeEditModal();
@@ -464,8 +508,6 @@
                                 }
                             } else {
                                 const errorMsg = error.response.data.message;
-                                console.log('ErrorMsg',errorMsg);
-                                console.log('Error',error);
                                 swalGenericError('An unexpected error occurred!',errorMsg);
                             }
                         });
@@ -473,13 +515,18 @@
 
             });
 
-
+            // FUNCTION TO SHOW ADD MODAL
+            function openAddModal() {
+                document.getElementById('addScheduleSlotModal').classList.remove('hidden'); 
+                document.getElementById('errorMessageSlot').innerHTML = '';
+            }
+            
+            // FUNCTION TO SHOW EDIT MODAL
             function openEditModal(id) {
-                console.log("Slot ID Sent to Axios:", id, typeof id);
+                
+                document.getElementById('editScheduleSlotModal').classList.remove('hidden'); 
                 document.getElementById('e_errorMessageSlot').innerHTML = '';
 
-                const modal = document.getElementById('editScheduleSlotModal');
-                modal.classList.remove('hidden');
                 axios.get(`/admission/schedule/scheduleSlots/${id}/edit`)
                     .then(response => {
                         const slot = response.data;
@@ -495,10 +542,14 @@
                         document.getElementById('e_slotStatus').value = slot.isActive;
                     })
                     .catch(error => {
-                        console.error('Error fetching Schedule Slot data:', error);
                         swalGenericError('An unexpected error occurred!', error);
                     });
                  
+            }
+
+            function closeAddModal() {
+                document.getElementById('addScheduleSlotModal').classList.add('hidden');
+                document.getElementById('errorMessageSlot').innerHTML = '';
             }
 
             function closeEditModal() {
@@ -535,7 +586,7 @@
                         })
                         .then(response => {
                             if (response.data.status === 'success') {
-                                swalGenericDelete(response.data.message);
+                                swalGenericSinglePageDelete(response.data.message);
                                 getDataRows();
                             } else {
                                 swalGenericError('Invalid Deletion!',response.data.message);
@@ -543,8 +594,6 @@
                         })
                         .catch(error => {
                             const errorMsg = error.response.data.message;
-                            console.log('ErrorMsg',errorMsg);
-                            console.log('Error',error);
                             swalGenericError('An unexpected error occurred!',errorMsg);
                         });
                     }

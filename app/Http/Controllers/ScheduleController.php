@@ -136,40 +136,46 @@ class ScheduleController extends Controller
             $centerId = $request->input('centerID');
             $dateFromId = $request->input('dateFromID');
             $dateToId = $request->input('dateToID');
+            $roomId = $request->input('roomID');
             $search = $request->input('search');
+            $sort = $request->input('sort');
 
             $prefRowQuery = ScheduleView::select($columns)
                 ->where('TermID', $termId)
                 ->when($centerId != 0, fn($query) => $query->where('testCenterID', $centerId))
+                ->when($roomId != 0, fn($query) => $query->where('testRoomID', $roomId))
                 ->when($dateFromId && $dateToId, fn($query) => $query->whereBetween('testDate', [$dateFromId, $dateToId]))
                 ->when($dateFromId && !$dateToId, fn($query) => $query->where('testDate', '>=', $dateFromId))
                 ->when(!$dateFromId && $dateToId, fn($query) => $query->where('testDate', '<=', $dateToId))
-                ->orderBy('Name', 'asc') ;
+                ->when($sort, fn($query) => $query->orderBy($sort, 'asc'));
 
 
             if ($search) {
                 $prefRowQuery->where(function($q) use ($search) {
                     $q->where('Name', 'LIKE', '%' . $search . '%')
-                    ->orWhere('appNo', 'LIKE', '%' . $search . '%');
+                    ->orWhere('appNo', 'LIKE', '%' . $search . '%')
+                    ->orWhere('testCenterName', 'LIKE', '%' . $search . '%')
+                    ->orWhere('testDate', 'LIKE', '%' . $search . '%')
+                    ->orWhere('testRoomName', 'LIKE', '%' . $search . '%');
                 });
             }
 
             $data = $prefRowQuery->paginate($perPage);
 
-            $agent = new Agent();
-            $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
+            // $agent = new Agent();
+            // $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
 
-            ActionLogs::create([
-                'type' => 'Read',
-                'module' => 'USePAT Schedule - Applicant',
-                'affectedItem' => 'Generate Applicants List',
-                'description' => "Term: $termId, Center: $centerId, Searched: $search, DateFrom: $dateFromId, DateTo: $dateToId, Schedules List Generated",
-                'status' => 1,
-                'userID' => Auth::user()->id,
-                'userEmail' => Auth::user()->email,
-                'hostName' => gethostname(),
-                'platform' => $agentInfo,
-            ]);
+            // ActionLogs::create([
+            //     'type' => 'Read',
+            //     'module' => 'USePAT Schedule - Applicant',
+            //     'affectedItem' => 'Generate Applicants List',
+            //     'description' => "Term: $termId, Center: $centerId, Searched: $search, DateFrom: $dateFromId, DateTo: $dateToId, Room: $roomId, Schedules List Generated",
+            //     'status' => 1,
+            //     'userID' => Auth::user()->id,
+            //     'userEmail' => Auth::user()->email,
+            //     'hostName' => gethostname(),
+            //     'platform' => $agentInfo,
+            // ]);
 
             return response()->json([
                 'data' => $data->items(),
@@ -193,13 +199,15 @@ class ScheduleController extends Controller
         try {
 
             $columns = explode(',', $request->input('columns', ''));
-            $filters = $request->only(['termID', 'centerID', 'dateFromID', 'dateToID', 'search']);
+            $filters = $request->only(['termID', 'centerID', 'dateFromID', 'dateToID', 'roomID', 'search', 'sort']);
 
             $termID = $filters['termID'] ?? 'N/A';
             $centerID = $filters['centerID'] ?? 'N/A';
             $dateFromID = $filters['dateFromID'] ?? 'N/A';
             $dateToID = $filters['dateToID'] ?? 'N/A';
+            $roomID = $filters['roomID'] ?? 'N/A';
             $search = $filters['search'] ?? 'N/A';
+            $sort = $filters['sort'] ?? 'N/A';
 
 
             $agent = new Agent();
@@ -209,7 +217,7 @@ class ScheduleController extends Controller
                 'type' => 'Read',
                 'module' => 'USePAT Schedule - Applicant',
                 'affectedItem' => 'Export Applicants List',
-                'description' => "Term: $termID, Center: $centerID, Searched: $search, DateFrom: $dateFromID, DateTo: $dateToID, Schedules List Exported",
+                'description' => "Term: $termID, Center: $centerID, Searched: $search, DateFrom: $dateFromID, DateTo: $dateToID,  Room: $roomID, Schedules List Exported",
                 'status' => 1,
                 'userID' => Auth::user()->id,
                 'userEmail' => Auth::user()->email,
@@ -257,51 +265,5 @@ class ScheduleController extends Controller
     }
 
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

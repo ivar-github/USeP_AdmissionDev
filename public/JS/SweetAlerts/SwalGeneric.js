@@ -53,8 +53,8 @@ function swalGenericUpdate(message){
 
 function swalGenericSinglePageUpdate(message){
   Swal.fire({
-    title: "Updated",
-    text: message,
+    // title: "Updated",
+    title: message,
     icon: 'success',
     showCancelButton: false,
     confirmButtonColor: '#3085d6',
@@ -83,6 +83,20 @@ function swalGenericDelete(){
       // location.reload();
     }
   });
+}
+
+
+function swalGenericSinglePageDelete(){
+    Swal.fire({
+    title: 'Deleted',
+    text: 'Deletion Successful',
+    icon: 'success',
+    showCancelButton: false,
+    confirmButtonColor: '#3085d6',
+    confirmButtonText: 'Ok',
+    background: document.documentElement.classList.contains('dark') ? '#1F2937' : '#ffffff',
+    color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#374151',
+  })
 }
 
 

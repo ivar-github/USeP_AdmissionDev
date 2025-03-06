@@ -28,7 +28,7 @@ class ScheduleRescheduleController extends Controller
         try {
 
             $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
-                ->limit(10)
+                ->where('IsForAdmission', 1)
                 ->orderBy('TermID', 'desc')
                 ->get();
 

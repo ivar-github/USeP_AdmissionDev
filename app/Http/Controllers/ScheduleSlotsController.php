@@ -17,11 +17,12 @@ use App\Models\ScheduleViewSlot;
 use App\Models\ScheduleSlot;
 use Illuminate\Support\Facades\DB;
 
-use App\Exports\ExportApplicantsSchedule;
+use App\Exports\ExportScheduleSlot;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\JsonResponse;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use App\Models\ActionLogs;
 use Illuminate\Validation\ValidationException;
 use Exception;
@@ -30,9 +31,7 @@ use Jenssegers\Agent\Agent;
 
 class ScheduleSlotsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+ 
     public function index()
     {
 
@@ -57,7 +56,7 @@ class ScheduleSlotsController extends Controller
 
             $sessions = ScheduleSession::select('id', 'testSessionName' )
                 ->where('isActive', 1)
-                ->orderBy('testSessionName', 'asc')->get();
+                ->orderBy('id', 'asc')->get();
 
             $rooms = ScheduleRoom::select('id', 'testRoomName' )
                 ->where('isActive', 1)
@@ -118,21 +117,6 @@ class ScheduleSlotsController extends Controller
 
             $data = $prefRowQuery->paginate($perPage);
 
-            // $agent = new Agent();
-            // $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
-
-            // ActionLogs::create([
-            //     'type' => 'Read',
-            //     'module' => 'USePAT Schedule - Applicant',
-            //     'affectedItem' => 'Generate Applicants List',
-            //     'description' => "Term: $termId, Center: $centerId, Searched: $search, DateFrom: $dateFromId, DateTo: $dateToId, Schedules List Generated",
-            //     'status' => 1,
-            //     'userID' => Auth::user()->id,
-            //     'userEmail' => Auth::user()->email,
-            //     'hostName' => gethostname(),
-            //     'platform' => $agentInfo,
-            // ]);
-
             return response()->json([
                 'data' => $data->items(),
                 'current_page' => $data->currentPage(),
@@ -150,18 +134,21 @@ class ScheduleSlotsController extends Controller
     }
 
 
-    public function exportApplicantsScheds(Request $request)
+    public function exportSchedulesSlots(Request $request)
     {
         try {
 
             $columns = explode(',', $request->input('columns', ''));
-            $filters = $request->only(['termID', 'centerID', 'dateFromID', 'dateToID', 'search']);
+            $filters = $request->only(['termID', 'centerID', 'dateFromID', 'dateToID',  'roomID', 'search', 'status', 'sort']);
 
             $termID = $filters['termID'] ?? 'N/A';
             $centerID = $filters['centerID'] ?? 'N/A';
             $dateFromID = $filters['dateFromID'] ?? 'N/A';
             $dateToID = $filters['dateToID'] ?? 'N/A';
+            $roomID = $filters['roomID'] ?? 'N/A';
             $search = $filters['search'] ?? 'N/A';
+            $sort = $filters['sort'] ?? 'N/A';
+            $status = $filters['status'] ?? 'N/A';
 
 
             $agent = new Agent();
@@ -169,9 +156,9 @@ class ScheduleSlotsController extends Controller
 
             ActionLogs::create([
                 'type' => 'Read',
-                'module' => 'USePAT Schedule - Applicant',
-                'affectedItem' => 'Export Applicants List',
-                'description' => "Term: $termID, Center: $centerID, Searched: $search, DateFrom: $dateFromID, DateTo: $dateToID, Schedules List Exported",
+                'module' => 'USePAT Schedule - Slot',
+                'affectedItem' => 'Export Schedlue Slot List',
+                'description' => "Term: $termID, Center: $centerID, Searched: $search, DateFrom: $dateFromID, DateTo: $dateToID, Room: $roomID, Status: $status,  Slots List Exported",
                 'status' => 1,
                 'userID' => Auth::user()->id,
                 'userEmail' => Auth::user()->email,
@@ -180,7 +167,7 @@ class ScheduleSlotsController extends Controller
             ]);
 
 
-            return Excel::download(new ExportApplicantsSchedule($columns, $filters), 'applicantsSchedules-data.xlsx');
+            return Excel::download(new ExportScheduleSlot($columns, $filters), 'schedulesSlots-data.xlsx');
 
         } catch (Throwable $e) {
             return response()->json([
@@ -191,33 +178,106 @@ class ScheduleSlotsController extends Controller
     }
 
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
-        //
+
+        try {
+            $request->validate([
+                'Term' => ['required', 'integer'],
+                'Center' => ['required', 'integer'],
+                'Date' => ['required', 'integer'],
+                'Time' => ['required', 'integer'],
+                'Session' => ['required', 'integer'],
+                'Room' => ['required', 'integer'],
+                'Slot' => ['required', 'integer', 'max:200'],
+                'Status' => ['required', 'integer', 'in:0,1'],
+            ]);
+ 
+            $existingSchedule = ScheduleSlot::where([
+                'termID' => $request->Term,
+                'testCenterID' => $request->Center,
+                'testDateID' => $request->Date,
+                'testTimeID' => $request->Time,
+                'testSessionID' => $request->Session,
+                'testRoomID' => $request->Room,
+            ])->exists();
+    
+            if ($existingSchedule) {
+                return response()->json([
+                    'message' => 'A schedule with the same details already exists!',
+                    'status' => 'error',
+                ], 409);  
+            }
+
+            $scheduleSlot = ScheduleSlot::create([
+                'termID' => $request->Term,
+                'testCenterID' => $request->Center,
+                'testDateID' => $request->Date,
+                'testTimeID' => $request->Time,
+                'testSessionID' => $request->Session,
+                'testRoomID' => $request->Room,
+                'maxExamineeSlots' => $request->Slot,
+                'dateAdded' => now(),
+                'createdBy' => Auth::user()->email,
+                'isActive' => $request->Status,
+            ]);
+
+            $agent = new Agent();
+            $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
+
+            ActionLogs::create([
+                'type' => 'Create',
+                'module' => 'USePAT Schedule - Slot',
+                'affectedID' => $scheduleSlot->id,
+                'affectedItem' => $scheduleSlot->testCenterID.','
+                    .$scheduleSlot->testDateID.','
+                    .$scheduleSlot->testTimeID.','
+                    .$scheduleSlot->testRoomID.','
+                    .$scheduleSlot->testSessionID.','
+                    .$scheduleSlot->termID.','
+                    .$scheduleSlot->maxExamineeSlots.','
+                    .$scheduleSlot->isActive.',',
+                'description' => 'Schedule Creation Successful',
+                'status' => 1,
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'hostName' => gethostname(),
+                'platform' => $agentInfo,
+            ]);
+
+            return response()->json([
+                'message' => 'Schedule Creation Successful!',
+                'status' => 'success',
+            ], 200);
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $e->errors(),
+                'status' => 'error',
+            ], 422);
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+
     public function edit(string $id): JsonResponse
     {
         try {
@@ -260,8 +320,6 @@ class ScheduleSlotsController extends Controller
 
             $slotID = $request->input('slotID');
 
-            $scheduleSlot = ScheduleSlot::where('id', $slotID)->firstOrFail();
-
             $request->validate([
                 'Term' => ['required', 'integer'],
                 'Center' => ['required', 'integer'],
@@ -272,6 +330,26 @@ class ScheduleSlotsController extends Controller
                 'Slot' => ['required', 'integer', 'max:200'],
                 'Status' => ['required', 'integer', 'in:0,1'],
             ]);
+ 
+            $existingSchedule = ScheduleSlot::where([
+                'termID' => $request->Term,
+                'testCenterID' => $request->Center,
+                'testDateID' => $request->Date,
+                'testTimeID' => $request->Time,
+                'testSessionID' => $request->Session,
+                'testRoomID' => $request->Room,
+            ])
+            ->where('id', '!=', $slotID)
+            ->exists();
+    
+            if ($existingSchedule) {
+                return response()->json([
+                    'message' => 'A schedule with the same details already exists!',
+                    'status' => 'error',
+                ], 409);  
+            }
+
+            $scheduleSlot = ScheduleSlot::where('id', $slotID)->firstOrFail();
 
             $scheduleSlot->testCenterID = $request->input('Center');
             $scheduleSlot->testDateID = $request->input('Date');
@@ -280,9 +358,7 @@ class ScheduleSlotsController extends Controller
             $scheduleSlot->testSessionID = $request->input('Session');
             $scheduleSlot->termID = $request->input('Term');
             $scheduleSlot->maxExamineeSlots = $request->input('Slot');
-            // $scheduleSlot->createdBy = Auth::user()->email;
             $scheduleSlot->isActive = $request->input('Status');
-            // $scheduleSlot->dateAdded = now();
             $scheduleSlot->save();
 
 
@@ -290,24 +366,31 @@ class ScheduleSlotsController extends Controller
             $desc = 'No changes were made';
             if ($scheduleSlot->wasChanged()) {
                 $status = 1;
-                $desc = 'Slot Update Successful';
+                $desc = 'Schedule Update Successful';
             }
 
-            // $agent = new Agent();
-            // $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
+            $agent = new Agent();
+            $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
 
-            // ActionLogs::create([
-            //     'type' => 'Update',
-            //     'module' => 'USePAT Schedule - Slot',
-            //     'affectedID' => $scheduleSlot->id,
-            //     'affectedItem' => $scheduleSlot->appNo,
-            //     'description' => $desc,
-            //     'status' => $status,
-            //     'userID' => Auth::user()->id,
-            //     'userEmail' => Auth::user()->email,
-            //     'hostName' => gethostname(),
-            //     'platform' => $agentInfo,
-            // ]);
+            ActionLogs::create([
+                'type' => 'Update',
+                'module' => 'USePAT Schedule - Slot',
+                'affectedID' => $scheduleSlot->id,
+                'affectedItem' => $scheduleSlot->testCenterID.','
+                    .$scheduleSlot->testDateID.','
+                    .$scheduleSlot->testTimeID.','
+                    .$scheduleSlot->testRoomID.','
+                    .$scheduleSlot->testSessionID.','
+                    .$scheduleSlot->termID.','
+                    .$scheduleSlot->maxExamineeSlots.','
+                    .$scheduleSlot->isActive.',',
+                'description' => $desc,
+                'status' => $status,
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'hostName' => gethostname(),
+                'platform' => $agentInfo,
+            ]);
 
             return response()->json([
                 'message' => $desc,
@@ -335,23 +418,19 @@ class ScheduleSlotsController extends Controller
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(Request $request, string $id)
     {
         try {
-            
-            // $appNo = $request->input('appNo');
-    
-            $hasValue = ScheduleViewSlot::where('id', $id)
+
+            $isBeingUsed = ScheduleViewSlot::where('id', $id)
                 ->where('totalRegistered', '>', 0)
                 ->exists();
     
-            if ($hasValue) {
+            if ($isBeingUsed) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Schedule Slot could not be deleted!'
+                    'message' => 'The schedule slot is already being used!'
                 ], 422);
             }
 
@@ -362,10 +441,17 @@ class ScheduleSlotsController extends Controller
             $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
 
             ActionLogs::create([
-                'type' => 'Delete',
+                'type' => 'Update',
                 'module' => 'USePAT Schedule - Slot',
                 'affectedID' => $scheduleSlot->id,
-                'affectedItem' => $scheduleSlot->id,
+                'affectedItem' => $scheduleSlot->testCenterID.','
+                    .$scheduleSlot->testDateID.','
+                    .$scheduleSlot->testTimeID.','
+                    .$scheduleSlot->testRoomID.','
+                    .$scheduleSlot->testSessionID.','
+                    .$scheduleSlot->termID.','
+                    .$scheduleSlot->maxExamineeSlots.','
+                    .$scheduleSlot->isActive.',',
                 'description' => 'Deletion Successful',
                 'status' => 1,
                 'userID' => Auth::user()->id,
@@ -373,6 +459,7 @@ class ScheduleSlotsController extends Controller
                 'hostName' => gethostname(),
                 'platform' => $agentInfo,
             ]);
+
 
             return response()->json([
                 'status' => 'success',

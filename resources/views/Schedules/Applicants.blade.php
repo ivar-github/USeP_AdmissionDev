@@ -10,7 +10,7 @@
 
             <label class="block text-md text-gray-700  dark:text-gray-300">FILTER: </label>
             <hr class="my-2 mx-2">
-            <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 mb-10">
+            <div class="grid lg:grid-cols-4 grid-cols-1 mb-2">
                 <div class="dark:text-gray-200 mx-2 mb-2">
                     <label for="termID" class="block text-md text-gray-700  dark:text-gray-300">Term </label>
                     <select id="termID" name="termID" onchange="getDataByTerm()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"> 
@@ -19,6 +19,8 @@
                         @endforeach
                     </select>
                 </div>
+            </div>
+            <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 mb-10">
                 <div class="dark:text-gray-200 mx-2 mb-2">
                     <div class="rounded-lg">
                         <label for="centerID" class="block text-md text-gray-700  dark:text-gray-300">Center</label>
@@ -46,14 +48,31 @@
                         </select>
                     </div>
                 </div>
+                <div class="dark:text-gray-200 mx-2 mb-2"> 
+                    <div class="rounded-lg">
+                        <label for="roomID" class="block text-md text-gray-700  dark:text-gray-300">Room</label>
+                        <select id="roomID" name="roomID" onchange="getDataByRoom()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="0">All </option>
+                        </select>
+                    </div>
+                </div>
             </div>
             
-            <button type="button"  onclick="generateData()" class="mb-4 flex items-center justify-center text-white bg-red-900 hover:bg-red-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-900 dark:hover:bg-red-800 focus:outline-none dark:focus:ring-primary-800">
-                <svg aria-hidden="true" class="w-5 h-5 me-1" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-                </svg>
-                Generate
-            </button>
+            <div class="flex justify-end items-center my-2"> 
+                {{-- <button type="button"  onclick="generateData()" class="flex items-center justify-center text-white bg-red-900 hover:bg-red-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-900 dark:hover:bg-red-800 focus:outline-none dark:focus:ring-primary-800">
+                    <svg aria-hidden="true" class="w-5 h-5 me-1" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                    </svg>
+                    Generate
+                </button> --}}
+             
+                <button type="button" onclick="exportToExcel()" class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-primary-800">
+                    <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                    </svg>
+                    Export
+                </button>
+            </div>
 
             <div class="border border-gray-300 rounded-xl p-5">
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-2">
@@ -84,7 +103,7 @@
                             <div id="filterDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
                                 <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Columns</h6>
                                 <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
-                                    @foreach(['appNo', 'termID', 'appDate', 'testCenterName', 'testDate', 'testTimeStartString', 'testTimeEndString', 'testRoomName'] as $column)
+                                    @foreach(['termID', 'appDate', 'testSessionName', 'testRoomName'] as $column)
                                         <li class="flex items-center">
                                             <input type="checkbox" value="{{ $column }}"  onchange="updateColumns(this)" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                             <label for="apple" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{ ucfirst($column) }}</label>
@@ -94,12 +113,15 @@
                                 </ul>
                             </div>
                         </div>
-                        <button type="button" onclick="exportToExcel()" class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-primary-800">
-                            <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
-                            </svg>
-                            Export
-                        </button>
+                        <div class="rounded-lg">
+                            <select id="sort" name="sort" onchange="sortByColumn()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full   dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="" disabled selected>Sort</option>        
+                                <option value="" selected>None</option>    
+                                @foreach(['appNo', 'Name', 'appDate', 'testCenterName', 'testDate', 'testTime', 'testSessionName', 'testRoomName'] as $sort)    
+                                    <option value="{{ $sort }}">{{ $sort }} </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -146,17 +168,17 @@
         <script src="{{ asset('JS/SweetAlerts/SwalGeneric.js') }}"></script>
         
         <script>
-            let selectedColumns = ['Name']; 
+            let selectedColumns = ['appNo', 'Name', 'testCenterName', 'testDate', 'testTime' ]; 
             let currentPage = 1;
             let pageLimit = 10; 
             let selectedStatus = 'all'; 
 
-            // getDateByCenter();
+            getDataByTerm();
 
 
             function handleInputChange(event) {
                 const searchValue = event.target.value;
-                // getDataRows(); 
+                getDataRows(); 
 
             }
 
@@ -166,6 +188,8 @@
                     centerID: document.getElementById('centerID').value,
                     dateFromID: document.getElementById('dateFromID').value,
                     dateToID: document.getElementById('dateToID').value,
+                    roomID: document.getElementById('roomID').value,
+                    sort: document.getElementById('sort').value,
                     search: document.getElementById('searchInput').value,
                 };
 
@@ -186,7 +210,6 @@
                     swalGenericExport();
                 })
                 .catch(error => {
-                    console.error('Error exporting to Excel:', error);
                     swalGenericError('An unexpected error occurred!', error.message || 'Please try again.');
                 });
             }
@@ -198,7 +221,7 @@
                     selectedColumns = selectedColumns.filter(column => column !== checkbox.value);
                 }
                 currentPage = 1;  
-                // getDataRows();
+                getDataRows();
             }
 
             function changePage(page) {
@@ -214,18 +237,29 @@
 
             function getDataByTerm() {
                 getDateByCenter();
-                // getDataRows();
+                getRoomData();
+                getDataRows();
             }
 
             function getDataByCenter() {
-                // getDataRows();
+                getRoomData();
+                getDataRows();
             }
 
             function getDataByDate() {
-                // getDataRows();
+                getRoomData();
+                getDataRows();
+            }
+
+            function getDataByRoom() {
+                getDataRows();
             }
 
             function generateData() {
+                getDataRows(); 
+            }
+
+            function sortByColumn() {
                 getDataRows(); 
             }
             
@@ -241,7 +275,6 @@
                         dateFromSelect.innerHTML = '<option value="0">All</option>';
                         response.data.forEach(date => {
                             const option = document.createElement('option');
-                            // option.value = date.testDateID;
                             option.value = date.testDate;
                             option.text = date.testDate;
                             dateFromSelect.appendChild(option);
@@ -255,6 +288,30 @@
                             option.value = date.testDate;
                             option.text = date.testDate;
                             dateToSelect.appendChild(option);
+                        });
+
+                        // getDataRows(); 
+                    })
+                    .catch(error => console.error('Error fetching dates:', error));
+            }
+
+            function getRoomData() {
+                axios.get('/api/admission/schedule/applicants/getRooms', {
+                        params: {
+                            centerID: document.getElementById('centerID').value,
+                            termID: document.getElementById('termID').value,
+                            dateFromID: document.getElementById('dateFromID').value,
+                            dateToID: document.getElementById('dateToID').value,
+                        },
+                        headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+                    }).then(response => {
+                        const roomSelect = document.getElementById('roomID');
+                        roomSelect.innerHTML = '<option value="0">All</option>';
+                        response.data.forEach(room => {
+                            const option = document.createElement('option');
+                            option.value = room.testRoomID;
+                            option.text = room.testRoomName;
+                            roomSelect.appendChild(option);
                         });
 
                         // getDataRows(); 
@@ -280,7 +337,9 @@
                         centerID: document.getElementById('centerID').value,
                         dateFromID: document.getElementById('dateFromID').value,
                         dateToID: document.getElementById('dateToID').value,
+                        roomID: document.getElementById('roomID').value,
                         search: document.getElementById('searchInput').value,
+                        sort: document.getElementById('sort').value, 
                     },
                     headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
                 })

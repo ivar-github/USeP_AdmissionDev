@@ -24,20 +24,20 @@ class CourseEvalController extends Controller
             ->get()
             ->groupBy('parameterID');
 
-        // Fetch parameters (headers)
+            
         $parameters = CourseEvalParameter::select('id', 'name', 'desc')
             ->where('isActive', 1)
             ->orderBy('id', 'asc')
             ->get();
 
-        // Fetch questions and group by parameterID
+            
         $statements = CourseEvalStatement::select('id', 'statement', 'parameterID', 'ratingTemplateID')
             ->where('isActive', 1)
             ->orderBy('id', 'asc')
             ->get()
             ->groupBy('parameterID');
 
-        // Fetch ratings/choices and group by evalTemplateID
+            
         $ratings = CourseEvalRating::select('id', 'description', 'rating', 'evalTemplateID')
             ->where('isActive', 1)
             ->orderBy('id', 'asc')

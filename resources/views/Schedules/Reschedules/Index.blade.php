@@ -293,7 +293,7 @@
 
             // FUNCTION TO SHOW EXAMINEES
             function fetchExaminees() {
-                axios.get('/api/rfid/applicantSchedules', {
+                axios.get('/api/admission/schedule/reschedule/applicantSchedules', {
                     params: { 
                             examinee: document.getElementById('examineeSearch').value,
                             termID: document.getElementById('termID').value,
@@ -378,7 +378,7 @@
                         })
                         .then(response => {
                             if (response.data.status === 'success') {
-                                swalGenericDelete(response.data.message);
+                                swalGenericSinglePageDelete(response.data.message);
                                 fetchExaminees();
                             } else {
                                 swalGenericError('Invalid Deletion!',response.data.message);
