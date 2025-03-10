@@ -266,44 +266,44 @@ class RFIDEmployeeController extends Controller
 
     public function table(Request $request)
     {
-        try {
+        // try {
 
-            $employees = Employee::select('EmployeeID', 
-                'Prefix', 
-                'LastName', 
-                'FirstName', 
-                'MiddleName', 
-                'Email', 
-                'Photo', 
-                'SmartCardID')
-                ->where('EmployeeID', 'LIKE', '%202%')
-                ->orderBy('EmployeeID', 'desc')
-                ->get();
+        //     $employees = Employee::select('EmployeeID', 
+        //         'Prefix', 
+        //         'LastName', 
+        //         'FirstName', 
+        //         'MiddleName', 
+        //         'Email', 
+        //         'Photo', 
+        //         'SmartCardID')
+        //         ->where('EmployeeID', 'LIKE', '%202%')
+        //         ->orderBy('EmployeeID', 'desc')
+        //         ->get();
 
-            if ($request->has('search')) {
-                $search = $request->input('search');
-                $employees->where(function($q) use ($search) {
-                    $q->where('EmployeeID', 'like', "%$search%")
-                    ->orWhere('LastName', 'like', "%$search%")
-                    ->orWhere('FirstName', 'like', "%$search%")
-                    ->orWhere('Email', 'like', "%$search%");
-                });
-            }
+        //     if ($request->has('search')) {
+        //         $search = $request->input('search');
+        //         $employees->where(function($q) use ($search) {
+        //             $q->where('EmployeeID', 'like', "%$search%")
+        //             ->orWhere('LastName', 'like', "%$search%")
+        //             ->orWhere('FirstName', 'like', "%$search%")
+        //             ->orWhere('Email', 'like', "%$search%");
+        //         });
+        //     }
 
-            foreach ($employees as $employee) {
-                if ($employee->Photo) {
-                    $employee->Photo_base64 = 'data:image/png;base64,' . base64_encode($employee->Photo);
-                } else {
-                    $employee->Photo_base64 = null;
-                }
-            }
+        //     foreach ($employees as $employee) {
+        //         if ($employee->Photo) {
+        //             $employee->Photo_base64 = 'data:image/png;base64,' . base64_encode($employee->Photo);
+        //         } else {
+        //             $employee->Photo_base64 = null;
+        //         }
+        //     }
 
-            return view('RFIDs.Employee.Table', compact('employees'));
+        //     return view('RFIDs.Employee.Table', compact('employees'));
 
-        } catch (Throwable $e) {
-            return redirect()->route('employeesRFIDs.search')
-                ->with('error', 'An unexpected error occurred: ' . $e->getMessage());
-        }
+        // } catch (Throwable $e) {
+        //     return redirect()->route('employeesRFIDs.search')
+        //         ->with('error', 'An unexpected error occurred: ' . $e->getMessage());
+        // }
     }
 
 }

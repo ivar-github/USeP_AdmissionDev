@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ScheduleCenter;
+use App\Models\ScheduleViewSlot;
 use Illuminate\Validation\Rule;
 
 use Illuminate\Support\Facades\Auth;
@@ -176,15 +177,15 @@ class ScheduleCenterController extends Controller
     {
         try {
 
-            // $isActive = ActionLogs::where('userID', $id)
-            //     ->exists();
+            $isBeingUSed = ScheduleViewSlot::where('testCenterID', $id)
+                ->exists();
 
-            // if ($isActive) {
-            //     return response()->json([
-            //         'status' => 'error',
-            //         'message' => 'User has action logs.'
-            //     ], 422);
-            // }
+            if ($isBeingUSed) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Test Center is already being used!.'
+                ], 422);
+            }
 
             $center = ScheduleCenter::findOrFail($id);
             $center->delete();

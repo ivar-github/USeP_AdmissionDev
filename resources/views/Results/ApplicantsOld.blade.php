@@ -19,12 +19,10 @@
                         @endforeach
                     </select>
                 </div>
-            </div>
-            <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1">
                 <div class="dark:text-gray-200 mx-2 mb-2">
                     <div class="rounded-lg">
                         <label for="campus" class="block text-md text-gray-700  dark:text-gray-300">Campus</label>
-                        <select id="campus" name="campus" onchange="getCollegeByCampus()" onclick="getDataByCampus()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
+                        <select id="campus" name="campus" onchange="getProgramByCampus()" onclick="getDataByCampus()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
                             <option value="0">All </option>
                             @foreach ($campuses as $campus)
                                 <option value="{{ $campus->id }}">{{ $campus->name }}</option>
@@ -32,18 +30,10 @@
                         </select>
                     </div>
                 </div>
-                <div class="dark:text-gray-200 mx-2 mb-2">
-                    <div class="rounded-lg">
-                        <label for="college" class="block text-md text-gray-700  dark:text-gray-300">College</label>
-                        <select id="college" name="college" onchange="getProgramByCollege()" onclick="getDataByCollege()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
-                            <option value="0">All </option>
-                        </select>
-                    </div>
-                </div>
                 <div class="dark:text-gray-200 mx-2 mb-2"> 
                     <div class="rounded-lg">
                         <label for="program" class="block text-md text-gray-700  dark:text-gray-300">Program</label>
-                        <select id="program" name="program" onchange="getMajorByProgram()"  onclick="getDataByProgram()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
+                        <select id="program" name="program" onchange="getMajorByProgram()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
                             <option value="0">All </option>
                         </select>
                     </div>
@@ -51,13 +41,12 @@
                 <div class="dark:text-gray-200 mx-2 mb-2">
                     <div class="rounded-lg">
                         <label for="major" class="block text-md text-gray-700  dark:text-gray-300">Major</label>
-                        <select id="major" name="major" onchange="getDataByMajor()"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
+                        <select id="major" name="major" onchange="getDataByMajor()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
                             <option value="0">All </option>
                         </select>
                     </div>
                 </div>
             </div>
-            
             
             <div class="mb-10 mt-3 mx-2">
                 <form id="filterForm ">
@@ -76,21 +65,14 @@
                 </form>
                 <hr class="my-3">
             </div>
+           
             
-            <div class="flex justify-between items-center my-2">
-                <button type="button"  onclick="generateData()" class="flex items-center justify-center text-white bg-red-900 hover:bg-red-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-900 dark:hover:bg-red-800 focus:outline-none dark:focus:ring-primary-800">
-                    <svg aria-hidden="true" class="w-5 h-5 me-1" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-                    </svg>
-                    Generate
-                </button>
-                <button type="button"  onclick="exportToExcel()" class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-primary-800">
-                    <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
-                    </svg>
-                    Export
-                </button>
-            </div>
+            <button type="button"  onclick="generateData()" class="mb-4 flex items-center justify-center text-white bg-red-900 hover:bg-red-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-900 dark:hover:bg-red-800 focus:outline-none dark:focus:ring-primary-800">
+                <svg aria-hidden="true" class="w-5 h-5 me-1" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                </svg>
+                Generate
+            </button>
 
             <div class="border border-gray-300 rounded-xl p-5">
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-2">
@@ -121,11 +103,7 @@
                             <div id="filterDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
                                 <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Columns</h6>
                                 <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
-                                    @foreach([ 'CampusID', 'QualifiedCourse', 'QualifiedMajor', 
-                                                'FinalRating', 'FinalGradesWeight', 'IncomeSourceWeight', 'UsepatScoreWeight', 'GpaWeight',
-                                                'Rank', 'OverAll_Rank', 'coursePreferenceLvl',
-                                                'OriginalQualifiedCourse', 'OriginalQualifiedMajor', 
-                                                'IsEnlisted', 'EnlistmentDate', 'IsPreviouslyWaitlisted', 'HasWaivedSlot'] as $column)
+                                    @foreach(['AppNo', 'Status', 'CampusID', 'QualifiedCourse', 'QualifiedMajor', 'IsEnlisted', 'EnlistmentDate', 'IsPreviouslyWaitlisted', 'FinalRating'] as $column)
                                         <li class="flex items-center">
                                             <input type="checkbox" value="{{ $column }}"  onchange="updateColumns(this)" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                             <label for="apple" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{ ucfirst($column) }}</label>
@@ -135,20 +113,12 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="rounded-lg">
-                            <select id="sort" name="sort" onchange="sortByColumn()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full   dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option value="" disabled selected>Sort</option>        
-                                <option value="" selected>None</option>    
-                                @foreach(['AppNo', 'Applicant', 'Status',
-                                            'CampusID', 'QualifiedCourse', 'QualifiedMajor', 
-                                            'FinalRating', 'FinalGradesWeight', 'IncomeSourceWeight', 'UsepatScoreWeight', 'GpaWeight',
-                                            'Rank', 'OverAll_Rank', 'coursePreferenceLvl',
-                                            'OriginalQualifiedCourse', 'OriginalQualifiedMajor', 
-                                            'IsEnlisted', 'EnlistmentDate', 'IsPreviouslyWaitlisted', 'HasWaivedSlot'] as $sort)    
-                                    <option value="{{ $sort }}">{{ $sort }} </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <button type="button"  onclick="exportToExcel()" class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-primary-800">
+                            <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                            </svg>
+                            Export
+                        </button>
                     </div>
                 </div>
 
@@ -195,18 +165,50 @@
         <script src="{{ asset('JS/SweetAlerts/SwalGeneric.js') }}"></script>
 
         <script>
-            let selectedColumns = ['AppNo', 'Applicant', 'Status' ]; 
+            let selectedColumns = ['Applicant']; 
             let currentPage = 1;
             let pageLimit = 10; 
             let selectedStatus = 'all'; 
 
-            // getProgramByCollege();
+            // getProgramByCampus();
 
 
             function handleInputChange(event) {
                 const searchValue = event.target.value;
-                getDataRows(); 
+                // getDataRows(); 
 
+            }
+
+            function exportToExcel() {
+                const filters = {
+                    termID: document.getElementById('termID').value,
+                    campus: document.getElementById('campus').value,
+                    program: document.getElementById('program').value,
+                    major: document.getElementById('major').value,
+                    status: selectedStatus,
+                    search: document.getElementById('searchInput').value,
+                };
+
+                axios.post('/admission/results/exportApplicantsResults', {
+                    columns:  selectedColumns.join(','),
+                    ...filters,
+                }, {
+                    responseType: 'blob',  
+                })
+                .then(response => {
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', 'applicantsResults-data.xlsx');
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    swalGenericExport();
+                })
+                .catch(error => {
+                    console.error('Error exporting to Excel:', error);
+                    swalGenericError('An unexpected error occurred!', error.message || 'Please try again.');
+                });
             }
 
             function updateColumns(checkbox) {
@@ -216,7 +218,7 @@
                     selectedColumns = selectedColumns.filter(column => column !== checkbox.value);
                 }
                 currentPage = 1;  
-                getDataRows();
+                // getDataRows();
             }
 
             function changePage(page) {
@@ -231,63 +233,26 @@
             }
 
             
-            function getDataByTerm() {
-                getDataRows();
-            }
 
+            function getDataByTerm() {
+                // getDataRows();
+            }
             function getDataByCampus() {
-                getCollegeByCampus();
-                getDataRows();
-            }
-            
-            function getDataByCollege() {
-                getProgramByCollege();
-                getDataRows();
-            }
-            
-            function getDataByProgram() {
-                getMajorByProgram();
-                getDataRows();
+                // getDataRows();
             }
 
             function getDataByMajor() {
-                getDataRows(); 
+                // getDataRows(); 
             }
 
             function generateData() {
                 getDataRows(); 
             }
-
-            function sortByColumn() {
-                getDataRows(); 
-            }
             
-            function getCollegeByCampus() {
-                axios.get('/api/admission/result/getColleges', {
-                        params: {
-                            campusId: document.getElementById('campus').value,
-                        },
-                        headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
-                    }).then(response => {
-                        const collegeSelect = document.getElementById('college');
-                        collegeSelect.innerHTML = '<option value="0">All</option>';
-                        response.data.forEach(college => {
-                            const option = document.createElement('option');
-                            option.value = college.CollegeID;
-                            option.text = college.CollegeName;
-                            collegeSelect.appendChild(option);
-                        });
-                        document.getElementById('program').innerHTML = '<option value="0">All</option>';
-                        // getDataRows(); 
-                    })
-                    .catch(error => console.error('Error fetching colleges:', error));
-            }
-            
-            function getProgramByCollege() {
+            function getProgramByCampus() {
                 axios.get('/api/admission/result/getPrograms', {
                         params: {
                             campusId: document.getElementById('campus').value,
-                            collegeId: document.getElementById('college').value,
                         },
                         headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
                     }).then(response => {
@@ -304,13 +269,11 @@
                     })
                     .catch(error => console.error('Error fetching programs:', error));
             }
-
-
+            
             function getMajorByProgram() {
                 axios.get('/api/admission/result/getMajors', {
                         params: {
                             campusId: document.getElementById('campus').value,
-                            collegeId: document.getElementById('college').value,
                             programId: document.getElementById('program').value,
                         },
                         headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
@@ -329,11 +292,10 @@
                     .catch(error => console.error('Error fetching majors:', error));
             }
             
-
             function filterByStatus(status) {
                 selectedStatus = status;
                 currentPage = 1; 
-                getDataRows(); 
+                // getDataRows(); 
             }
 
             function getDataRows(page = currentPage, limit = pageLimit) {
@@ -353,11 +315,9 @@
                         status: selectedStatus !== 'all' ? selectedStatus : null,
                         termID: document.getElementById('termID').value,
                         campus: document.getElementById('campus').value,
-                        college: document.getElementById('college').value,
                         program: document.getElementById('program').value,
                         major: document.getElementById('major').value,
                         search: document.getElementById('searchInput').value,
-                        sort: document.getElementById('sort').value, 
                     },
                     headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
                 })
@@ -422,39 +382,6 @@
                     }
                     pageSelect.appendChild(option);
                 }
-            }
-
-            function exportToExcel() {
-                const filters = {
-                    termID: document.getElementById('termID').value,
-                    campus: document.getElementById('campus').value,
-                    program: document.getElementById('program').value,
-                    major: document.getElementById('major').value,
-                    status: selectedStatus,
-                    search: document.getElementById('searchInput').value,
-                    sort: document.getElementById('sort').value,
-                };
-
-                axios.post('/admission/results/exportApplicantsResults', {
-                    columns:  selectedColumns.join(','),
-                    ...filters,
-                }, {
-                    responseType: 'blob',  
-                })
-                .then(response => {
-                    const url = window.URL.createObjectURL(new Blob([response.data]));
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.setAttribute('download', 'applicantsResults-data.xlsx');
-                    document.body.appendChild(link);
-                    link.click();
-                    link.remove();
-                    swalGenericExport();
-                })
-                .catch(error => {
-                    console.error('Error exporting to Excel:', error);
-                    swalGenericError('An unexpected error occurred!', error.message || 'Please try again.');
-                });
             }
 
         </script>

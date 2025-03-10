@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ScheduleDate;
+use App\Models\ScheduleViewSlot;
 use Illuminate\Validation\Rule;
 // use Illuminate\Support\Facades\DB;
 
@@ -169,15 +170,15 @@ class ScheduleDateController extends Controller
     {
         try {
 
-            // $isActive = ActionLogs::where('userID', $id)
-            //     ->exists();
+            $isBeingUSed = ScheduleViewSlot::where('testDateID', $id)
+                ->exists();
 
-            // if ($isActive) {
-            //     return response()->json([
-            //         'status' => 'error',
-            //         'message' => 'User has action logs.'
-            //     ], 422);
-            // }
+            if ($isBeingUSed) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Test Date is already being used!.'
+                ], 422);
+            }
 
             $date = ScheduleDate::findOrFail($id);
             $date->delete();

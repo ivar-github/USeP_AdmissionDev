@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ScheduleRoom;
+use App\Models\ScheduleViewSlot;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\ActionLogs;
@@ -162,15 +163,15 @@ class ScheduleRoomController extends Controller
     {
         try {
 
-            // $isActive = ActionLogs::where('userID', $id)
-            //     ->exists();
+            $isBeingUSed = ScheduleViewSlot::where('testRoomID', $id)
+                ->exists();
 
-            // if ($isActive) {
-            //     return response()->json([
-            //         'status' => 'error',
-            //         'message' => 'User has action logs.'
-            //     ], 422);
-            // }
+            if ($isBeingUSed) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Test Room is already being used!.'
+                ], 422);
+            }
 
             $room = ScheduleRoom::findOrFail($id);
             $room->delete();

@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Major extends Model
+class ProgramMajorsView extends Model
 {
     
     protected $connection = 'sqlsrv2'; 
-    protected $table = 'CUSTOM_AdmissionProgramMajorsOfferedStatic';
+    protected $table = 'vw_CUSTOM_AllProgramsAndMajors';
 
     // protected $primaryKey = 'ProgID';
     public $incrementing = false;

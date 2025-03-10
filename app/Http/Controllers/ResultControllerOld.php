@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Result;
 use App\Models\Term;
 use App\Models\Program;
-use App\Models\ProgramMajorsView;
+use App\Models\Major;
 use Illuminate\Support\Facades\DB;
 
 use App\Exports\ExportApplicantsResult;
@@ -21,12 +21,13 @@ use Jenssegers\Agent\Agent;
 
 class ResultController extends Controller
 {
- 
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        return view('Results.Dashboard');
+         return view('Results.Dashboard');
     }
-
 
     public function applicants()
     {
@@ -35,42 +36,17 @@ class ResultController extends Controller
            
             $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
                 ->limit(100)
-                ->orderBy('TermID', 'desc')
-                ->get();
+                ->orderBy('TermID', 'desc')->get();
 
             $campuses = collect([
-                (object) ['id' => 1, 'name' => 'Obrero'],
-                (object) ['id' => 6, 'name' => 'Mintal'],
-                (object) ['id' => 7, 'name' => 'Tagum'],
-                (object) ['id' => 8, 'name' => 'Mabini'],
-                (object) ['id' => 10, 'name' => 'Malabog'],
-            ]);
+                    (object) ['id' => 1, 'name' => 'Obrero'],
+                    (object) ['id' => 6, 'name' => 'Mintal'],
+                    (object) ['id' => 7, 'name' => 'Tagum'],
+                    (object) ['id' => 8, 'name' => 'Mabini'],
+                    (object) ['id' => 10, 'name' => 'Malabog'],
+                ]);
 
             return view('Results.Applicants', compact('terms', 'campuses'));
-
-        } catch (Throwable $e) {
-            return response()->json([
-                'error' => 'An unexpected error occurred',
-                'message' => $e->getMessage(),
-            ], 500);
-        }
-    }
-
-
-    public function getColleges(Request $request)
-    {
-        try {
-
-            $campusId = $request->input('campusId');
-            $programs = ProgramMajorsView::select('CollegeID', 'CollegeName', 'ProgClass', 'CampusID') 
-                ->distinct()
-                ->when($campusId != 0, fn($query) => $query->where('CampusID', $campusId))
-                ->where('Display_Online', 1)
-                ->where('ProgClass', 50)
-                ->orderBy('CollegeName', 'asc')
-                ->get();
-
-            return response()->json($programs);
 
         } catch (Throwable $e) {
             return response()->json([
@@ -86,14 +62,9 @@ class ResultController extends Controller
         try {
 
             $campusId = $request->input('campusId');
-            $collegeId = $request->input('collegeId');
-            $programs = Program::select('ProgID', 'ProgName', 'ProgShortName', 'ProgCode') 
-                ->when($campusId != 0, fn($query) => $query->where('CampusID', $campusId))
-                ->when($collegeId != 0, fn($query) => $query->where('CollegeID', $collegeId))
+            $programs = Program:: when($campusId != 0, fn($query) => $query->where('CampusID', $campusId))
                 ->where('Display_Online', 1)
-                ->orderBy('ProgName', 'asc')
-                ->get();
-
+                ->orderBy('ProgName', 'asc')->get();
             return response()->json($programs);
 
         } catch (Throwable $e) {
@@ -104,26 +75,19 @@ class ResultController extends Controller
         }
     }
 
-
-
     public function getMajors(Request $request)
     {
         try {
 
             $campusId = $request->input('campusId');
             $programId = $request->input('programId');
-            $collegeId = $request->input('collegeId');
 
-            $majors = ProgramMajorsView::select('ProgID', 'ProgName', 'MajorID', 'Major') 
-                ->when($campusId != 0, fn($query) => $query->where('CampusID', $campusId))
-                ->when($collegeId != 0, fn($query) => $query->where('CollegeID', $collegeId))
+            $majors = Major:: when($campusId != 0, fn($query) => $query->where('CampusID', $campusId))
                 ->when($programId != 0, fn($query) => $query->where('ProgID', $programId))
                 ->where('Display_Online', 1)
                 ->where('MajorID', '!=', 0)
                 ->where('MajorID', '!=', '')
-                ->where('ProgClass', '=', 50)
-                ->orderBy('Major', 'asc')
-                ->get();
+                ->orderBy('Major', 'asc')->get();
 
             return response()->json($majors);
 
@@ -135,8 +99,6 @@ class ResultController extends Controller
         }
     }
 
-
-
     public function getData(Request $request)
     {
 
@@ -147,11 +109,9 @@ class ResultController extends Controller
             $status = $request->input('status');
             $termID = $request->input('termID');
             $campus = $request->input('campus');
-            $college = $request->input('college');
             $program = $request->input('program');
             $major = $request->input('major');
             $search = $request->input('search');
-            $sort = $request->input('sort');
 
 
             $prefCountQuery = Result::where('TermID', $termID)
@@ -178,8 +138,7 @@ class ResultController extends Controller
                 ->when($program != 0, fn($query) => $query->where('QualifiedCourseID', $program))
                 ->when($major != 0, fn($query) => $query->where('QualifiedMajorID', $major))
                 ->when($status && $status !== 'all' && $status !== '1', fn($query) => $query->where('Status', $status))
-                ->when($status == 1, fn($query) => $query->where('isEnlisted', $status))
-                ->when($sort, fn($query) => $query->orderBy($sort, 'asc'));
+                ->when($status == 1, fn($query) => $query->where('isEnlisted', $status));
 
             if ($search) {
                 $prefRowQuery->where(function($q) use ($search) {
@@ -220,20 +179,20 @@ class ResultController extends Controller
                 ];
             }
 
-            // $agent = new Agent();
-            // $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
+            $agent = new Agent();
+            $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
 
-            // ActionLogs::create([
-            //     'type' => 'Read',
-            //     'module' => 'USePAT Result',
-            //     'affectedItem' => 'Generate Applicants List',
-            //     'description' => "Term: $termID, Campus: $campus, Program: $program, Major: $major, Status: $status, Searched: $search Result List Generated",
-            //     'status' => 1,
-            //     'userID' => Auth::user()->id,
-            //     'userEmail' => Auth::user()->email,
-            //     'hostName' => gethostname(),
-            //     'platform' => $agentInfo,
-            // ]);
+            ActionLogs::create([
+                'type' => 'Read',
+                'module' => 'USePAT Result',
+                'affectedItem' => 'Generate Applicants List',
+                'description' => "Term: $termID, Campus: $campus, Program: $program, Major: $major, Status: $status, Searched: $search Result List Generated",
+                'status' => 1,
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'hostName' => gethostname(),
+                'platform' => $agentInfo,
+            ]);
 
             return response()->json([
                 'data' => $data->items(),
@@ -262,7 +221,7 @@ class ResultController extends Controller
         try {
 
             $columns = explode(',', $request->input('columns', ''));
-            $filters = $request->only(['termID', 'campus', 'program', 'major', 'status', 'search', 'sort']);
+            $filters = $request->only(['termID', 'campus', 'program', 'major', 'status', 'search']);
 
             $termID = $filters['termID'] ?? 'N/A';
             $campus = $filters['campus'] ?? 'N/A';
@@ -270,7 +229,6 @@ class ResultController extends Controller
             $major = $filters['major'] ?? 'N/A';
             $status = $filters['status'] ?? 'N/A';
             $search = $filters['search'] ?? 'N/A';
-            $sort = $filters['sort'] ?? 'N/A';
 
 
             $agent = new Agent();

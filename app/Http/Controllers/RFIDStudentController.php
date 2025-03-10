@@ -253,35 +253,35 @@ class RFIDStudentController extends Controller
 
     public function table()
     {
-        try {
+        // try {
 
-            $students = Student::select('StudentNo', 
-                'AppNo', 
-                'TermID', 
-                'LastName', 
-                'FirstName', 
-                'Middlename', 
-                'Email', 
-                'StudentPicture', 
-                'SmartCardID', 
-                'Fullname')
-            ->where('StudentNo', 'LIKE', '%%')
-            ->orderBy('StudentNo', 'desc')
-            ->get();
+        //     $students = Student::select('StudentNo', 
+        //         'AppNo', 
+        //         'TermID', 
+        //         'LastName', 
+        //         'FirstName', 
+        //         'Middlename', 
+        //         'Email', 
+        //         'StudentPicture', 
+        //         'SmartCardID', 
+        //         'Fullname')
+        //     ->where('StudentNo', 'LIKE', '%%')
+        //     ->orderBy('StudentNo', 'desc')
+        //     ->get();
 
-            foreach ($students as $student) {
-                if ($student->StudentPicture) {
-                    $student->StudentPicture_base64 = 'data:image/png;base64,' . base64_encode($student->StudentPicture);
-                } else {
-                    $student->StudentPicture_base64 = null;
-                }
-            }
-            return view('RFIDs.Student.Table', compact('students'));
+        //     foreach ($students as $student) {
+        //         if ($student->StudentPicture) {
+        //             $student->StudentPicture_base64 = 'data:image/png;base64,' . base64_encode($student->StudentPicture);
+        //         } else {
+        //             $student->StudentPicture_base64 = null;
+        //         }
+        //     }
+        //     return view('RFIDs.Student.Table', compact('students'));
 
-        } catch (Throwable $e) {
-            return redirect()->route('employeesRFIDs.search')
-                ->with('error', 'An unexpected error occurred: ' . $e->getMessage());
-        }
+        // } catch (Throwable $e) {
+        //     return redirect()->route('employeesRFIDs.search')
+        //         ->with('error', 'An unexpected error occurred: ' . $e->getMessage());
+        // }
     }
 
 }

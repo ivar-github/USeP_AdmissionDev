@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ScheduleSession;
+use App\Models\ScheduleViewSlot;
 use Illuminate\Validation\Rule;
 // use Illuminate\Support\Facades\DB;
 
@@ -169,15 +170,15 @@ class ScheduleSessionController extends Controller
     {
         try {
 
-            // $isActive = ActionLogs::where('userID', $id)
-            //     ->exists();
+            $isBeingUSed = ScheduleViewSlot::where('testSessionID', $id)
+                ->exists();
 
-            // if ($isActive) {
-            //     return response()->json([
-            //         'status' => 'error',
-            //         'message' => 'User has action logs.'
-            //     ], 422);
-            // }
+            if ($isBeingUSed) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Test Session is already being used!.'
+                ], 422);
+            }
 
             $session = ScheduleSession::findOrFail($id);
             $session->delete();

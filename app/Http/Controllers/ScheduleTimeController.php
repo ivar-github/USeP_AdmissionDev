@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ScheduleTime;
+use App\Models\ScheduleViewSlot;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\ActionLogs;
@@ -170,15 +171,15 @@ class ScheduleTimeController extends Controller
     {
         try {
 
-            // $isActive = ActionLogs::where('userID', $id)
-            //     ->exists();
+            $isBeingUSed = ScheduleViewSlot::where('testTimeID', $id)
+                ->exists();
 
-            // if ($isActive) {
-            //     return response()->json([
-            //         'status' => 'error',
-            //         'message' => 'User has action logs.'
-            //     ], 422);
-            // }
+            if ($isBeingUSed) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Test Time is already being used!.'
+                ], 422);
+            }
 
             $time = ScheduleTime::findOrFail($id);
             $time->delete();
