@@ -117,7 +117,7 @@
                             <div id="filterDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
                                 <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Columns</h6>
                                 <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
-                                    @foreach([ 'testSessionName', 'maxExamineeSlots', 'totalRegistered', 'availableSlots', 'isFull', 'isActive'] as $column)
+                                    @foreach([ 'testSessionName', 'testTimeStartString', 'testTimeEndString', 'maxExamineeSlots', 'totalRegistered', 'availableSlots', 'isFull', 'isActive'] as $column)
                                         <li class="flex items-center">
                                             <input type="checkbox" value="{{ $column }}"  onchange="updateColumns(this)" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                             <label for="apple" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{ ucfirst($column) }}</label>
@@ -131,7 +131,7 @@
                             <select id="sort" name="sort" onchange="sortByColumn()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full   dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option value="" disabled selected>Sort</option>        
                                 <option value="" selected>None</option>    
-                                @foreach(['testTimeStartString', 'testTimeEndString', 'testSessionName', 'testRoomName', 'totalRegistered', 'availableSlots', 'isFull'] as $sort)    
+                                @foreach([  'testCenterName', 'testDate', 'testTime', 'testRoomName', 'testTimeStartString', 'testTimeEndString', 'testSessionName', 'testRoomName', 'totalRegistered', 'availableSlots', 'isFull'] as $sort)    
                                     <option value="{{ $sort }}">{{ $sort }} </option>
                                 @endforeach
                             </select>
@@ -186,7 +186,7 @@
         <script src="{{ asset('JS/SweetAlerts/SwalGeneric.js') }}"></script>
         
         <script>
-            let selectedColumns = ['id', 'testCenterName', 'testDate', 'testTimeStartString', 'testTimeEndString',  'testRoomName',]; 
+            let selectedColumns = ['id', 'testCenterName', 'testDate', 'testTime', 'testRoomName',]; 
             let currentPage = 1;
             let pageLimit = 10; 
             let selectedStatus = '1'; 

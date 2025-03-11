@@ -63,6 +63,7 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     Route::get('/api/registrationsData', [RegistrationController::class, 'fetchData']);
 
     Route::get('/api/admission/result/applicants', [ResultController::class, 'getData'])->name('api.results.data');
+    Route::get('/api/admission/result/dashboard', [ResultController::class, 'getDashboard'])->name('api.results.dashboard');
     Route::get('/api/admission/result/getColleges', [ResultController::class, 'getColleges']);
     Route::get('/api/admission/result/getPrograms', [ResultController::class, 'getPrograms']);
     Route::get('/api/admission/result/getMajors', [ResultController::class, 'getMajors']);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Result;
+use App\Models\ResultView;
 use App\Models\Term;
 use App\Models\Program;
 use App\Models\ProgramMajorsView;
@@ -135,63 +136,13 @@ class ResultController extends Controller
         }
     }
 
-
-
-    public function getData(Request $request)
+    public function getDashboard(Request $request)
     {
 
         try {
 
-            $columns = explode(',', $request->input('columns', ''));
-            $perPage = $request->input('limit', 10);
-            $status = $request->input('status');
-            $termID = $request->input('termID');
-            $campus = $request->input('campus');
-            $college = $request->input('college');
-            $program = $request->input('program');
-            $major = $request->input('major');
-            $search = $request->input('search');
-            $sort = $request->input('sort');
-
-
-            $prefCountQuery = Result::where('TermID', $termID)
-                ->when($campus != 0, fn($query) => $query->where('CampusID', $campus))
-                ->when($program != 0, fn($query) => $query->where('QualifiedCourseID', $program))
-                ->when($major != 0, fn($query) => $query->where('QualifiedMajorID', $major));
-
-            if ($search) {
-                $prefCountQuery->where(function($q) use ($search) {
-                    $q->where('Applicant', 'LIKE', '%' . $search . '%')
-                    ->orWhere('AppNo', 'LIKE', '%' . $search . '%');
-                });
-            }
-
-            $qualifiedCount = (clone $prefCountQuery)->where('Status', 'Qualified')->count();
-            $waivedslotCount = (clone $prefCountQuery)->where('Status', 'WaivedSlot')->count();
-            $confirmedtCount = (clone $prefCountQuery)->where('isEnlisted', '1')->count();
-            $totalCount = $prefCountQuery->count();
-
-
-            $prefRowQuery = Result::select($columns)
-                ->where('TermID', $termID)
-                ->when($campus != 0, fn($query) => $query->where('CampusID', $campus))
-                ->when($program != 0, fn($query) => $query->where('QualifiedCourseID', $program))
-                ->when($major != 0, fn($query) => $query->where('QualifiedMajorID', $major))
-                ->when($status && $status !== 'all' && $status !== '1', fn($query) => $query->where('Status', $status))
-                ->when($status == 1, fn($query) => $query->where('isEnlisted', $status))
-                ->when($sort, fn($query) => $query->orderBy($sort, 'asc'));
-
-            if ($search) {
-                $prefRowQuery->where(function($q) use ($search) {
-                    $q->where('Applicant', 'LIKE', '%' . $search . '%')
-                    ->orWhere('AppNo', 'LIKE', '%' . $search . '%');
-                });
-            }
-
-            $data = $prefRowQuery->paginate($perPage);
-
             $results = DB::connection('sqlsrv2')
-                ->table('CUSTOM_AdmissionQualifiedApplicantsOfficial as results')
+                ->table('vw_QualifiedApplicantsOfficialDetails as results')
                 ->select(
                     'results.TermID',
                     'terms.AcademicYear',
@@ -219,6 +170,81 @@ class ResultController extends Controller
                     'appTotal' => $item->AppTotal,
                 ];
             }
+            return response()->json([
+                'graph' => $dataGraph
+            ]);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function getData(Request $request)
+    {
+
+        try {
+
+            $columns = explode(',', $request->input('columns', ''));
+            $perPage = $request->input('limit', 10);
+            $status = $request->input('status');
+            $termID = $request->input('termID');
+            $campus = $request->input('campus');
+            $college = $request->input('college');
+            $program = $request->input('program');
+            $major = $request->input('major');
+            $search = $request->input('search');
+            $sort = $request->input('sort');
+
+
+            $prefCountQuery = ResultView::where('TermID', $termID)
+                ->when($campus != 0, fn($query) => $query->where('CampusID', $campus))
+                ->when($program != 0, fn($query) => $query->where('QualifiedCourseID', $program))
+                ->when($college != 0, fn($query) => $query->where('CollegeID', $college))
+                ->when($major != 0, fn($query) => $query->where('QualifiedMajorID', $major));
+
+            if ($search) {
+                $prefCountQuery->where(function($q) use ($search) {
+                    $q->where('Applicant', 'LIKE', '%' . $search . '%')
+                    ->orWhere('AppNo', 'LIKE', '%' . $search . '%');
+                });
+            }
+
+            $qualifiedCount = (clone $prefCountQuery)->where('Status', 'Qualified')->count();
+            $waivedslotCount = (clone $prefCountQuery)->where('Status', 'WaivedSlot')->count();
+            $waitlistedCount = (clone $prefCountQuery)->where('Status', 'Waitlisted')->count();
+            $confirmedtCount = (clone $prefCountQuery)->where('isEnlisted', '1')->count();
+            $totalCount = $prefCountQuery->count();
+
+            $prefRowQuery = ResultView::select($columns)
+                ->where('TermID', $termID)
+                ->when($campus != 0, fn($query) => $query->where('CampusID', $campus))
+                ->when($program != 0, fn($query) => $query->where('QualifiedCourseID', $program))
+                ->when($college != 0, fn($query) => $query->where('CollegeID', $college))
+                ->when($major != 0, fn($query) => $query->where('QualifiedMajorID', $major))
+                ->when($status && $status !== 'all' && $status !== '1', fn($query) => $query->where('Status', $status))
+                ->when($status == 1, fn($query) => $query->where('isEnlisted', $status))
+                ->when($sort, fn($query) => $query->orderBy($sort, 'asc'));
+
+            if ($search) {
+                $prefRowQuery->where(function($q) use ($search) {
+                    $q->where('Applicant', 'LIKE', '%' . $search . '%')
+                    ->orWhere('AppNo', 'LIKE', '%' . $search . '%');
+                });
+            }
+
+            $academicCount = (clone $prefRowQuery)->where('Track_ID', 1)->count();
+            $techVocCount = (clone $prefRowQuery)->where('Track_ID', 2)->count();
+            $sportsCount = (clone $prefRowQuery)->where('Track_ID', 3)->count();
+            $artsDesignCount = (clone $prefRowQuery)->where('Track_ID', 4)->count();
+
+            $choiceACount = (clone $prefRowQuery)->where('coursePreferenceLvl', 1)->count();
+            $choiceBCount = (clone $prefRowQuery)->where('coursePreferenceLvl', 2)->count();
+            $choiceCCount = (clone $prefRowQuery)->where('coursePreferenceLvl', 3)->count();
+
+            $data = $prefRowQuery->paginate($perPage);
 
             // $agent = new Agent();
             // $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
@@ -243,10 +269,19 @@ class ResultController extends Controller
                 'counts' => [
                     'qualified' => $qualifiedCount,
                     'waivedslot' => $waivedslotCount,
+                    'waitlisted' => $waitlistedCount,
                     'confirmed' => $confirmedtCount,
                     'total' => $totalCount,
+                    
+                    'academic' => $academicCount,
+                    'techVoc' => $techVocCount,
+                    'sports' => $sportsCount,
+                    'artsDesign' => $artsDesignCount,
+                    
+                    'choiceA' => $choiceACount,
+                    'choiceB' => $choiceBCount,
+                    'choiceC' => $choiceCCount,
                 ],
-                'graph' => $dataGraph
             ]);
 
         } catch (Throwable $e) {

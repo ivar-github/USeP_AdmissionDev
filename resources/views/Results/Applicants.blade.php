@@ -4,7 +4,7 @@
     </x-Breadcrumbs>
     <div class="mx-auto h-full">
         <div class="overflow-hidden py-5 lg:py-10">
-            <div id="displayCards" class="flex gap-5 lg:gap-10">
+            <div id="displayCards" class="flexs gap-5 lg:gap-10">
                 <x-Cards.ResultCards />
             </div>
 
@@ -71,6 +71,9 @@
                         <input type="radio" name="status" id="filterWaivedSlot" value="WaivedSlot" onclick="filterByStatus(this.value)"> WaivedSlot
                     </label>
                     <label class="text-gray-700  dark:text-gray-300 mx-1">
+                        <input type="radio" name="status" id="filterWaitlisted" value="Waitlisted" onclick="filterByStatus(this.value)"> Waitlisted
+                    </label>
+                    <label class="text-gray-700  dark:text-gray-300 mx-1">
                         <input type="radio" name="status" id="filterConfirmed" value="1" onclick="filterByStatus(this.value)"> Confirmed
                     </label>
                 </form>
@@ -121,9 +124,9 @@
                             <div id="filterDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
                                 <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Columns</h6>
                                 <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
-                                    @foreach([ 'CampusID', 'QualifiedCourse', 'QualifiedMajor', 
+                                    @foreach([ 'CampusName', 'QualifiedCourse', 'QualifiedMajor', 
                                                 'FinalRating', 'FinalGradesWeight', 'IncomeSourceWeight', 'UsepatScoreWeight', 'GpaWeight',
-                                                'Rank', 'OverAll_Rank', 'coursePreferenceLvl',
+                                                'Rank', 'OverAll_Rank', 'coursePreferenceLvl','track_name', 'strand_name',
                                                 'OriginalQualifiedCourse', 'OriginalQualifiedMajor', 
                                                 'IsEnlisted', 'EnlistmentDate', 'IsPreviouslyWaitlisted', 'HasWaivedSlot'] as $column)
                                         <li class="flex items-center">
@@ -140,9 +143,9 @@
                                 <option value="" disabled selected>Sort</option>        
                                 <option value="" selected>None</option>    
                                 @foreach(['AppNo', 'Applicant', 'Status',
-                                            'CampusID', 'QualifiedCourse', 'QualifiedMajor', 
+                                            'CampusName', 'QualifiedCourse', 'QualifiedMajor', 
                                             'FinalRating', 'FinalGradesWeight', 'IncomeSourceWeight', 'UsepatScoreWeight', 'GpaWeight',
-                                            'Rank', 'OverAll_Rank', 'coursePreferenceLvl',
+                                            'Rank', 'OverAll_Rank', 'coursePreferenceLvl', 'track_name', 'strand_name',
                                             'OriginalQualifiedCourse', 'OriginalQualifiedMajor', 
                                             'IsEnlisted', 'EnlistmentDate', 'IsPreviouslyWaitlisted', 'HasWaivedSlot'] as $sort)    
                                     <option value="{{ $sort }}">{{ $sort }} </option>
@@ -369,6 +372,16 @@
                     document.getElementById('countQualified').textContent = data.counts.qualified.toLocaleString();
                     document.getElementById('countWaivedSlot').textContent = data.counts.waivedslot.toLocaleString();
                     document.getElementById('countConfirmed').textContent = data.counts.confirmed.toLocaleString();
+                    document.getElementById('countWaitlisted').textContent = data.counts.waitlisted.toLocaleString();
+                    
+                    document.getElementById('countAcademic').textContent = data.counts.academic.toLocaleString();
+                    document.getElementById('counTechVoc').textContent = data.counts.techVoc.toLocaleString();
+                    document.getElementById('countSports').textContent = data.counts.sports.toLocaleString();
+                    document.getElementById('countArtsDesign').textContent = data.counts.artsDesign.toLocaleString();
+                    
+                    document.getElementById('countChoiceA').textContent = data.counts.choiceA.toLocaleString();
+                    document.getElementById('countChoiceB').textContent = data.counts.choiceB.toLocaleString();
+                    document.getElementById('countChoiceC').textContent = data.counts.choiceC.toLocaleString();
                     
                 })
                 .catch(console.error);

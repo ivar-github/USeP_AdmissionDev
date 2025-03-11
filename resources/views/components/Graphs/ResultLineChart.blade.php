@@ -30,7 +30,7 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            axios.get('{{ route('api.results.data') }}')
+            axios.get('{{ route('api.results.dashboard') }}')
                 .then(response => {
                     const data = response.data;
                     renderLineChart(data.graph);
