@@ -21,8 +21,11 @@ class User extends Authenticatable
         'name',
         'email',
         'type',
+        'campus',
+        'class',
+        'force_pass',
         'status',
-        'default_pw',
+        'restrictions',
         'password',
     ];
 

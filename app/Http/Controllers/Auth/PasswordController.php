@@ -63,7 +63,9 @@ class PasswordController extends Controller
 
 
 
-        Auth::logout();
+        // if ($request->user()->wasChanged('password')) {
+        //     Auth::logout();
+        // }
         return back()->with('status', 'password-updated');
     }
 

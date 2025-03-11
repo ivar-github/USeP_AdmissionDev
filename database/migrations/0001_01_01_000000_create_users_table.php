@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('campus')->default(0);
             $table->integer('class')->default(0);
             $table->integer('force_pass')->default(1);
-            $table->integer('status')->default(0);
+            $table->integer('status')->default(1);
             $table->string('restrictions')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

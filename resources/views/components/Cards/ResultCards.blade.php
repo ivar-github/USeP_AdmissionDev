@@ -61,8 +61,8 @@
                 </svg>
             </div>
             <div class="px-4 text-gray-700  dark:text-gray-200 ">
-                <h3 class="text-md lg:text-md tracking-wider">Total</h3>
-                <p class="text-xl" id="countTotalStatus">0</p>
+                <h3 class="text-md md:text-xl tracking-wider">Total</h3>
+                <p class="text-xl md:text-3xl" id="countTotalStatus">0</p>
             </div>
         </div>
         <div>

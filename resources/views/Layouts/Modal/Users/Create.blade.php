@@ -70,14 +70,14 @@
                             <option value="1">Admin</option>
                         </x-Input-Dropdown>
                     </div>
-                    <div class=" text-white">
+                    {{-- <div class=" text-white">
                         <x-Input-Label for="status">Status</x-Input-Label>
                         <x-Input-Dropdown name="status" id="status">
                             <option value="" disabled selected>Select</option>
                             <option value="0">Inactive</option>
                             <option value="1">Active</option>
                         </x-Input-Dropdown>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="flex items-center  mt-4">
                     <x-Input-Submit class="mt-4">

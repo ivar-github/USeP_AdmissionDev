@@ -2,22 +2,24 @@
 <aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 md:translate-x-0 dark:bg-gray-800 dark:border-gray-700" aria-label="Sidebar">
     <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
         <div class="py-4 px-1  overflow-y-auto">
-            {{-- <img src="{{asset('img_assets/usep.png') }}" class=" w-24 h-24 md:w-32 md:h-32 mb-3 rounded-full shadow-lg  ms-5" alt="Student Photo"> --}}
-
-            <div id="dropdown-cta" class="p-4  rounded-lg bg-blue-50 dark:bg-blue-900" role="alert">
+            {{-- <img src="{{asset('img_assets/usep.png') }}" class="mx-auto w-24 h-24 md:w-32 md:h-32 mb-3 rounded-full shadow-lg " alt="Student Photo"> --}}
+            <div id="alertSidebar" class="p-4  rounded-lg bg-blue-50 dark:bg-blue-900" role="alert">
                 <div class="flex items-center mb-3">
-                    <span class="bg-orange-100 text-orange-800 text-sm font-semibold me-2 px-2.5 py-0.5 rounded dark:bg-orange-200 dark:text-orange-900">Info</span>
-                    <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-blue-50 inline-flex justify-center items-center w-6 h-6 text-blue-900 rounded-lg focus:ring-2 focus:ring-blue-400 p-1 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-400 dark:hover:bg-blue-800" data-dismiss-target="#dropdown-cta" aria-label="Close">
+                    <span class="bg-orange-100 text-orange-800 text-sm font-semibold me-2 px-2.5 py-0.5 rounded dark:bg-orange-200 dark:text-orange-900">Welcome</span>
+                    <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-blue-50 inline-flex justify-center items-center w-6 h-6 text-blue-900 rounded-lg focus:ring-2 focus:ring-blue-400 p-1 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-400 dark:hover:bg-blue-800" data-dismiss-target="#alertSidebar" aria-label="Close">
                         <span class="sr-only">Close</span>
                         <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                         </svg>
                     </button>
                 </div>
-                <p class="mb-3 text-sm text-blue-800 dark:text-blue-400">
-                        You can turn the new navigation off for a limited time in your profile.
+                <p class="ms-2 text-md text-blue-800 dark:text-blue-400">
+                    {{ Auth::user()->name }}
                 </p>
-                <a class="text-sm text-blue-800 underline font-medium hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300" href="#">Try new feature</a>
+                <p class="mb-2 ms-2 text-md text-blue-800 dark:text-blue-400">
+                    {{ Auth::user()->email }}
+                </p>
+                {{-- <a class="text-sm text-blue-800 underline font-medium hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300" href="#">Try new feature</a> --}}
             </div>
             <ul class="space-y-3 mt-8 font-medium">
                 <li>
@@ -54,8 +56,8 @@
                                 <span class="ms-8">Employees</span>
                             </x-subNav-Link>
                         </li>
-                    </ul>
-                </li> --}}
+                    </ul> --}}
+                </li>
                 {{-- <li>
                     <x-Nav-Link :href="route('registers.index')" :active="request()->routeIs('registers.index')">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor">
@@ -211,6 +213,8 @@
                     </form>
                 </li>
             </ul>
+
+            <img src="{{asset('img_assets/AdmissionLogo.png') }}" class="mx-auto w-full my-5" alt="Logo">
         </div>
 
     </div>

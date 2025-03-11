@@ -103,7 +103,7 @@
                             <div id="filterDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
                                 <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Columns</h6>
                                 <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
-                                    @foreach(['termID', 'appDate', 'testSessionName', 'testRoomName'] as $column)
+                                    @foreach(['termID', 'appDate', 'testSessionName', 'testRoomName', 'HasSpecialNeed', 'Disability'] as $column)
                                         <li class="flex items-center">
                                             <input type="checkbox" value="{{ $column }}"  onchange="updateColumns(this)" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                             <label for="apple" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{ ucfirst($column) }}</label>
@@ -117,7 +117,7 @@
                             <select id="sort" name="sort" onchange="sortByColumn()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full   dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option value="" disabled selected>Sort</option>        
                                 <option value="" selected>None</option>    
-                                @foreach(['appNo', 'Name', 'appDate', 'testCenterName', 'testDate', 'testTime', 'testSessionName', 'testRoomName'] as $sort)    
+                                @foreach(['appNo', 'Name', 'appDate', 'testCenterName', 'testDate', 'testTime', 'testSessionName', 'testRoomName', 'HasSpecialNeed', 'Disability'] as $sort)    
                                     <option value="{{ $sort }}">{{ $sort }} </option>
                                 @endforeach
                             </select>

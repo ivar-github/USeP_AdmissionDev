@@ -23,10 +23,12 @@ use App\Http\Controllers\CourseEvalStatementController;
 use App\Http\Controllers\CourseEvalRatingController;
 use App\Http\Controllers\CourseEvalRemarkController;
 use App\Http\Middleware\CheckUserStatus;
+use App\Http\Middleware\ForcePasswordChange;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PDFController;
 
-Route::middleware(['auth', CheckUserStatus::class])->group(function () {
+
+Route::middleware(['auth', 'isAdmin', 'forcePassChange'])->group(function () {
 
     Route::get('/', function () {
         return redirect()->route('dashboard');
@@ -35,15 +37,14 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
-
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::resource('users', UserController::class);
     Route::patch('user/resetPassword', [UserController::class, 'resetPassword'])->name('users.resetPassword');
 
-
     Route::resource('registers', RegistrationController ::class);
+
 
     Route::get('admission/result/dashboard', [ResultController::class, 'index'])->name('results.index');
     Route::get('admission/result/applicants', [ResultController::class, 'applicants'])->name('results.applicants');
@@ -94,7 +95,7 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     })->name('rfid.dashboard');
 
     Route::resource('rfid/studentsRFIDs', RFIDStudentController::class)
-    ->where(['employeesRFIDs' => '[a-zA-Z0-9_]+']);
+    ->where(['studentsRFIDs' => '[a-zA-Z0-9_]+']);
     
     Route::resource('rfid/employeesRFIDs', RFIDEmployeeController::class)
     ->where(['employeesRFIDs' => '[a-zA-Z0-9_]+']);

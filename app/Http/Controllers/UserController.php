@@ -63,8 +63,14 @@ class UserController extends Controller
 
             $request->validate([
                 'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-                // 'password' => ['required', 'confirmed', Rules\Password::defaults()],
+                'email' => ['required', 
+                    'string', 
+                    'lowercase', 
+                    'email', 
+                    'max:255', 
+                    'unique:'.User::class,
+                    'ends_with:@usep.edu.ph',
+                ],
                 'password' => [
                     'required',
                     // 'confirmed',
@@ -76,7 +82,6 @@ class UserController extends Controller
                         ->uncompromised(),
                 ],
                 'type' => ['required', 'integer', 'in:0,1'],
-                'status' => ['required', 'integer', 'in:0,1'],
             ]);
 
             $user = User::create([
@@ -84,7 +89,7 @@ class UserController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'type' => $request->type,
-                'status' => $request->status,
+                'status' => 1,
             ]);
 
             $agent = new Agent();
@@ -156,7 +161,13 @@ class UserController extends Controller
 
             $request->validate([
                 'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
+                'email' => ['required', 
+                    'string', 
+                    'lowercase', 
+                    'email', 
+                    'max:255', 
+                    'ends_with:@usep.edu.ph',
+                    Rule::unique(User::class)->ignore($user->id)],
                 'type' => ['required', 'integer', 'in:0,1'],
                 'status' => ['required', 'integer', 'in:0,1'],
             ]);
