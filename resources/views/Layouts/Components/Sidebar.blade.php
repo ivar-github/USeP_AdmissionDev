@@ -43,17 +43,17 @@
                     <ul id="dropdown-rfids" class="hidden mx-1 p-2 mt-1 space-y-2 rounded-xl bg-slate-100 dark:bg-slate-800">
                         <li >
                             <x-subNav-Link :href="route('rfid.dashboard')" :active="request()->routeIs('rfid.dashboard')">
-                                <span class="ms-8">Dashboard</span>
+                                <span class="ms-3">Dashboard</span>
                             </x-subNav-Link>
                         </li>
                         <li >
                             <x-subNav-Link :href="route('studentsRFIDs.index')" :active="request()->routeIs('studentsRFIDs.index')">
-                                <span class="ms-8">Students</span>
+                                <span class="ms-3">Students</span>
                             </x-subNav-Link>
                         </li>
                         <li >
                             <x-subNav-Link :href="route('employeesRFIDs.index')" :active="request()->routeIs('employeesRFIDs.index')">
-                                <span class="ms-8">Employees</span>
+                                <span class="ms-3">Employees</span>
                             </x-subNav-Link>
                         </li>
                     </ul> --}}
@@ -80,12 +80,12 @@
                     <ul id="dropdown-registrations" class="hidden mx-1 p-2 mt-1 space-y-2 rounded-xl bg-slate-100 dark:bg-slate-800">
                         <li >
                             <x-subNav-Link :href="route('registrations.pdf.USePAT')" :active="request()->routeIs('registrations.pdf.USePAT')">
-                                <span class="ms-8">USePAT</span>
+                                <span class="ms-3">USePAT</span>
                             </x-subNav-Link>
                         </li>
                         <li >
                             <x-subNav-Link :href="route('registrations.pdf.USePATv2')" :active="request()->routeIs('registrations.pdf.USePATv2')">
-                                <span class="ms-8">USePAT V2</span>
+                                <span class="ms-3">USePAT V2</span>
                             </x-subNav-Link>
                         </li>
                     </ul>
@@ -103,22 +103,22 @@
                     <ul id="dropdown-schedules" class="hidden mx-1 p-2 mt-1 space-y-2 rounded-xl bg-slate-100 dark:bg-slate-800">
                         <li >
                             <x-subNav-Link :href="route('schedules.applicants')" :active="request()->routeIs('schedules.applicants')">
-                                <span class="ms-8">Applicants</span>
+                                <span class="ms-3">Applicants</span>
                             </x-subNav-Link>
                         </li>
                         <li >
                             <x-subNav-Link :href="route('schedules.management')" :active="request()->routeIs('schedules.management')">
-                                <span class="ms-8">Management</span>
+                                <span class="ms-3">Management</span>
                             </x-subNav-Link>
                         </li>
                         <li >
                             <x-subNav-Link :href="route('scheduleSlots.index')" :active="request()->routeIs('scheduleSlots.index')">
-                                <span class="ms-8">Slots</span>
+                                <span class="ms-3">Slots</span>
                             </x-subNav-Link>
                         </li>
                         <li >
                             <x-subNav-Link :href="route('scheduleReschedules.index')" :active="request()->routeIs('scheduleReschedules.index')">
-                                <span class="ms-8">Reschedule</span>
+                                <span class="ms-3">Reschedule</span>
                             </x-subNav-Link>
                         </li>
                     </ul>
@@ -136,17 +136,17 @@
                     <ul id="dropdown-results" class="hidden mx-1 p-2 mt-1 space-y-2 rounded-xl bg-slate-100 dark:bg-slate-800">
                         <li >
                             <x-subNav-Link :href="route('results.index')" :active="request()->routeIs('results.index')">
-                                <span class="ms-8">Dashboard</span>
+                                <span class="ms-3">Dashboard</span>
                             </x-subNav-Link>
                         </li>
                         <li >
                             <x-subNav-Link :href="route('results.applicants')" :active="request()->routeIs('results.applicants')">
-                                <span class="ms-8">Applicants</span>
+                                <span class="ms-3">Qualified Applicants</span>
                             </x-subNav-Link>
                         </li>
                         <li >
                             <x-subNav-Link :href="route('results.overall')" :active="request()->routeIs('results.overall')">
-                                <span class="ms-8">Overall</span>
+                                <span class="ms-3">Overall Ranking</span>
                             </x-subNav-Link>
                         </li>
                     </ul>
@@ -164,12 +164,12 @@
                     <ul id="dropdown-courseEvals" class="hidden mx-1 p-2 mt-1 space-y-2 rounded-xl bg-slate-100 dark:bg-slate-800">
                         <li >
                             <x-subNav-Link :href="route('courseEvals.index')" :active="request()->routeIs('courseEvals.index')">
-                                <span class="ms-8">Form</span>
+                                <span class="ms-3">Form</span>
                             </x-subNav-Link>
                         </li>
                         <li >
                             <x-subNav-Link :href="route('courseEvalParameters.index')" :active="request()->routeIs('courseEvalParameters.index')">
-                                <span class="ms-8">Management</span>
+                                <span class="ms-3">Management</span>
                             </x-subNav-Link>
                         </li>
                     </ul>

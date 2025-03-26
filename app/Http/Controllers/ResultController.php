@@ -450,7 +450,7 @@ class ResultController extends Controller
         try {
 
             $columns = explode(',', $request->input('columns', ''));
-            $filters = $request->only(['termID', 'campus', 'program', 'major', 'status', 'search', 'sort', 'isAscending']);
+            $filters = $request->only(['termID', 'campus', 'program', 'major', 'status', 'search', 'sort', 'isAscending', 'export']);
 
             $termID = $filters['termID'] ?? 'N/A';
             $campus = $filters['campus'] ?? 'N/A';
@@ -460,6 +460,7 @@ class ResultController extends Controller
             $search = $filters['search'] ?? 'N/A';
             $sort = $filters['sort'] ?? 'N/A';
             $isAscending = $filters['isAscending'] ?? 'N/A';
+            $export = $filters['export'];
 
 
             $agent = new Agent();
@@ -476,8 +477,11 @@ class ResultController extends Controller
                 'hostName' => gethostname(),
                 'platform' => $agentInfo,
             ]);
-
-            return Excel::download(new ExportApplicantsResultOverall($columns, $filters), 'applicantsResults-data.xlsx');
+            if ($export == 'Overall') {
+                return Excel::download(new ExportApplicantsResultOverall($columns, $filters), 'applicantsResults-data.xlsx');
+            } else {
+                return Excel::download(new ExportApplicantsResult($columns, $filters), 'applicantsResults-data.xlsx');
+            }
 
         } catch (Throwable $e) {
             return response()->json([

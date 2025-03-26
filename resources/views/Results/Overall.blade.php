@@ -1,11 +1,11 @@
 <x-Main-layout>
     <x-Breadcrumbs>
-        <a  href="{{route('results.applicants')}}" class="ms-1 text-lg font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">RESULTS - Applicants</a>
+        <a  href="{{route('results.applicants')}}" class="ms-1 text-lg font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">RESULTS - Overall Ranking</a>
     </x-Breadcrumbs>
     <div class="mx-auto h-full">
         <div class="overflow-hidden py-5 lg:py-10">
             <div id="displayCards" class="gap-5 lg:gap-10">
-                <x-Cards.ResultCards />
+                <x-Cards.ResultCardsV2 />
             </div>
 
             <label class="block text-md text-gray-700  dark:text-gray-300">FILTER: </label>
@@ -147,7 +147,8 @@
                             <select id="sort" name="sort" onchange="sortByColumn()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full   dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option value="" disabled selected>Sort</option>        
                                 <option value="" selected>None</option>    
-                                @foreach([ 'ApplicationType', 'AppDate', 'Rank', 'CampusName', 'CollegeName', 'QualifiedCourse', 'QualifiedMajor', 
+                                @foreach([ 'Over_All_Rank', 'AppNo', 'ApplicantName', 'Status',
+                                            'ApplicationType', 'AppDate', 'Rank', 'CampusName', 'CollegeName', 'QualifiedCourse', 'QualifiedMajor', 
                                             'Test_Score_Ranking', 'Total_Ranking_Score', 'Total_Grade_Ranking', 'Total_Income_Ranking', 
                                             'coursePreferenceLvl', 'OriginalQualifiedCourse', 'OriginalQualifiedMajor','Track_Name', 'Strand_Name', 
                                             'Choice1_Campus', 'Choice1_CourseName', 'Choice1_CourseMajorName',
@@ -467,6 +468,7 @@
                     search: document.getElementById('searchInput').value,
                     sort: document.getElementById('sort').value,
                     isAscending: isAscending, 
+                    export: 'Overall', 
                 };
 
                 axios.post('/admission/results/exportApplicantsResults', {
