@@ -4,14 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ResultView extends Model
+class ResultOverallView extends Model
 {
-    // use HasFactory;
+    
     protected $connection = 'sqlsrv2'; 
-    protected $table = 'vw_QualifiedApplicantsOfficialDetails';
-    // protected $table = 'vw_CUSTOM_AdmissionQualifiedApplicantsOfficial_TEST';
+    protected $table = 'vw_CUSTOM_Admission_With_Over_All_Ranking';
 
-    protected $primaryKey = 'AppNo';
+    // protected $primaryKey = 'ProgID';
     public $incrementing = false;
     protected $keyType = 'string';
 

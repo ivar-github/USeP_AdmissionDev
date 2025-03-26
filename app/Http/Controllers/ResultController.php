@@ -8,8 +8,12 @@ use App\Models\ResultView;
 use App\Models\Term;
 use App\Models\Program;
 use App\Models\ProgramMajorsView;
+use App\Models\ResultOverallView;
+use App\Models\CollegeProgramMajorStatic;
+use App\Models\Major;
 use Illuminate\Support\Facades\DB;
 
+use App\Exports\ExportApplicantsResultOverall;
 use App\Exports\ExportApplicantsResult;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -58,12 +62,46 @@ class ResultController extends Controller
     }
 
 
+    public function overall()
+    {
+
+        try {
+           
+            $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
+                ->limit(100)
+                ->orderBy('TermID', 'desc')
+                ->get();
+
+            $campuses = collect([
+                (object) ['id' => 1, 'name' => 'Obrero'],
+                (object) ['id' => 6, 'name' => 'Mintal'],
+                (object) ['id' => 7, 'name' => 'Tagum'],
+                (object) ['id' => 8, 'name' => 'Mabini'],
+                (object) ['id' => 10, 'name' => 'Malabog'],
+            ]);
+
+            return view('Results.Overall', compact('terms', 'campuses'));
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
     public function getColleges(Request $request)
     {
         try {
 
+            if (!Auth::check()) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+
             $campusId = $request->input('campusId');
-            $programs = ProgramMajorsView::select('CollegeID', 'CollegeName', 'ProgClass', 'CampusID') 
+
+            $programs = CollegeProgramMajorStatic::select('CollegeID', 'CollegeName', 'ProgClass', 'CampusID') 
                 ->distinct()
                 ->when($campusId != 0, fn($query) => $query->where('CampusID', $campusId))
                 ->where('Display_Online', 1)
@@ -88,7 +126,8 @@ class ResultController extends Controller
 
             $campusId = $request->input('campusId');
             $collegeId = $request->input('collegeId');
-            $programs = Program::select('ProgID', 'ProgName', 'ProgShortName', 'ProgCode') 
+            $programs = CollegeProgramMajorStatic::select('ProgID', 'ProgName', 'ProgCode') 
+                ->distinct()
                 ->when($campusId != 0, fn($query) => $query->where('CampusID', $campusId))
                 ->when($collegeId != 0, fn($query) => $query->where('CollegeID', $collegeId))
                 ->where('Display_Online', 1)
@@ -115,7 +154,7 @@ class ResultController extends Controller
             $programId = $request->input('programId');
             $collegeId = $request->input('collegeId');
 
-            $majors = ProgramMajorsView::select('ProgID', 'ProgName', 'MajorID', 'Major') 
+            $majors = CollegeProgramMajorStatic::select('ProgID', 'ProgName', 'MajorID', 'Major') 
                 ->when($campusId != 0, fn($query) => $query->where('CampusID', $campusId))
                 ->when($collegeId != 0, fn($query) => $query->where('CollegeID', $collegeId))
                 ->when($programId != 0, fn($query) => $query->where('ProgID', $programId))
@@ -197,6 +236,7 @@ class ResultController extends Controller
             $major = $request->input('major');
             $search = $request->input('search');
             $sort = $request->input('sort');
+            $isAscending = $request->boolean('isAscending') ? 'asc' : 'desc';
 
 
             $prefCountQuery = ResultView::where('TermID', $termID)
@@ -226,7 +266,7 @@ class ResultController extends Controller
                 ->when($major != 0, fn($query) => $query->where('QualifiedMajorID', $major))
                 ->when($status && $status !== 'all' && $status !== '1', fn($query) => $query->where('Status', $status))
                 ->when($status == 1, fn($query) => $query->where('isEnlisted', $status))
-                ->when($sort, fn($query) => $query->orderBy($sort, 'asc'));
+                ->when($sort, fn($query) => $query->orderBy($sort, $isAscending));
 
             if ($search) {
                 $prefRowQuery->where(function($q) use ($search) {
@@ -292,12 +332,125 @@ class ResultController extends Controller
         }
     }
 
+    public function getOverallData(Request $request)
+    {
+
+        try {
+
+            $columns = explode(',', $request->input('columns', ''));
+            $perPage = $request->input('limit', 10);
+            $status = $request->input('status');
+            $termID = $request->input('termID');
+            $campus = $request->input('campus');
+            $college = $request->input('college');
+            $program = $request->input('program');
+            $major = $request->input('major');
+            $search = $request->input('search');
+            $sort = $request->input('sort');
+            $isAscending = $request->boolean('isAscending') ? 'asc' : 'desc';
+
+
+            $prefCountQuery = ResultOverallView::where('TermID', $termID)
+                ->when($campus != 0, fn($query) => $query->where('CampusID', $campus))
+                ->when($program != 0, fn($query) => $query->where('QualifiedCourseID', $program))
+                ->when($college != 0, fn($query) => $query->where('CollegeID', $college))
+                ->when($major != 0, fn($query) => $query->where('QualifiedMajorID', $major));
+
+            if ($search) {
+                $prefCountQuery->where(function($q) use ($search) {
+                    $q->where('ApplicantName', 'LIKE', '%' . $search . '%')
+                    ->orWhere('AppNo', 'LIKE', '%' . $search . '%');
+                });
+            }
+
+            $qualifiedCount = (clone $prefCountQuery)->where('Status', 'Qualified')->count();
+            $waivedslotCount = (clone $prefCountQuery)->where('Status', 'WaivedSlot')->count();
+            $waitlistedCount = (clone $prefCountQuery)->where('Status', 'Waitlisted')->count();
+            $notQualifiedCount = (clone $prefCountQuery)->where('Status', 'NotQualified')->count();
+            $confirmedtCount = (clone $prefCountQuery)->where('isEnlisted', '1')->count();
+            $totalCount = $prefCountQuery->count();
+
+            $prefRowQuery = ResultOverallView::select($columns)
+                ->where('TermID', $termID)
+                ->when($campus != 0, fn($query) => $query->where('CampusID', $campus))
+                ->when($program != 0, fn($query) => $query->where('QualifiedCourseID', $program))
+                ->when($college != 0, fn($query) => $query->where('CollegeID', $college))
+                ->when($major != 0, fn($query) => $query->where('QualifiedMajorID', $major))
+                ->when($status && $status !== 'all' && $status !== '1', fn($query) => $query->where('Status', $status))
+                ->when($status == 1, fn($query) => $query->where('isEnlisted', $status))
+                ->when($sort, fn($query) => $query->orderBy($sort, $isAscending));
+
+            if ($search) {
+                $prefRowQuery->where(function($q) use ($search) {
+                    $q->where('ApplicantName', 'LIKE', '%' . $search . '%')
+                    ->orWhere('AppNo', 'LIKE', '%' . $search . '%');
+                });
+            }
+
+            $academicCount = (clone $prefRowQuery)->where('Track_ID', 1)->count();
+            $techVocCount = (clone $prefRowQuery)->where('Track_ID', 2)->count();
+            $sportsCount = (clone $prefRowQuery)->where('Track_ID', 3)->count();
+            $artsDesignCount = (clone $prefRowQuery)->where('Track_ID', 4)->count();
+
+            $choiceACount = (clone $prefRowQuery)->where('coursePreferenceLvl', 1)->count();
+            $choiceBCount = (clone $prefRowQuery)->where('coursePreferenceLvl', 2)->count();
+            $choiceCCount = (clone $prefRowQuery)->where('coursePreferenceLvl', 3)->count();
+
+            $data = $prefRowQuery->paginate($perPage);
+
+            // $agent = new Agent();
+            // $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
+
+            // ActionLogs::create([
+            //     'type' => 'Read',
+            //     'module' => 'USePAT Result',
+            //     'affectedItem' => 'Generate Applicants List',
+            //     'description' => "Term: $termID, Campus: $campus, Program: $program, Major: $major, Status: $status, Searched: $search Result List Generated",
+            //     'status' => 1,
+            //     'userID' => Auth::user()->id,
+            //     'userEmail' => Auth::user()->email,
+            //     'hostName' => gethostname(),
+            //     'platform' => $agentInfo,
+            // ]);
+
+            return response()->json([
+                'data' => $data->items(),
+                'current_page' => $data->currentPage(),
+                'last_page' => $data->lastPage(),
+                'total' => $data->total(),
+                'counts' => [
+                    'qualified' => $qualifiedCount,
+                    'waivedslot' => $waivedslotCount,
+                    'waitlisted' => $waitlistedCount,
+                    'confirmed' => $confirmedtCount,
+                    'notQualified' => $notQualifiedCount,
+                    'total' => $totalCount,
+                    
+                    'academic' => $academicCount,
+                    'techVoc' => $techVocCount,
+                    'sports' => $sportsCount,
+                    'artsDesign' => $artsDesignCount,
+                    
+                    'choiceA' => $choiceACount,
+                    'choiceB' => $choiceBCount,
+                    'choiceC' => $choiceCCount,
+                ],
+            ]);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function exportApplicantsResults(Request $request)
     {
         try {
 
             $columns = explode(',', $request->input('columns', ''));
-            $filters = $request->only(['termID', 'campus', 'program', 'major', 'status', 'search', 'sort']);
+            $filters = $request->only(['termID', 'campus', 'program', 'major', 'status', 'search', 'sort', 'isAscending']);
 
             $termID = $filters['termID'] ?? 'N/A';
             $campus = $filters['campus'] ?? 'N/A';
@@ -306,6 +459,7 @@ class ResultController extends Controller
             $status = $filters['status'] ?? 'N/A';
             $search = $filters['search'] ?? 'N/A';
             $sort = $filters['sort'] ?? 'N/A';
+            $isAscending = $filters['isAscending'] ?? 'N/A';
 
 
             $agent = new Agent();
@@ -323,7 +477,7 @@ class ResultController extends Controller
                 'platform' => $agentInfo,
             ]);
 
-            return Excel::download(new ExportApplicantsResult($columns, $filters), 'applicantsResults-data.xlsx');
+            return Excel::download(new ExportApplicantsResultOverall($columns, $filters), 'applicantsResults-data.xlsx');
 
         } catch (Throwable $e) {
             return response()->json([

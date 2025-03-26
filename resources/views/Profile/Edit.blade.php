@@ -20,7 +20,7 @@
                                 </svg>
                             </button>
                         </div>
-                        <p class="mb-1 text-lg text-red-800 dark:text-red-400 ms-3">
+                        <p class="mb-1 text-md text-red-800 dark:text-red-400 ms-3">
                             You are required to change your password before proceeding.                    
                         </p>
                 </div>

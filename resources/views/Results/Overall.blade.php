@@ -4,7 +4,7 @@
     </x-Breadcrumbs>
     <div class="mx-auto h-full">
         <div class="overflow-hidden py-5 lg:py-10">
-            <div id="displayCards" class="flexs gap-5 lg:gap-10">
+            <div id="displayCards" class="gap-5 lg:gap-10">
                 <x-Cards.ResultCards />
             </div>
 
@@ -76,6 +76,9 @@
                     <label class="text-gray-700  dark:text-gray-300 mx-1">
                         <input type="radio" name="status" id="filterConfirmed" value="1" onclick="filterByStatus(this.value)"> Confirmed
                     </label>
+                    <label class="text-gray-700  dark:text-gray-300 mx-1">
+                        <input type="radio" name="status" id="filterNotQualified" value="NotQualified" onclick="filterByStatus(this.value)"> Not Qualified
+                    </label>
                 </form>
                 <hr class="my-3">
             </div>
@@ -124,10 +127,12 @@
                             <div id="filterDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
                                 <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Columns</h6>
                                 <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
-                                    @foreach([ 'CampusName', 'QualifiedCourse', 'QualifiedMajor', 
-                                                'FinalRating', 'FinalGradesWeight', 'IncomeSourceWeight', 'UsepatScoreWeight', 'GpaWeight',
-                                                'Rank', 'OverAll_Rank', 'coursePreferenceLvl','track_name', 'strand_name',
-                                                'OriginalQualifiedCourse', 'OriginalQualifiedMajor', 
+                                    @foreach([ 'ApplicationType', 'AppDate', 'Rank', 'CampusName', 'CollegeName', 'QualifiedCourse', 'QualifiedMajor', 
+                                                'Test_Score_Ranking', 'Total_Ranking_Score', 'Total_Grade_Ranking', 'Total_Income_Ranking', 
+                                                'coursePreferenceLvl', 'OriginalQualifiedCourse', 'OriginalQualifiedMajor','Track_Name', 'Strand_Name', 
+                                                'Choice1_Campus', 'Choice1_CourseName', 'Choice1_CourseMajorName',
+                                                'Choice2_Campus', 'Choice2_CourseName', 'Choice2_CourseMajorName',
+                                                'Choice3_Campus', 'Choice3_CourseName', 'Choice3_CourseMajorName',
                                                 'IsEnlisted', 'EnlistmentDate', 'IsPreviouslyWaitlisted', 'HasWaivedSlot', 'App_PassCode'] as $column)
                                         <li class="flex items-center">
                                             <input type="checkbox" value="{{ $column }}"  onchange="updateColumns(this)" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
@@ -142,12 +147,13 @@
                             <select id="sort" name="sort" onchange="sortByColumn()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full   dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option value="" disabled selected>Sort</option>        
                                 <option value="" selected>None</option>    
-                                @foreach(['AppNo', 'Applicant', 'Status',
-                                            'CampusName', 'QualifiedCourse', 'QualifiedMajor', 
-                                            'FinalRating', 'FinalGradesWeight', 'IncomeSourceWeight', 'UsepatScoreWeight', 'GpaWeight',
-                                            'Rank', 'OverAll_Rank', 'coursePreferenceLvl', 'track_name', 'strand_name',
-                                            'OriginalQualifiedCourse', 'OriginalQualifiedMajor', 
-                                            'IsEnlisted', 'EnlistmentDate', 'IsPreviouslyWaitlisted', 'HasWaivedSlot'] as $sort)    
+                                @foreach([ 'ApplicationType', 'AppDate', 'Rank', 'CampusName', 'CollegeName', 'QualifiedCourse', 'QualifiedMajor', 
+                                            'Test_Score_Ranking', 'Total_Ranking_Score', 'Total_Grade_Ranking', 'Total_Income_Ranking', 
+                                            'coursePreferenceLvl', 'OriginalQualifiedCourse', 'OriginalQualifiedMajor','Track_Name', 'Strand_Name', 
+                                            'Choice1_Campus', 'Choice1_CourseName', 'Choice1_CourseMajorName',
+                                            'Choice2_Campus', 'Choice2_CourseName', 'Choice2_CourseMajorName',
+                                            'Choice3_Campus', 'Choice3_CourseName', 'Choice3_CourseMajorName',
+                                            'IsEnlisted', 'EnlistmentDate', 'IsPreviouslyWaitlisted', 'HasWaivedSlot', 'App_PassCode'] as $sort)    
                                     <option value="{{ $sort }}">{{ $sort }} </option>
                                 @endforeach
                             </select>
@@ -204,7 +210,7 @@
         <script src="{{ asset('JS/SweetAlerts/SwalGeneric.js') }}"></script>
 
         <script>
-            let selectedColumns = ['AppNo', 'Applicant', 'Status' ]; 
+            let selectedColumns = ['Over_All_Rank', 'AppNo', 'ApplicantName', 'Status' ]; 
             let currentPage = 1;
             let pageLimit = 10; 
             let selectedStatus = 'all'; 
@@ -360,7 +366,7 @@
                     return;
                 }
 
-                axios.get('/api/admission/result/applicants', {
+                axios.get('/api/admission/result/overall', {
                     params: {
                         columns: selectedColumns.join(','),
                         page,
@@ -385,6 +391,7 @@
                     document.getElementById('countQualified').textContent = data.counts.qualified.toLocaleString();
                     document.getElementById('countWaivedSlot').textContent = data.counts.waivedslot.toLocaleString();
                     document.getElementById('countConfirmed').textContent = data.counts.confirmed.toLocaleString();
+                    document.getElementById('countNotQualifiedStatus').textContent = data.counts.notQualified.toLocaleString();
                     document.getElementById('countWaitlisted').textContent = data.counts.waitlisted.toLocaleString();
                     
                     document.getElementById('countAcademic').textContent = data.counts.academic.toLocaleString();
@@ -403,7 +410,7 @@
 
             function renderTable(data, currentPage, limit) {
                 let tableHTML = '<table class="min-w-full border border-gray-300 rounded-xl text-gray-700  dark:text-gray-300"><thead><tr>';
-                tableHTML += '<th class="py-2 px-4 border">#</th>';  
+                // tableHTML += '<th class="py-2 px-4 border">#</th>';  
                 selectedColumns.forEach(column => {
                     tableHTML += `<th class="py-2 px-4 border">${column.charAt(0).toUpperCase() + column.slice(1)}</th>`;
                 });
@@ -411,7 +418,7 @@
 
                 data.forEach((row, index) => {
                     let rowNumber = (currentPage - 1) * limit + index + 1; 
-                    tableHTML += `<tr><td class="py-2 px-4 border">${rowNumber}</td>`; 
+                    // tableHTML += `<tr><td class="py-2 px-4 border">${rowNumber}</td>`; 
                     selectedColumns.forEach(column => {
                         if (column === 'CampusID') {
                             tableHTML += `<td class="py-2 px-4 border">${row[column] === '1' ? 'Obrero' 
@@ -459,6 +466,7 @@
                     status: selectedStatus,
                     search: document.getElementById('searchInput').value,
                     sort: document.getElementById('sort').value,
+                    isAscending: isAscending, 
                 };
 
                 axios.post('/admission/results/exportApplicantsResults', {

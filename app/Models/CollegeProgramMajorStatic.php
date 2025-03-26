@@ -4,14 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ResultView extends Model
+class CollegeProgramMajorStatic extends Model
 {
-    // use HasFactory;
+    
     protected $connection = 'sqlsrv2'; 
-    protected $table = 'vw_QualifiedApplicantsOfficialDetails';
-    // protected $table = 'vw_CUSTOM_AdmissionQualifiedApplicantsOfficial_TEST';
+    protected $table = 'CUSTOM_AdmissionProgramMajorsOfferedStatic';
 
-    protected $primaryKey = 'AppNo';
+    // protected $primaryKey = 'ProgID';
     public $incrementing = false;
     protected $keyType = 'string';
 

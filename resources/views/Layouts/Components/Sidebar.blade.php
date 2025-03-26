@@ -144,6 +144,11 @@
                                 <span class="ms-8">Applicants</span>
                             </x-subNav-Link>
                         </li>
+                        <li >
+                            <x-subNav-Link :href="route('results.overall')" :active="request()->routeIs('results.overall')">
+                                <span class="ms-8">Overall</span>
+                            </x-subNav-Link>
+                        </li>
                     </ul>
                 </li>
                 {{-- <li>

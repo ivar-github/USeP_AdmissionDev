@@ -48,6 +48,7 @@ Route::middleware(['auth', 'isAdmin', 'forcePassChange'])->group(function () {
 
     Route::get('admission/result/dashboard', [ResultController::class, 'index'])->name('results.index');
     Route::get('admission/result/applicants', [ResultController::class, 'applicants'])->name('results.applicants');
+    Route::get('admission/result/overall', [ResultController::class, 'overall'])->name('results.overall');
 
     Route::resource('admission/schedule/scheduleReschedules', ScheduleRescheduleController ::class);
     Route::get('admission/schedule/scheduleApplicants', [ScheduleController::class, 'scheduleApplicants'])->name('schedules.applicants');
@@ -64,6 +65,7 @@ Route::middleware(['auth', 'isAdmin', 'forcePassChange'])->group(function () {
     Route::get('/api/registrationsData', [RegistrationController::class, 'fetchData']);
 
     Route::get('/api/admission/result/applicants', [ResultController::class, 'getData'])->name('api.results.data');
+    Route::get('/api/admission/result/overall', [ResultController::class, 'getOverallData'])->name('api.results.overall');
     Route::get('/api/admission/result/dashboard', [ResultController::class, 'getDashboard'])->name('api.results.dashboard');
     Route::get('/api/admission/result/getColleges', [ResultController::class, 'getColleges']);
     Route::get('/api/admission/result/getPrograms', [ResultController::class, 'getPrograms']);
