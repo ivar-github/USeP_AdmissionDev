@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ScheduleView extends Model
+class ResultRankingView extends Model
 {
     
     protected $connection = 'sqlsrv2'; 
-    protected $table = 'vw_CUSTOM_AdmissionApplicantTestSchedules';
+    protected $table = 'vw_CUSTOM_Admission_With_Ranking_Parameters';
 
-    // protected $primaryKey = 'AppNO';
+    // protected $primaryKey = 'ProgID';
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -19,5 +19,4 @@ class ScheduleView extends Model
     protected $fillable = [
         // 'MobileNo'
     ];
-
 }

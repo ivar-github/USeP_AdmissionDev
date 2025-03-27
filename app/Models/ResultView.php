@@ -11,7 +11,7 @@ class ResultView extends Model
     protected $table = 'vw_QualifiedApplicantsOfficialDetails';
     // protected $table = 'vw_CUSTOM_AdmissionQualifiedApplicantsOfficial_TEST';
 
-    protected $primaryKey = 'AppNo';
+    // protected $primaryKey = 'AppNo';
     public $incrementing = false;
     protected $keyType = 'string';
 

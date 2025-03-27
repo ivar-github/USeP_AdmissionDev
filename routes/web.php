@@ -28,7 +28,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PDFController;
 
 
-Route::middleware(['auth', 'isAdmin', 'forcePassChange'])->group(function () {
+Route::middleware(['auth', 'isActive', 'forcePassChange'])->group(function () {
+
+    Route::middleware(['isAdmin'])->group(function () {
+        Route::resource('users', UserController::class);
+        Route::patch('user/resetPassword', [UserController::class, 'resetPassword'])->name('users.resetPassword');
+        Route::resource('registers', RegistrationController ::class);
+    });
+
 
     Route::get('/', function () {
         return redirect()->route('dashboard');
@@ -40,15 +47,13 @@ Route::middleware(['auth', 'isAdmin', 'forcePassChange'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    Route::resource('users', UserController::class);
-    Route::patch('user/resetPassword', [UserController::class, 'resetPassword'])->name('users.resetPassword');
 
-    Route::resource('registers', RegistrationController ::class);
 
 
     Route::get('admission/result/dashboard', [ResultController::class, 'index'])->name('results.index');
     Route::get('admission/result/applicants', [ResultController::class, 'applicants'])->name('results.applicants');
     Route::get('admission/result/overall', [ResultController::class, 'overall'])->name('results.overall');
+    Route::get('admission/result/transferees', [ResultController::class, 'transferees'])->name('results.transferees');
 
     Route::resource('admission/schedule/scheduleReschedules', ScheduleRescheduleController ::class);
     Route::get('admission/schedule/scheduleApplicants', [ScheduleController::class, 'scheduleApplicants'])->name('schedules.applicants');
@@ -66,6 +71,7 @@ Route::middleware(['auth', 'isAdmin', 'forcePassChange'])->group(function () {
 
     Route::get('/api/admission/result/applicants', [ResultController::class, 'getData'])->name('api.results.data');
     Route::get('/api/admission/result/overall', [ResultController::class, 'getOverallData'])->name('api.results.overall');
+    Route::get('/api/admission/result/transferees', [ResultController::class, 'getTransfereeData'])->name('api.results.transferees');
     Route::get('/api/admission/result/dashboard', [ResultController::class, 'getDashboard'])->name('api.results.dashboard');
     Route::get('/api/admission/result/getColleges', [ResultController::class, 'getColleges']);
     Route::get('/api/admission/result/getPrograms', [ResultController::class, 'getPrograms']);

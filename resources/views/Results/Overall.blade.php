@@ -1,9 +1,11 @@
 <x-Main-layout>
     <x-Breadcrumbs>
-        <a  href="{{route('results.applicants')}}" class="ms-1 text-lg font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">RESULTS - Overall Ranking</a>
+        <a  href="{{route('results.overall')}}" class="ms-1 text-lg font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">RESULTS - Overall Ranking</a>
     </x-Breadcrumbs>
     <div class="mx-auto h-full">
         <div class="overflow-hidden py-5 lg:py-10">
+            <x-SpinnerGlobal />
+
             <div id="displayCards" class="gap-5 lg:gap-10">
                 <x-Cards.ResultCardsV2 />
             </div>
@@ -145,8 +147,8 @@
                         </div>
                         <div class="flex items-center rounded-lg">
                             <select id="sort" name="sort" onchange="sortByColumn()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full   dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option value="" disabled selected>Sort</option>        
-                                <option value="" selected>None</option>    
+                                {{-- <option value="" disabled selected>Sort</option>        
+                                <option value="" selected>None</option>     --}}
                                 @foreach([ 'Over_All_Rank', 'AppNo', 'ApplicantName', 'Status',
                                             'ApplicationType', 'AppDate', 'Rank', 'CampusName', 'CollegeName', 'QualifiedCourse', 'QualifiedMajor', 
                                             'Test_Score_Ranking', 'Total_Ranking_Score', 'Total_Grade_Ranking', 'Total_Income_Ranking', 
@@ -154,7 +156,7 @@
                                             'Choice1_Campus', 'Choice1_CourseName', 'Choice1_CourseMajorName',
                                             'Choice2_Campus', 'Choice2_CourseName', 'Choice2_CourseMajorName',
                                             'Choice3_Campus', 'Choice3_CourseName', 'Choice3_CourseMajorName',
-                                            'IsEnlisted', 'EnlistmentDate', 'IsPreviouslyWaitlisted', 'HasWaivedSlot', 'App_PassCode'] as $sort)    
+                                            'IsEnlisted', 'EnlistmentDate', 'IsPreviouslyWaitlisted', 'HasWaivedSlot'] as $sort)    
                                     <option value="{{ $sort }}">{{ $sort }} </option>
                                 @endforeach
                             </select>
@@ -366,6 +368,8 @@
                     document.getElementById('totalRows').innerHTML = ""; 
                     return;
                 }
+                
+                SpinnerGlobal.classList.remove("hidden");
 
                 axios.get('/api/admission/result/overall', {
                     params: {
@@ -405,7 +409,10 @@
                     document.getElementById('countChoiceC').textContent = data.counts.choiceC.toLocaleString();
                     
                 })
-                .catch(console.error);
+                .catch(console.error)
+                .finally(() => {
+                    SpinnerGlobal.classList.add("hidden");
+                });
             }
 
 
@@ -418,17 +425,10 @@
                 tableHTML += '</tr></thead><tbody>';
 
                 data.forEach((row, index) => {
-                    let rowNumber = (currentPage - 1) * limit + index + 1; 
+                    // let rowNumber = (currentPage - 1) * limit + index + 1; 
                     // tableHTML += `<tr><td class="py-2 px-4 border">${rowNumber}</td>`; 
                     selectedColumns.forEach(column => {
-                        if (column === 'CampusID') {
-                            tableHTML += `<td class="py-2 px-4 border">${row[column] === '1' ? 'Obrero' 
-                                : row[column] === '6'  ? 'Mintal' 
-                                : row[column] === '7'  ? 'Tagum' 
-                                : row[column] === '8'  ? 'Mabini' 
-                                : row[column] === '10' ? 'Malabog' 
-                                : ''}</td>`; 
-                        }else if (column === 'IsEnlisted') {
+                        if (column === 'IsEnlisted') {
                             tableHTML += `<td class="py-2 px-4 border">${row[column] === '1' ? 'Yes' 
                                 : row[column] === '0'  ? 'No' 
                                 : ''}</td>`; 
@@ -470,6 +470,8 @@
                     isAscending: isAscending, 
                     export: 'Overall', 
                 };
+                
+                SpinnerGlobal.classList.remove("hidden");
 
                 axios.post('/admission/results/exportApplicantsResults', {
                     columns:  selectedColumns.join(','),
@@ -490,6 +492,9 @@
                 .catch(error => {
                     console.error('Error exporting to Excel:', error);
                     swalGenericError('An unexpected error occurred!', error.message || 'Please try again.');
+                })
+                .finally(() => {
+                    SpinnerGlobal.classList.add("hidden");
                 });
             }
 

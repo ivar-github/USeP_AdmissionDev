@@ -13,10 +13,10 @@
                         </svg>
                     </button>
                 </div>
-                <p class="ms-2 text-md text-blue-800 dark:text-blue-400">
+                <p class="text-sm text-blue-800 dark:text-blue-400">
                     {{ Auth::user()->name }}
                 </p>
-                <p class="mb-2 ms-2 text-md text-blue-800 dark:text-blue-400">
+                <p class="mb-2 flex text-sm text-blue-800 dark:text-blue-400">
                     {{ Auth::user()->email }}
                 </p>
                 {{-- <a class="text-sm text-blue-800 underline font-medium hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300" href="#">Try new feature</a> --}}
@@ -147,6 +147,11 @@
                         <li >
                             <x-subNav-Link :href="route('results.overall')" :active="request()->routeIs('results.overall')">
                                 <span class="ms-3">Overall Ranking</span>
+                            </x-subNav-Link>
+                        </li>
+                        <li >
+                            <x-subNav-Link :href="route('results.transferees')" :active="request()->routeIs('results.transferees')">
+                                <span class="ms-3">Transferees</span>
                             </x-subNav-Link>
                         </li>
                     </ul>

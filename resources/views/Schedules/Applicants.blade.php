@@ -1,6 +1,6 @@
 <x-Main-layout>
     <x-Breadcrumbs>
-        <a  href="{{route('schedules.applicants')}}" class="ms-1 text-md font-small md:text-lg md:font-medium  text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">SCHEDULES - Applicants</a>
+        <a  href="{{route('schedules.applicants')}}" class="ms-1 text-md font-small md:text-lg md:font-medium  text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">SCHEDULES - Examinees</a>
     </x-Breadcrumbs>
     <div class="mx-auto h-full">
         <div class="overflow-hidden py-5 lg:py-10 mb-10 ">
@@ -115,8 +115,8 @@
                         </div>
                         <div class="rounded-lg">
                             <select id="sort" name="sort" onchange="sortByColumn()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full   dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option value="" disabled selected>Sort</option>        
-                                <option value="" selected>None</option>    
+                                {{-- <option value="" disabled selected>Sort</option>        
+                                <option value="" selected>None</option>     --}}
                                 @foreach(['appNo', 'Name', 'appDate', 'testCenterName', 'testDate', 'testTime', 'testSessionName', 'testRoomName', 'HasSpecialNeed', 'Disability'] as $sort)    
                                     <option value="{{ $sort }}">{{ $sort }} </option>
                                 @endforeach

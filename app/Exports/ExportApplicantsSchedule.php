@@ -25,7 +25,7 @@
                 ->when($this->filters['dateFromID'] && $this->filters['dateToID'], fn($query) => $query->whereBetween('testDate', [$this->filters['dateFromID'], $this->filters['dateToID']]))
                 ->when($this->filters['dateFromID'] && !$this->filters['dateToID'], fn($query) => $query->where('testDate', '>=', $this->filters['dateFromID']))
                 ->when(!$this->filters['dateFromID'] && $this->filters['dateToID'], fn($query) => $query->where('testDate', '<=', $this->filters['dateToID']))
-                ->when($this->filters['roomID'], fn($query) => $query->where('testRoomID', $this->filters['roomID']))
+                ->when($this->filters['roomID'] != 0, fn($query) => $query->where('testRoomID', $this->filters['roomID']))
                 ->when($this->filters['sort'] , fn($query) => $query->orderBy($this->filters['sort']))
                 ->when($this->filters['search'], function ($query, $search) {
                     $query->where(function ($q) use ($search) {

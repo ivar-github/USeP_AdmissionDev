@@ -41,7 +41,7 @@ if (document.getElementById("main-table") && typeof simpleDatatables.DataTable !
         template: (options, dom) =>
         "<div class='border-2 border-gray-200 dark:border-gray-600 border-solid rounded-lg p-5 lg:p-8'>" +
             "<div>" +
-                "<div class='" + options.classes.top + " flex justify-center items-center flex-column flex-wrap md:flex-row pb-2 border-b-2'>" +
+                "<div class='" + options.classes.top + " flex justify-center items-center  flex-wrap flex-row pb-2 border-b-2'>" +
                         "<button id='exportDropdownButton' type='button' class='flex w-full lg:w-auto items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 '>" +
                             "Export" +
                             "<svg class='-me-0.5 ms-1.5 h-4 w-4' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'>" +

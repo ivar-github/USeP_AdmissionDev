@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\CheckUserStatus;
 use App\Http\Middleware\ForcePasswordChange;
+use App\Http\Middleware\CheckUserAccess;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,7 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'isAdmin' => CheckUserStatus::class,
+            'isAdmin' => CheckUserAccess::class,
+            'isActive' => CheckUserStatus::class,
             'forcePassChange' => ForcePasswordChange::class,
         ]);
     

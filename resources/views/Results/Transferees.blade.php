@@ -1,13 +1,13 @@
 <x-Main-layout>
     <x-Breadcrumbs>
-        <a  href="{{route('results.applicants')}}" class="ms-1 text-lg font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">RESULTS - Qualified Applicants</a>
+        <a  href="{{route('results.transferees')}}" class="ms-1 text-lg font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">RESULTS - Transferees</a>
     </x-Breadcrumbs>
     <div class="mx-auto h-full">
         <div class="overflow-hidden py-5 lg:py-10">
             <x-SpinnerGlobal />
 
-            <div id="displayCards" class="flexs gap-5 lg:gap-10">
-                <x-Cards.ResultCards />
+            <div id="displayCards" class="gap-5 lg:gap-10">
+                {{-- <x-Cards.ResultCardsV2 /> --}}
             </div>
 
             <label class="block text-md text-gray-700  dark:text-gray-300">FILTER: </label>
@@ -22,7 +22,7 @@
                     </select>
                 </div>
             </div>
-            <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1">
+            {{-- <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1">
                 <div class="dark:text-gray-200 mx-2 mb-2">
                     <div class="rounded-lg">
                         <label for="campus" class="block text-md text-gray-700  dark:text-gray-300">Campus</label>
@@ -58,10 +58,10 @@
                         </select>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             
             
-            <div class="mb-10 mt-3 mx-2">
+            {{-- <div class="mb-10 mt-3 mx-2">
                 <form id="filterForm ">
                     <label class="text-gray-700  dark:text-gray-300 mx-1">
                         <input type="radio" name="status" id="filterAll" value="all" checked onclick="filterByStatus(this.value)" > All
@@ -78,9 +78,12 @@
                     <label class="text-gray-700  dark:text-gray-300 mx-1">
                         <input type="radio" name="status" id="filterConfirmed" value="1" onclick="filterByStatus(this.value)"> Confirmed
                     </label>
+                    <label class="text-gray-700  dark:text-gray-300 mx-1">
+                        <input type="radio" name="status" id="filterNotQualified" value="NotQualified" onclick="filterByStatus(this.value)"> Not Qualified
+                    </label>
                 </form>
                 <hr class="my-3">
-            </div>
+            </div> --}}
             
             <div class="flex justify-between items-center my-2">
                 <button type="button"  onclick="generateData()" class="flex items-center justify-center text-white bg-red-900 hover:bg-red-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-900 dark:hover:bg-red-800 focus:outline-none dark:focus:ring-primary-800">
@@ -126,11 +129,12 @@
                             <div id="filterDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
                                 <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Columns</h6>
                                 <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
-                                    @foreach([ 'CampusName', 'QualifiedCourse', 'QualifiedMajor', 
-                                                'FinalRating', 'FinalGradesWeight', 'IncomeSourceWeight', 'UsepatScoreWeight', 'GpaWeight',
-                                                'Rank', 'OverAll_Rank', 'coursePreferenceLvl','track_name', 'strand_name',
-                                                'OriginalQualifiedCourse', 'OriginalQualifiedMajor', 
-                                                'IsEnlisted', 'EnlistmentDate', 'IsPreviouslyWaitlisted', 'HasWaivedSlot', 'App_PassCode'] as $column)
+                                    @foreach([ 'AppDate', 'email', 'TelNo', 'Emergency_Contact', 'Emergency_TelNo', 'Emergency_Relation', 'ExamDate',
+                                                'Track_Name', 'Strand_Name', 'Total_Income_Ranking_Score', 'SHS_Grade_Ranking', 'Test_Score_Ranking', 'Test_Score_Stanine',
+                                                'validationDate', 'validatedBy', 'TransCollege_School', 'TransCollegeSchoolType', 'TransCollege_InclDates',
+                                                'Choice1_CampusName', 'Choice1_CourseName', 'Choice1_CourseMajorName',
+                                                'Choice2_CampusName', 'Choice2_CourseName', 'Choice2_CourseMajorName',
+                                                'Choice3_CampusName', 'Choice3_CourseName', 'Choice3_CourseMajorName', 'pass_code'] as $column)
                                         <li class="flex items-center">
                                             <input type="checkbox" value="{{ $column }}"  onchange="updateColumns(this)" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                             <label for="apple" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{ ucfirst($column) }}</label>
@@ -142,14 +146,15 @@
                         </div>
                         <div class="flex items-center rounded-lg">
                             <select id="sort" name="sort" onchange="sortByColumn()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full   dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option value="" disabled selected>Sort</option>        
-                                <option value="" selected>None</option>    
-                                @foreach(['AppNo', 'Applicant', 'Status',
-                                            'CampusName', 'QualifiedCourse', 'QualifiedMajor', 
-                                            'FinalRating', 'FinalGradesWeight', 'IncomeSourceWeight', 'UsepatScoreWeight', 'GpaWeight',
-                                            'Rank', 'OverAll_Rank', 'coursePreferenceLvl', 'track_name', 'strand_name',
-                                            'OriginalQualifiedCourse', 'OriginalQualifiedMajor', 
-                                            'IsEnlisted', 'EnlistmentDate', 'IsPreviouslyWaitlisted', 'HasWaivedSlot'] as $sort)    
+                                {{-- <option value="" disabled selected>Sort</option>        
+                                <option value="" selected>None</option>     --}}
+                                @foreach([ 'AppNo', 'ApplicantName', 
+                                            'AppDate', 'email', 'TelNo', 'Emergency_Contact', 'Emergency_TelNo', 'Emergency_Relation', 'ExamDate',
+                                            'Track_Name', 'Strand_Name', 'Total_Income_Ranking_Score', 'SHS_Grade_Ranking', 'Test_Score_Ranking', 'Test_Score_Stanine',
+                                            'validationDate', 'validatedBy', 'TransCollege_School', 'TransCollegeSchoolType', 'TransCollege_InclDates',
+                                            'Choice1_CampusName', 'Choice1_CourseName', 'Choice1_CourseMajorName',
+                                            'Choice2_CampusName', 'Choice2_CourseName', 'Choice2_CourseMajorName',
+                                            'Choice3_CampusName', 'Choice3_CourseName', 'Choice3_CourseMajorName' ] as $sort)    
                                     <option value="{{ $sort }}">{{ $sort }} </option>
                                 @endforeach
                             </select>
@@ -206,7 +211,7 @@
         <script src="{{ asset('JS/SweetAlerts/SwalGeneric.js') }}"></script>
 
         <script>
-            let selectedColumns = ['OverAll_Rank', 'AppNo', 'Applicant', 'Status' ]; 
+            let selectedColumns = ['AppNo', 'ApplicantName', 'ApplicationType' ]; 
             let currentPage = 1;
             let pageLimit = 10; 
             let selectedStatus = 'all'; 
@@ -247,25 +252,6 @@
                 getDataRows();
             }
 
-            function getDataByCampus() {
-                getCollegeByCampus();
-                getDataRows();
-            }
-            
-            function getDataByCollege() {
-                getProgramByCollege();
-                getDataRows();
-            }
-            
-            function getDataByProgram() {
-                getMajorByProgram();
-                getDataRows();
-            }
-
-            function getDataByMajor() {
-                getDataRows(); 
-            }
-
             function generateData() {
                 getDataRows(); 
             }
@@ -278,74 +264,7 @@
                 isAscending = !isAscending;
                 getDataRows(); 
             }
-            
-            function getCollegeByCampus() {
-                axios.get('/api/admission/result/getColleges', {
-                        params: {
-                            campusId: document.getElementById('campus').value,
-                        },
-                        headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
-                    }).then(response => {
-                        const collegeSelect = document.getElementById('college');
-                        collegeSelect.innerHTML = '<option value="0">All</option>';
-                        response.data.forEach(college => {
-                            const option = document.createElement('option');
-                            option.value = college.CollegeID;
-                            option.text = college.CollegeName;
-                            collegeSelect.appendChild(option);
-                        });
-                        document.getElementById('program').innerHTML = '<option value="0">All</option>';
-                        // getDataRows(); 
-                    })
-                    .catch(error => console.error('Error fetching colleges:', error));
-            }
-            
-            function getProgramByCollege() {
-                axios.get('/api/admission/result/getPrograms', {
-                        params: {
-                            campusId: document.getElementById('campus').value,
-                            collegeId: document.getElementById('college').value,
-                        },
-                        headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
-                    }).then(response => {
-                        const programSelect = document.getElementById('program');
-                        programSelect.innerHTML = '<option value="0">All</option>';
-                        response.data.forEach(program => {
-                            const option = document.createElement('option');
-                            option.value = program.ProgID;
-                            option.text = program.ProgName;
-                            programSelect.appendChild(option);
-                        });
-                        document.getElementById('major').innerHTML = '<option value="0">All</option>';
-                        // getDataRows(); 
-                    })
-                    .catch(error => console.error('Error fetching programs:', error));
-            }
-
-
-            function getMajorByProgram() {
-                axios.get('/api/admission/result/getMajors', {
-                        params: {
-                            campusId: document.getElementById('campus').value,
-                            collegeId: document.getElementById('college').value,
-                            programId: document.getElementById('program').value,
-                        },
-                        headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
-                    })
-                    .then(response => {
-                        const majorSelect = document.getElementById('major');
-                        majorSelect.innerHTML = '<option value="0">All</option>';
-                        response.data.forEach(major => {
-                            const option = document.createElement('option');
-                            option.value = major.MajorID;
-                            option.text = major.Major;
-                            majorSelect.appendChild(option);
-                        });
-                        // getDataRows(); 
-                    })
-                    .catch(error => console.error('Error fetching majors:', error));
-            }
-            
+        
 
             function filterByStatus(status) {
                 selectedStatus = status;
@@ -364,17 +283,13 @@
                 
                 SpinnerGlobal.classList.remove("hidden");
 
-                axios.get('/api/admission/result/applicants', {
+                axios.get('/api/admission/result/transferees', {
                     params: {
                         columns: selectedColumns.join(','),
                         page,
                         limit,
                         status: selectedStatus !== 'all' ? selectedStatus : null,
                         termID: document.getElementById('termID').value,
-                        campus: document.getElementById('campus').value,
-                        college: document.getElementById('college').value,
-                        program: document.getElementById('program').value,
-                        major: document.getElementById('major').value,
                         search: document.getElementById('searchInput').value,
                         sort: document.getElementById('sort').value, 
                         isAscending: isAscending, 
@@ -385,20 +300,6 @@
                     renderTable(data.data, data.current_page, pageLimit);
                     renderPagination(data);
                     document.getElementById('totalRows').textContent = `${data.total.toLocaleString()}`;
-                    document.getElementById('countTotalStatus').textContent = data.counts.total.toLocaleString();
-                    document.getElementById('countQualified').textContent = data.counts.qualified.toLocaleString();
-                    document.getElementById('countWaivedSlot').textContent = data.counts.waivedslot.toLocaleString();
-                    document.getElementById('countConfirmed').textContent = data.counts.confirmed.toLocaleString();
-                    document.getElementById('countWaitlisted').textContent = data.counts.waitlisted.toLocaleString();
-                    
-                    document.getElementById('countAcademic').textContent = data.counts.academic.toLocaleString();
-                    document.getElementById('counTechVoc').textContent = data.counts.techVoc.toLocaleString();
-                    document.getElementById('countSports').textContent = data.counts.sports.toLocaleString();
-                    document.getElementById('countArtsDesign').textContent = data.counts.artsDesign.toLocaleString();
-                    
-                    document.getElementById('countChoiceA').textContent = data.counts.choiceA.toLocaleString();
-                    document.getElementById('countChoiceB').textContent = data.counts.choiceB.toLocaleString();
-                    document.getElementById('countChoiceC').textContent = data.counts.choiceC.toLocaleString();
                     
                 })
                 .catch(console.error)
@@ -417,7 +318,7 @@
                 tableHTML += '</tr></thead><tbody>';
 
                 data.forEach((row, index) => {
-                    // let rowNumber = (currentPage - 1) * limit + index + 1; 
+                    let rowNumber = (currentPage - 1) * limit + index + 1; 
                     // tableHTML += `<tr><td class="py-2 px-4 border">${rowNumber}</td>`; 
                     selectedColumns.forEach(column => {
                         if (column === 'IsEnlisted') {
@@ -453,13 +354,10 @@
             function exportToExcel() {
                 const filters = {
                     termID: document.getElementById('termID').value,
-                    campus: document.getElementById('campus').value,
-                    program: document.getElementById('program').value,
-                    major: document.getElementById('major').value,
-                    status: selectedStatus,
                     search: document.getElementById('searchInput').value,
                     sort: document.getElementById('sort').value,
-                    export: 'Qualified', 
+                    isAscending: isAscending, 
+                    export: 'Transferees', 
                 };
                 
                 SpinnerGlobal.classList.remove("hidden");
