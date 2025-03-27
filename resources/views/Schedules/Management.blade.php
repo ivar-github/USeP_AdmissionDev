@@ -43,7 +43,7 @@
                             {{-- Test Centers --}}
                         </h1>
                         <p class="mt-1 text-md text-gray-600 dark:text-gray-400  xl:px-5">
-                            Test Dates details of USePAT Schedule
+                            Test Center management of USePAT Schedule
                         </p>
                         <div class="flex justify-end px-0 md:px-5 mt-5 md:mt-1">
                             <a href="#" id="addCenterModalButton" data-modal-target="addCenterModal" data-modal-toggle="addCenterModal" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-800 hover:bg-red-900 rounded-lg focus:outline-none focus:ring-1 focus:ring-offset-1">
@@ -122,7 +122,7 @@
                             {{-- Test Dates --}}
                         </h1>
                         <p class="mt-1 text-md text-gray-600 dark:text-gray-400  xl:px-5">
-                            Test Dates details of USePAT Schedule
+                            Test Date management of USePAT Schedule
                         </p>
                         <div class="flex justify-end px-0 md:px-5 mt-5 md:mt-1">
                             <a href="#" id="addDateModalButton" data-modal-target="addDateModal" data-modal-toggle="addDateModal" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-800 hover:bg-red-900 rounded-lg focus:outline-none focus:ring-1 focus:ring-offset-1">
@@ -189,7 +189,7 @@
                             {{-- Test Times --}}
                         </h1>
                         <p class="mt-1 text-md text-gray-600 dark:text-gray-400  xl:px-5">
-                            Test Time details of USePAT Schedule
+                            Test Time management of USePAT Schedule
                         </p>
                         <div class="flex justify-end px-0 md:px-5 mt-5 md:mt-1">
                             <a href="#" id="addTimeModalButton" data-modal-target="addTimeModal" data-modal-toggle="addTimeModal" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-800 hover:bg-red-900 rounded-lg focus:outline-none focus:ring-1 focus:ring-offset-1">
@@ -274,7 +274,7 @@
                             {{-- Test Rooms --}}
                         </h1>
                         <p class="mt-1 text-md text-gray-600 dark:text-gray-400  xl:px-5">
-                            Test Rooms details of USePAT Schedule
+                            Test Rooms management of USePAT Schedule
                         </p>
                         <div class="flex justify-end px-0 md:px-5 mt-5 md:mt-1">
                             <a href="#" id="addRoomModalButton" data-modal-target="addRoomModal" data-modal-toggle="addRoomModal" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-800 hover:bg-red-900 rounded-lg focus:outline-none focus:ring-1 focus:ring-offset-1">
@@ -347,7 +347,7 @@
                             {{-- Test Sessions --}}
                         </h1>
                         <p class="mt-1 text-md text-gray-600 dark:text-gray-400  xl:px-5">
-                            Test Sessions details of USePAT Schedule
+                            Test Session management of USePAT Schedule
                         </p>
                         <div class="flex justify-end px-0 md:px-5 mt-5 md:mt-1">
                             <a href="#" id="addSessionModalButton" data-modal-target="addSessionModal" data-modal-toggle="addSessionModal" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-800 hover:bg-red-900 rounded-lg focus:outline-none focus:ring-1 focus:ring-offset-1">

@@ -40,9 +40,9 @@ if (document.getElementById("main-table") && typeof simpleDatatables.DataTable !
     const table = new simpleDatatables.DataTable("#main-table", {
         template: (options, dom) =>
         "<div class='border-2 border-gray-200 dark:border-gray-600 border-solid rounded-lg p-5 lg:p-8'>" +
-            "<div>" +
-                "<div class='" + options.classes.top + " flex justify-center items-center  flex-wrap flex-row pb-2 border-b-2'>" +
-                        "<button id='exportDropdownButton' type='button' class='flex w-full lg:w-auto items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 '>" +
+            "<div class='flex flex-col xl:flex-col lg:justify-between items-center lg:space-x-4'>" +
+                "<div class='" + options.classes.top + " flex flex-col border-b-2  justify-center items-center pb-2'>" +
+                        "<button id='exportDropdownButton' type='button' class='flex w-full xl:w-auto items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 '>" +
                             "Export" +
                             "<svg class='-me-0.5 ms-1.5 h-4 w-4' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'>" +
                                 "<path stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m19 9-7 7-7-7' />" +
@@ -86,7 +86,7 @@ if (document.getElementById("main-table") && typeof simpleDatatables.DataTable !
                         "</div>" +
 
                         (options.paging && options.perPageSelect ?
-                            "<div class='lg:flex-auto flex lg:py-5 w-full lg:w-auto  justify-center lg:justify-end '>" +
+                            "<div class='lg:flex-auto flex lg:py-5 w-full xl:w-auto justify-center '>" +
                                 "<label >" +
                                     "<select class='" + options.classes.selector + " text-gray-500 bg-white border px-3 py-2  border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700'></select> "  +
                                 "</label>" + // options.labels.perPage +
@@ -95,7 +95,7 @@ if (document.getElementById("main-table") && typeof simpleDatatables.DataTable !
                         ) +
 
                         (options.searchable ?
-                            "<div class='"+ options.classes.search +" w-full lg:w-auto '>" +
+                            "<div class='"+ options.classes.search +" w-full xl:w-auto '>" +
                                 "<input type='text' class='" + options.classes.input + " w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700' placeholder='" + options.labels.placeholder + "' type='search' title='" + options.labels.searchTitle + "'" + (dom.id ? " aria-controls='" + dom.id + "'" : "") + ">" +
                             "</div> " : ""
 
@@ -149,8 +149,8 @@ if (document.getElementById("second-table") && typeof simpleDatatables.DataTable
     const table = new simpleDatatables.DataTable("#second-table", {
         template: (options, dom) =>
         "<div class='border-2 border-gray-200 dark:border-gray-600 border-solid rounded-lg p-5 lg:p-8'>" +
-            "<div>" +
-                "<div class='" + options.classes.top + " flex justify-center items-center flex-column flex-wrap md:flex-row pb-2 border-b-2'>" +
+            "<div class='flex flex-col xl:flex-col lg:justify-between items-center lg:space-x-4'>" +
+                "<div class='" + options.classes.top + " flex flex-col border-b-2  justify-center items-center pb-2'>" +
                         "<button id='exportDropdownButtonSecond' type='button' class='flex w-full lg:w-auto items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 '>" +
                             "Export" +
                             "<svg class='-me-0.5 ms-1.5 h-4 w-4' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'>" +
@@ -258,8 +258,8 @@ if (document.getElementById("third-table") && typeof simpleDatatables.DataTable 
     const table = new simpleDatatables.DataTable("#third-table", {
         template: (options, dom) =>
         "<div class='border-2 border-gray-200 dark:border-gray-600 border-solid rounded-lg p-5 lg:p-8'>" +
-            "<div>" +
-                "<div class='" + options.classes.top + " flex justify-center items-center flex-column flex-wrap md:flex-row pb-2 border-b-2'>" +
+            "<div class='flex flex-col xl:flex-col lg:justify-between items-center lg:space-x-4'>" +
+                "<div class='" + options.classes.top + " flex flex-col border-b-2  justify-center items-center pb-2'>" +
                         "<button id='exportDropdownButtonThird' type='button' class='flex w-full lg:w-auto items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 '>" +
                             "Export" +
                             "<svg class='-me-0.5 ms-1.5 h-4 w-4' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'>" +
@@ -369,8 +369,8 @@ if (document.getElementById("fourth-table") && typeof simpleDatatables.DataTable
     const table = new simpleDatatables.DataTable("#fourth-table", {
         template: (options, dom) =>
         "<div class='border-2 border-gray-200 dark:border-gray-600 border-solid rounded-lg p-5 lg:p-8'>" +
-            "<div>" +
-                "<div class='" + options.classes.top + " flex justify-center items-center flex-column flex-wrap md:flex-row pb-2 border-b-2'>" +
+            "<div class='flex flex-col xl:flex-col lg:justify-between items-center lg:space-x-4'>" +
+                "<div class='" + options.classes.top + " flex flex-col border-b-2  justify-center items-center pb-2'>" +
                         "<button id='exportDropdownButtonFourth' type='button' class='flex w-full lg:w-auto items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 '>" +
                             "Export" +
                             "<svg class='-me-0.5 ms-1.5 h-4 w-4' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'>" +
@@ -480,8 +480,8 @@ if (document.getElementById("fifth-table") && typeof simpleDatatables.DataTable 
     const table = new simpleDatatables.DataTable("#fifth-table", {
         template: (options, dom) =>
         "<div class='border-2 border-gray-200 dark:border-gray-600 border-solid rounded-lg p-5 lg:p-8'>" +
-            "<div>" +
-                "<div class='" + options.classes.top + " flex justify-center items-center flex-column flex-wrap md:flex-row pb-2 border-b-2'>" +
+            "<div class='flex flex-col xl:flex-col lg:justify-between items-center lg:space-x-4'>" +
+                "<div class='" + options.classes.top + " flex flex-col border-b-2  justify-center items-center pb-2'>" +
                         "<button id='exportDropdownButtonFifth' type='button' class='flex w-full lg:w-auto items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 '>" +
                             "Export" +
                             "<svg class='-me-0.5 ms-1.5 h-4 w-4' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'>" +
