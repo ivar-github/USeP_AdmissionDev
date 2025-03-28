@@ -142,9 +142,9 @@
                         </div>
                         <div class="flex items-center rounded-lg">
                             <select id="sort" name="sort" onchange="sortByColumn()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full   dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option value="" disabled selected>Sort</option>        
-                                <option value="" selected>None</option>    
-                                @foreach(['AppNo', 'Applicant', 'Status',
+                                {{-- <option value="" disabled selected>Sort</option>        
+                                <option value="" selected>None</option>     --}}
+                                @foreach([ 'Rank', 'AppNo', 'Applicant', 'Status',
                                             'CampusName', 'QualifiedCourse', 'QualifiedMajor', 
                                             'FinalRating', 'FinalGradesWeight', 'IncomeSourceWeight', 'UsepatScoreWeight', 'GpaWeight',
                                             'Rank', 'OverAll_Rank', 'coursePreferenceLvl', 'track_name', 'strand_name',
@@ -206,7 +206,7 @@
         <script src="{{ asset('JS/SweetAlerts/SwalGeneric.js') }}"></script>
 
         <script>
-            let selectedColumns = ['OverAll_Rank', 'AppNo', 'Applicant', 'Status' ]; 
+            let selectedColumns = ['Rank', 'AppNo', 'Applicant', 'Status' ]; 
             let currentPage = 1;
             let pageLimit = 10; 
             let selectedStatus = 'all'; 

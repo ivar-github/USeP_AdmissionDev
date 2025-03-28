@@ -24,14 +24,15 @@
                 ->when($this->filters['campus'] != 0, fn($query) => $query->where('CampusID', $this->filters['campus']))
                 ->when($this->filters['program'] != 0, fn($query) => $query->where('QualifiedCourseID', $this->filters['program']))
                 ->when($this->filters['major'] != 0, fn($query) => $query->where('QualifiedMajorID', $this->filters['major']))
-                ->when($this->filters['status'] && $this->filters['status'] !== 'all', fn($query) => $query->where('Status', $this->filters['status']))
-                ->when($this->filters['sort'] , fn($query) => $query->orderBy($this->filters['sort']))
+                ->when($this->filters['status'] && $this->filters['status'] !== 'all' && $this->filters['status'] != '1', fn($query) => $query->where('Status', $this->filters['status']))
+                ->when($this->filters['status'] == 1, fn($query) => $query->where('isEnlisted', $this->filters['status']))
                 ->when($this->filters['search'], function ($query, $search) {
                     $query->where(function ($q) use ($search) {
                         $q->where('ApplicantName', 'LIKE', '%' . $search . '%')
                         ->orWhere('AppNo', 'LIKE', '%' . $search . '%');
                     });
-                });
+                })
+                ->when($this->filters['sort'] , fn($query) => $query->orderBy($this->filters['sort']));
         }
 
         public function headings(): array

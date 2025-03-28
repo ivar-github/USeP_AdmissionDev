@@ -270,7 +270,7 @@ class ResultController extends Controller
 
 
             $prefCountQuery = ResultView::where('TermID', $termID)
-                ->distinct()
+                // ->distinct()
                 ->when($campus != 0, fn($query) => $query->where('CampusID', $campus))
                 ->when($program != 0, fn($query) => $query->where('QualifiedCourseID', $program))
                 ->when($college != 0, fn($query) => $query->where('CollegeID', $college))
@@ -484,7 +484,7 @@ class ResultController extends Controller
 
         try {
 
-            ini_set('max_execution_time', 120);
+            ini_set('max_execution_time', 300);
 
             $columns = explode(',', $request->input('columns', ''));
             $perPage = $request->input('limit', 10);

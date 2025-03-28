@@ -235,7 +235,7 @@
                     selectedColumns = selectedColumns.filter(column => column !== checkbox.value);
                 }
                 currentPage = 1;  
-                getDataRows();
+                // getDataRows();
             }
 
             function changePage(page) {
@@ -251,26 +251,26 @@
 
             
             function getDataByTerm() {
-                getDataRows();
+                // getDataRows();
             }
 
             function getDataByCampus() {
                 getCollegeByCampus();
-                getDataRows();
+                // getDataRows();
             }
             
             function getDataByCollege() {
                 getProgramByCollege();
-                getDataRows();
+                // getDataRows();
             }
             
             function getDataByProgram() {
                 getMajorByProgram();
-                getDataRows();
+                // getDataRows();
             }
 
             function getDataByMajor() {
-                getDataRows(); 
+                // getDataRows(); 
             }
 
             function generateData() {
@@ -357,7 +357,7 @@
             function filterByStatus(status) {
                 selectedStatus = status;
                 currentPage = 1; 
-                getDataRows(); 
+                // getDataRows(); 
             }
 
             function getDataRows(page = currentPage, limit = pageLimit) {

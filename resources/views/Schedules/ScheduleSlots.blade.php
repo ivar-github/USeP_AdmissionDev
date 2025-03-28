@@ -4,6 +4,8 @@
     </x-Breadcrumbs>
     <div class="mx-auto h-full">
         <div class="overflow-hidden py-5 lg:py-10 mb-10 ">
+            <x-SpinnerGlobal />
+
             <div id="displayCards" class="flex gap-5 lg:gap-10">
                 {{-- <x-Cards.ResultCards /> --}}
             </div>
@@ -419,6 +421,8 @@
                     search: document.getElementById('searchInput').value,
                     status: selectedStatus,
                 };
+                
+                SpinnerGlobal.classList.remove("hidden");
 
                 axios.post('/admission/schedule/exportSchedulesSlots', {
                     columns:  selectedColumns.join(','),
@@ -438,6 +442,9 @@
                 })
                 .catch(error => {
                     swalGenericError('An unexpected error occurred!', error.message || 'Please try again.');
+                })
+                .finally(() => {
+                    SpinnerGlobal.classList.add("hidden");
                 });
             }
 

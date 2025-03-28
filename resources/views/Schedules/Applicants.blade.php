@@ -4,6 +4,8 @@
     </x-Breadcrumbs>
     <div class="mx-auto h-full">
         <div class="overflow-hidden py-5 lg:py-10 mb-10 ">
+            <x-SpinnerGlobal />
+
             <div id="displayCards" class="flex gap-5 lg:gap-10">
                 {{-- <x-Cards.ResultCards /> --}}
             </div>
@@ -192,6 +194,8 @@
                     sort: document.getElementById('sort').value,
                     search: document.getElementById('searchInput').value,
                 };
+                
+                SpinnerGlobal.classList.remove("hidden");
 
                 axios.post('/admission/schedule/exportApplicantsScheds', {
                     columns:  selectedColumns.join(','),
@@ -211,6 +215,9 @@
                 })
                 .catch(error => {
                     swalGenericError('An unexpected error occurred!', error.message || 'Please try again.');
+                })
+                .finally(() => {
+                    SpinnerGlobal.classList.add("hidden");
                 });
             }
 
@@ -327,6 +334,8 @@
                     document.getElementById('totalRows').innerHTML = ""; 
                     return;
                 }
+                
+                // SpinnerGlobal.classList.remove("hidden");
 
                 axios.get('/api/admission/schedule/applicants', {
                     params: {
@@ -350,6 +359,9 @@
                     
                 })
                 .catch(console.error);
+                // .finally(() => {
+                //     SpinnerGlobal.classList.add("hidden");
+                // });
             }
 
 
