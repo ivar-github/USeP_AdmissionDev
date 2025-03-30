@@ -36,6 +36,24 @@ Route::middleware(['auth', 'isActive', 'forcePassChange'])->group(function () {
         Route::resource('registers', RegistrationController ::class);
     });
 
+    Route::prefix('error')->group(function () {
+        Route::get('/404', function () {
+            abort(404);
+        });
+
+        Route::get('/500', function () {
+            abort(500);
+        });
+
+        Route::get('/503', function () {
+            abort(503); // php artisan down  // php artisan up
+        });
+
+        Route::get('/419', function () {
+            throw new \Illuminate\Session\TokenMismatchException();
+        });
+    });
+
 
     Route::get('/', function () {
         return redirect()->route('dashboard');
@@ -96,7 +114,7 @@ Route::middleware(['auth', 'isActive', 'forcePassChange'])->group(function () {
     Route::get('registration/pdf/USePATv2', [PDFController::class, 'USePATFormv2'])->name('registrations.pdf.USePATv2');
 
 
-    
+
 
     Route::get('/rfid/dashboard', function () {
         return view('RFIDs.Dashboard');
@@ -104,7 +122,7 @@ Route::middleware(['auth', 'isActive', 'forcePassChange'])->group(function () {
 
     Route::resource('rfid/studentsRFIDs', RFIDStudentController::class)
     ->where(['studentsRFIDs' => '[a-zA-Z0-9_]+']);
-    
+
     Route::resource('rfid/employeesRFIDs', RFIDEmployeeController::class)
     ->where(['employeesRFIDs' => '[a-zA-Z0-9_]+']);
 

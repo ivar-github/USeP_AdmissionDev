@@ -90,22 +90,22 @@
                         </li>
                     </ul>
                 </li> --}}
-                <li x-data="{ 
-                        open: false, 
-                        isActive: window.location.pathname.includes('/admission/schedule/scheduleSlots') || 
-                                window.location.pathname.includes('/admission/schedule/scheduleApplicants') || 
-                                window.location.pathname.includes('/admission/schedule/scheduleManagements') || 
-                                window.location.pathname.includes('/admission/schedule/scheduleReschedules'), 
+                <li x-data="{
+                        open: false,
+                        isActive: window.location.pathname.includes('/admission/schedule/scheduleSlots') ||
+                                window.location.pathname.includes('/admission/schedule/scheduleApplicants') ||
+                                window.location.pathname.includes('/admission/schedule/scheduleManagements') ||
+                                window.location.pathname.includes('/admission/schedule/scheduleReschedules'),
                         init() {
                             if (this.isActive) {
                                 this.open = true;
                             }
                         }
                     }">
-                    <button type="button" 
+                    <button type="button"
                         class="flex items-center w-full p-2 px-2 text-base text-gray-900 transition duration-75 rounded-lg group"
                         :class="{'bg-red-800 text-white dark:bg-red-900': isActive, 'hover:bg-slate-200 hover:text-slate-800  dark:text-white dark:hover:bg-gray-700 ': !isActive}"
-                        aria-controls="dropdown-schedules" 
+                        aria-controls="dropdown-schedules"
                         @click="open = !open">
 
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor">
@@ -116,7 +116,7 @@
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
                         </svg>
                     </button>
-                    
+
                     <ul id="dropdown-schedules" x-show="open"  class="mx-1 p-2 mt-1 space-y-2 rounded-xl bg-slate-100 dark:bg-gray-900 dark:bg-opacity-40">
                         <li>
                             <x-subNav-Link :href="route('schedules.applicants')" :active="request()->routeIs('schedules.applicants')">
@@ -140,23 +140,23 @@
                         </li>
                     </ul>
                 </li>
-                
-                <li x-data="{ 
-                        open: false, 
-                        isActive: window.location.pathname.includes('/admission/result/dashboard') || 
-                                window.location.pathname.includes('/admission/result/applicants') || 
+
+                <li x-data="{
+                        open: false,
+                        isActive: window.location.pathname.includes('/admission/result/dashboard') ||
+                                window.location.pathname.includes('/admission/result/applicants') ||
                                 window.location.pathname.includes('/admission/result/overall') ||
-                                window.location.pathname.includes('/admission/result/transferees'), 
+                                window.location.pathname.includes('/admission/result/transferees'),
                         init() {
                             if (this.isActive) {
                                 this.open = true;
                             }
                         }
                     }">
-                    <button type="button" 
+                    <button type="button"
                         class="flex items-center w-full p-2 px-2 text-base text-gray-900 transition duration-75 rounded-lg group"
                         :class="{'bg-red-800 text-white dark:bg-red-900': isActive, 'hover:bg-slate-200 hover:text-slate-800  dark:text-white dark:hover:bg-gray-700': !isActive}"
-                        aria-controls="dropdown-results" 
+                        aria-controls="dropdown-results"
                         @click="open = !open">
 
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor">
@@ -167,7 +167,7 @@
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
                         </svg>
                     </button>
-                    
+
                     <ul id="dropdown-results" x-show="open"  class="mx-1 p-2 mt-1 space-y-2 rounded-xl bg-slate-100 dark:bg-gray-900 dark:bg-opacity-40">
                         <li >
                             <x-subNav-Link :href="route('results.index')" :active="request()->routeIs('results.index')">
@@ -191,39 +191,6 @@
                         </li>
                     </ul>
                 </li>
-                {{-- <li>
-                    <button type="button" class="flex items-center w-full p-2 px-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:text-white hover:bg-red-800 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-results" data-collapse-toggle="dropdown-results">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor">
-                            <path d="M560-680v-80h320v80H560Zm0 160v-80h320v80H560Zm0 160v-80h320v80H560Zm-240-40q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM80-160v-76q0-21 10-40t28-30q45-27 95.5-40.5T320-360q56 0 106.5 13.5T522-306q18 11 28 30t10 40v76H80Zm86-80h308q-35-20-74-30t-80-10q-41 0-80 10t-74 30Zm154-240q17 0 28.5-11.5T360-520q0-17-11.5-28.5T320-560q-17 0-28.5 11.5T280-520q0 17 11.5 28.5T320-480Zm0-40Zm0 280Z"/>
-                        </svg>
-                        <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Results</span>
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                        </svg>
-                    </button>
-                    <ul id="dropdown-results" class="hidden mx-1 p-2 mt-1 space-y-2 rounded-xl bg-slate-100 dark:bg-slate-800">
-                        <li >
-                            <x-subNav-Link :href="route('results.index')" :active="request()->routeIs('results.index')">
-                                <span class="ms-3">Dashboard</span>
-                            </x-subNav-Link>
-                        </li>
-                        <li >
-                            <x-subNav-Link :href="route('results.applicants')" :active="request()->routeIs('results.applicants')">
-                                <span class="ms-3">Qualified Applicants</span>
-                            </x-subNav-Link>
-                        </li>
-                        <li >
-                            <x-subNav-Link :href="route('results.overall')" :active="request()->routeIs('results.overall')">
-                                <span class="ms-3">Overall Ranking</span>
-                            </x-subNav-Link>
-                        </li>
-                        <li >
-                            <x-subNav-Link :href="route('results.transferees')" :active="request()->routeIs('results.transferees')">
-                                <span class="ms-3">Transferees</span>
-                            </x-subNav-Link>
-                        </li>
-                    </ul>
-                </li> --}}
                 {{-- <li>
                     <button type="button" class="flex items-center w-full p-2 px-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:text-white hover:bg-red-800 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-courseEvals" data-collapse-toggle="dropdown-courseEvals">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor">
