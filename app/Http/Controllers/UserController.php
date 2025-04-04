@@ -142,6 +142,7 @@ class UserController extends Controller
         try {
 
             $user = User::findOrFail($user);
+            // dd($user->restrictions);
             return response()->json($user);
 
         } catch (Throwable $e) {

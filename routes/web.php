@@ -59,6 +59,7 @@ Route::middleware(['auth', 'isActive', 'forcePassChange'])->group(function () {
         return redirect()->route('dashboard');
     });
     Route::get('/dashboard', function () {
+        // abort(503);
         return view('dashboard');
     })->name('dashboard');
 
@@ -67,7 +68,7 @@ Route::middleware(['auth', 'isActive', 'forcePassChange'])->group(function () {
 
 
 
-
+    
     Route::get('admission/result/dashboard', [ResultController::class, 'index'])->name('results.index');
     Route::get('admission/result/applicants', [ResultController::class, 'applicants'])->name('results.applicants');
     Route::get('admission/result/overall', [ResultController::class, 'overall'])->name('results.overall');

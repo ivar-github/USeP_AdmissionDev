@@ -91,7 +91,7 @@
             </div>
 
             <div class="border border-gray-300 rounded-xl p-2">
-                <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-2">
+                <div class="flex flex-col lg:flex-row items-center justify-between space-y-3 lg:space-y-0 md:space-x-4 p-2">
                     <div class="w-full lg:w-4/12 justify-start">
                         <form class="flex items-center">
                             <label for="searchInput" class="sr-only">Search</label>
@@ -119,7 +119,8 @@
                             <div id="filterDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
                                 <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Columns</h6>
                                 <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
-                                    @foreach([ 'testSessionName', 'testTimeStartString', 'testTimeEndString', 'maxExamineeSlots', 'totalRegistered', 'availableSlots', 'isFull', 'isActive'] as $column)
+                                    @foreach([ 'testSessionName', 'testTimeStartString', 'testTimeEndString', 
+                                                'maxExamineeSlots', 'totalRegistered', 'availableSlots', 'isFull', 'isActive'] as $column)
                                         <li class="flex items-center">
                                             <input type="checkbox" value="{{ $column }}"  onchange="updateColumns(this)" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                             <label for="apple" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{ ucfirst($column) }}</label>
@@ -129,14 +130,21 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="rounded-lg">
+                        <div class="flex items-center rounded-lg">
                             <select id="sort" name="sort" onchange="sortByColumn()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full   dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option value="" disabled selected>Sort</option>        
-                                <option value="" selected>None</option>    
-                                @foreach([  'testCenterName', 'testDate', 'testTime', 'testRoomName', 'testTimeStartString', 'testTimeEndString', 'testSessionName', 'testRoomName', 'totalRegistered', 'availableSlots', 'isFull'] as $sort)    
+                                {{-- <option value="" disabled selected>Sort</option>        
+                                <option value="" selected>None</option>     --}}
+                                @foreach([  'testCenterName', 'testDate', 'testTime', 'testRoomName', 
+                                            'testTimeStartString', 'testTimeEndString', 'testSessionName', 
+                                            'totalRegistered', 'availableSlots', 'isFull', 'isActive'] as $sort)    
                                     <option value="{{ $sort }}">{{ $sort }} </option>
                                 @endforeach
                             </select>
+                            <button onclick="SortOrder()" class="ms-1 p-1 hover:bg-gray-100 dark:text-gray-300 text-gray-600 rounded-xl">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5 7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
+                                  </svg>                                  
+                            </button>
                         </div>
                         
                     </div>
@@ -192,6 +200,7 @@
             let currentPage = 1;
             let pageLimit = 10; 
             let selectedStatus = '1'; 
+            let isAscending = true;  
 
             getDataByTerm();
 
@@ -261,6 +270,11 @@
             }
 
             function sortByColumn() {
+                getDataRows(); 
+            }
+
+            function SortOrder() {
+                isAscending = !isAscending;
                 getDataRows(); 
             }
             
@@ -343,6 +357,7 @@
                         sort: document.getElementById('sort').value, 
                         isVacant: document.getElementById('isVacant').checked,
                         status: selectedStatus,
+                        isAscending: isAscending, 
                     },
                     headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
                 })

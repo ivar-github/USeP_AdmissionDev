@@ -90,6 +90,8 @@ class ScheduleSlotsController extends Controller
             $status = $request->input('status');
             // $isVacant = $request->boolean('isVacant', false) ? 'False' : 'True';
             $isVacant = $request->boolean('isVacant', false);
+            $isAscending = $request->boolean('isAscending') ? 'asc' : 'desc';
+
 
             $prefRowQuery = ScheduleViewSlot::select($columns)
                 ->where('TermID', $termId)
@@ -100,10 +102,7 @@ class ScheduleSlotsController extends Controller
                 ->when(!$dateFromId && $dateToId, fn($query) => $query->where('testDate', '<=', $dateToId))
                 ->when($isVacant, fn($query) => $query->where('isFull', 'False'))
                 ->where('isActive', $status)
-                // ->where('isFull', '=', $isVacant)
-                ->orderBy('testCenterName', 'asc') 
-                ->orderBy('testDate', 'asc') 
-                ->when($sort, fn($query) => $query->orderBy($sort, 'asc'));
+                ->when($sort, fn($query) => $query->orderBy($sort, $isAscending));
 
 
             if ($search) {

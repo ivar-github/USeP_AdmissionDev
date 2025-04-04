@@ -182,8 +182,6 @@
                                 }
                             } else {
                                 const errorMsg = error.response.data.message;
-                                console.log('ErrorMsg',errorMsg);
-                                console.log('Error',error);
                                 swalGenericError('An unexpected error occurred!',errorMsg);
                             }
                         });
@@ -348,7 +346,10 @@
 
                     examineeList.appendChild(ul);
                 })
-                .catch(error => console.error("Error fetching examinees:", error));
+                .catch(error => {
+                    const errorMsg = error.response.data.message;
+                    swalGenericError('Error!',errorMsg);
+                }); 
             }
             
             // FUNCTION TO DELETE ITEM

@@ -139,6 +139,7 @@ class ScheduleController extends Controller
             $roomId = $request->input('roomID');
             $search = $request->input('search');
             $sort = $request->input('sort');
+            $isAscending = $request->boolean('isAscending') ? 'asc' : 'desc';
 
             $prefRowQuery = ScheduleView::select($columns)
                 ->where('TermID', $termId)
@@ -147,7 +148,7 @@ class ScheduleController extends Controller
                 ->when($dateFromId && $dateToId, fn($query) => $query->whereBetween('testDate', [$dateFromId, $dateToId]))
                 ->when($dateFromId && !$dateToId, fn($query) => $query->where('testDate', '>=', $dateFromId))
                 ->when(!$dateFromId && $dateToId, fn($query) => $query->where('testDate', '<=', $dateToId))
-                ->when($sort, fn($query) => $query->orderBy($sort, 'asc'));
+                ->when($sort, fn($query) => $query->orderBy($sort, $isAscending));
 
 
             if ($search) {

@@ -2,7 +2,7 @@
     <x-Breadcrumbs>
         <a  href="{{route('results.transferees')}}" class="ms-1 text-lg font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">RESULTS - Transferees</a>
     </x-Breadcrumbs>
-    <div class="mx-auto h-full">
+    <div class="mx-auto h-full pb-10">
         <div class="overflow-hidden py-5 lg:py-10">
             <x-SpinnerGlobal />
 
@@ -22,68 +22,6 @@
                     </select>
                 </div>
             </div>
-            {{-- <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1">
-                <div class="dark:text-gray-200 mx-2 mb-2">
-                    <div class="rounded-lg">
-                        <label for="campus" class="block text-md text-gray-700  dark:text-gray-300">Campus</label>
-                        <select id="campus" name="campus" onchange="getCollegeByCampus()" onclick="getDataByCampus()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
-                            <option value="0">All </option>
-                            @foreach ($campuses as $campus)
-                                <option value="{{ $campus->id }}">{{ $campus->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="dark:text-gray-200 mx-2 mb-2">
-                    <div class="rounded-lg">
-                        <label for="college" class="block text-md text-gray-700  dark:text-gray-300">College</label>
-                        <select id="college" name="college" onchange="getProgramByCollege()" onclick="getDataByCollege()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
-                            <option value="0">All </option>
-                        </select>
-                    </div>
-                </div>
-                <div class="dark:text-gray-200 mx-2 mb-2"> 
-                    <div class="rounded-lg">
-                        <label for="program" class="block text-md text-gray-700  dark:text-gray-300">Program</label>
-                        <select id="program" name="program" onchange="getMajorByProgram()"  onclick="getDataByProgram()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
-                            <option value="0">All </option>
-                        </select>
-                    </div>
-                </div>
-                <div class="dark:text-gray-200 mx-2 mb-2">
-                    <div class="rounded-lg">
-                        <label for="major" class="block text-md text-gray-700  dark:text-gray-300">Major</label>
-                        <select id="major" name="major" onchange="getDataByMajor()"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
-                            <option value="0">All </option>
-                        </select>
-                    </div>
-                </div>
-            </div> --}}
-            
-            
-            {{-- <div class="mb-10 mt-3 mx-2">
-                <form id="filterForm ">
-                    <label class="text-gray-700  dark:text-gray-300 mx-1">
-                        <input type="radio" name="status" id="filterAll" value="all" checked onclick="filterByStatus(this.value)" > All
-                    </label>
-                    <label class="text-gray-700  dark:text-gray-300 mx-1" >
-                        <input type="radio" name="status" id="filterQualified" value="Qualified" onclick="filterByStatus(this.value)"> Qualified
-                    </label>
-                    <label class="text-gray-700  dark:text-gray-300 mx-1">
-                        <input type="radio" name="status" id="filterWaivedSlot" value="WaivedSlot" onclick="filterByStatus(this.value)"> WaivedSlot
-                    </label>
-                    <label class="text-gray-700  dark:text-gray-300 mx-1">
-                        <input type="radio" name="status" id="filterWaitlisted" value="Waitlisted" onclick="filterByStatus(this.value)"> Waitlisted
-                    </label>
-                    <label class="text-gray-700  dark:text-gray-300 mx-1">
-                        <input type="radio" name="status" id="filterConfirmed" value="1" onclick="filterByStatus(this.value)"> Confirmed
-                    </label>
-                    <label class="text-gray-700  dark:text-gray-300 mx-1">
-                        <input type="radio" name="status" id="filterNotQualified" value="NotQualified" onclick="filterByStatus(this.value)"> Not Qualified
-                    </label>
-                </form>
-                <hr class="my-3">
-            </div> --}}
             
             <div class="flex justify-between items-center my-2">
                 <button type="button"  onclick="generateData()" class="flex items-center justify-center text-white bg-red-900 hover:bg-red-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-900 dark:hover:bg-red-800 focus:outline-none dark:focus:ring-primary-800">
@@ -126,22 +64,25 @@
                                     <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
                                 </svg>
                             </button>
-                            <div id="filterDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
-                                <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Columns</h6>
-                                <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
-                                    @foreach([ 'AppDate', 'email', 'TelNo', 'Emergency_Contact', 'Emergency_TelNo', 'Emergency_Relation', 'ExamDate',
-                                                'Track_Name', 'Strand_Name', 'Total_Income_Ranking_Score', 'SHS_Grade_Ranking', 'Test_Score_Ranking', 'Test_Score_Stanine',
+                            
+                            <div id="filterDropdown" class="z-10 hidden w-70 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                                <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white bg-slate-200 dark:bg-slate-800 p-1 rounded-lg text-center">Columns</h6>
+                                <div class="max-h-60 overflow-y-auto"> 
+                                    <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
+                                        @foreach([ 'AppDate', 'email', 'TelNo', 'Emergency_Contact', 'Emergency_TelNo', 'Emergency_Relation', 'ExamDate',
+                                                'Track_Name', 'Strand_Name', 'TestScore', 'TestScore_Stanine',
+                                                'Total_Income_Ranking_Score', 'Test_Score_Ranking', 'SHS_Grade_Ranking',
                                                 'validationDate', 'validatedBy', 'TransCollege_School', 'TransCollegeSchoolType', 'TransCollege_InclDates',
                                                 'Choice1_CampusName', 'Choice1_CourseName', 'Choice1_CourseMajorName',
                                                 'Choice2_CampusName', 'Choice2_CourseName', 'Choice2_CourseMajorName',
                                                 'Choice3_CampusName', 'Choice3_CourseName', 'Choice3_CourseMajorName', 'pass_code'] as $column)
-                                        <li class="flex items-center">
-                                            <input type="checkbox" value="{{ $column }}"  onchange="updateColumns(this)" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                            <label for="apple" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{ ucfirst($column) }}</label>
-                                        </li>
-                                    @endforeach
-                                    
-                                </ul>
+                                            <li class="flex items-center">
+                                                <input type="checkbox" value="{{ $column }}" onchange="updateColumns(this)" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                <label class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{ ucfirst($column) }}</label>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                         <div class="flex items-center rounded-lg">
@@ -150,7 +91,8 @@
                                 <option value="" selected>None</option>     --}}
                                 @foreach([ 'AppNo', 'ApplicantName', 
                                             'AppDate', 'email', 'TelNo', 'Emergency_Contact', 'Emergency_TelNo', 'Emergency_Relation', 'ExamDate',
-                                            'Track_Name', 'Strand_Name', 'Total_Income_Ranking_Score', 'SHS_Grade_Ranking', 'Test_Score_Ranking', 'Test_Score_Stanine',
+                                            'Track_Name', 'Strand_Name',  'TestScore', 'TestScore_Stanine',
+                                            'Total_Income_Ranking_Score', 'Test_Score_Ranking', 'SHS_Grade_Ranking',
                                             'validationDate', 'validatedBy', 'TransCollege_School', 'TransCollegeSchoolType', 'TransCollege_InclDates',
                                             'Choice1_CampusName', 'Choice1_CourseName', 'Choice1_CourseMajorName',
                                             'Choice2_CampusName', 'Choice2_CourseName', 'Choice2_CourseMajorName',
@@ -163,7 +105,6 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5 7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
                                   </svg>                                  
                             </button>
-                              
                         </div>
                     </div>
                 </div>
@@ -372,7 +313,7 @@
                     const url = window.URL.createObjectURL(new Blob([response.data]));
                     const link = document.createElement('a');
                     link.href = url;
-                    link.setAttribute('download', 'applicantsResults-data.xlsx');
+                    link.setAttribute('download', 'applicantsResultsTransferees-data.xlsx');
                     document.body.appendChild(link);
                     link.click();
                     link.remove();

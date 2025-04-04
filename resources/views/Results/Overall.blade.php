@@ -2,7 +2,7 @@
     <x-Breadcrumbs>
         <a  href="{{route('results.overall')}}" class="ms-1 text-lg font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">RESULTS - Overall Ranking</a>
     </x-Breadcrumbs>
-    <div class="mx-auto h-full">
+    <div class="mx-auto h-full pb-10">
         <div class="overflow-hidden py-5 lg:py-10">
             <x-SpinnerGlobal />
 
@@ -126,23 +126,26 @@
                                     <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
                                 </svg>
                             </button>
-                            <div id="filterDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
-                                <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Columns</h6>
-                                <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
-                                    @foreach([ 'ApplicationType', 'AppDate', 'Rank', 'CampusName', 'CollegeName', 'QualifiedCourse', 'QualifiedMajor', 
-                                                'Test_Score_Ranking', 'Total_Ranking_Score', 'Total_Grade_Ranking', 'Total_Income_Ranking', 
+                            
+                            <div id="filterDropdown" class="z-10 hidden w-70 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                                <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white bg-slate-200 dark:bg-slate-800 p-1 rounded-lg text-center">Columns</h6>
+                                <div class="max-h-60 overflow-y-auto"> 
+                                    <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
+                                        @foreach([ 'ApplicationType', 'AppDate', 'Rank', 'CampusName', 'CollegeName', 'QualifiedCourse', 'QualifiedMajor', 
+                                                'Total_Ranking_Score', 'Test_Score_Ranking','Total_Grade_Ranking', 'Total_Income_Ranking', 
+                                                'TestScore', 'Test_Score_Stanine', 'Test_Score_Point', 'Total_Income_Average_Point', 'SHS_Grade',
                                                 'coursePreferenceLvl', 'OriginalQualifiedCourse', 'OriginalQualifiedMajor','Track_Name', 'Strand_Name', 
                                                 'Choice1_Campus', 'Choice1_CourseName', 'Choice1_CourseMajorName',
                                                 'Choice2_Campus', 'Choice2_CourseName', 'Choice2_CourseMajorName',
                                                 'Choice3_Campus', 'Choice3_CourseName', 'Choice3_CourseMajorName',
                                                 'IsEnlisted', 'EnlistmentDate', 'IsPreviouslyWaitlisted', 'HasWaivedSlot', 'App_PassCode'] as $column)
-                                        <li class="flex items-center">
-                                            <input type="checkbox" value="{{ $column }}"  onchange="updateColumns(this)" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                            <label for="apple" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{ ucfirst($column) }}</label>
-                                        </li>
-                                    @endforeach
-                                    
-                                </ul>
+                                            <li class="flex items-center">
+                                                <input type="checkbox" value="{{ $column }}" onchange="updateColumns(this)" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                <label class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{ ucfirst($column) }}</label>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                         <div class="flex items-center rounded-lg">
@@ -151,7 +154,8 @@
                                 <option value="" selected>None</option>     --}}
                                 @foreach([ 'Over_All_Rank', 'AppNo', 'ApplicantName', 'Status',
                                             'ApplicationType', 'AppDate', 'Rank', 'CampusName', 'CollegeName', 'QualifiedCourse', 'QualifiedMajor', 
-                                            'Test_Score_Ranking', 'Total_Ranking_Score', 'Total_Grade_Ranking', 'Total_Income_Ranking', 
+                                            'Total_Ranking_Score', 'Test_Score_Ranking','Total_Grade_Ranking', 'Total_Income_Ranking', 
+                                            'TestScore', 'Test_Score_Stanine', 'Test_Score_Point', 'Total_Income_Average_Point', 'SHS_Grade',
                                             'coursePreferenceLvl', 'OriginalQualifiedCourse', 'OriginalQualifiedMajor','Track_Name', 'Strand_Name', 
                                             'Choice1_Campus', 'Choice1_CourseName', 'Choice1_CourseMajorName',
                                             'Choice2_Campus', 'Choice2_CourseName', 'Choice2_CourseMajorName',
@@ -224,7 +228,7 @@
 
             function handleInputChange(event) {
                 const searchValue = event.target.value;
-                getDataRows(); 
+                // getDataRows(); 
 
             }
 
@@ -483,7 +487,7 @@
                     const url = window.URL.createObjectURL(new Blob([response.data]));
                     const link = document.createElement('a');
                     link.href = url;
-                    link.setAttribute('download', 'applicantsResults-data.xlsx');
+                    link.setAttribute('download', 'applicantsResultsOverall-data.xlsx');
                     document.body.appendChild(link);
                     link.click();
                     link.remove();

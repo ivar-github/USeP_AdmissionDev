@@ -77,7 +77,7 @@
             </div>
 
             <div class="border border-gray-300 rounded-xl p-5">
-                <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-2">
+                <div class="flex flex-col lg:flex-row items-center justify-between space-y-3 lg:space-y-0 md:space-x-4 p-2">
                     <div class="w-full lg:w-4/12 justify-start">
                         <form class="flex items-center">
                             <label for="searchInput" class="sr-only">Search</label>
@@ -115,7 +115,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="rounded-lg">
+                        <div class="flex items-center rounded-lg"">
                             <select id="sort" name="sort" onchange="sortByColumn()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full   dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 {{-- <option value="" disabled selected>Sort</option>        
                                 <option value="" selected>None</option>     --}}
@@ -123,6 +123,11 @@
                                     <option value="{{ $sort }}">{{ $sort }} </option>
                                 @endforeach
                             </select>
+                            <button onclick="SortOrder()" class="ms-1 p-1 hover:bg-gray-100 dark:text-gray-300 text-gray-600 rounded-xl">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5 7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
+                                  </svg>                                  
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -174,6 +179,7 @@
             let currentPage = 1;
             let pageLimit = 10; 
             let selectedStatus = 'all'; 
+            let isAscending = true;  
 
             getDataByTerm();
 
@@ -269,6 +275,11 @@
             function sortByColumn() {
                 getDataRows(); 
             }
+
+            function SortOrder() {
+                isAscending = !isAscending;
+                getDataRows(); 
+            }
             
             function getDateByCenter() {
                 axios.get('/api/admission/schedule/applicants/getDates', {
@@ -349,6 +360,7 @@
                         roomID: document.getElementById('roomID').value,
                         search: document.getElementById('searchInput').value,
                         sort: document.getElementById('sort').value, 
+                        isAscending: isAscending, 
                     },
                     headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
                 })
