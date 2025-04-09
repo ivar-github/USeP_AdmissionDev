@@ -61,6 +61,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * LOGOUT
      */
+
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
@@ -69,6 +70,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        // return redirect('/login');
+
+        $response = redirect('/login')->with('status', 'You have logged out successfully.');
+
+        $response->headers->set('Clear-Site-Data', '"cookies", "storage", "executionContexts"');
+
+        return $response;
     }
 }

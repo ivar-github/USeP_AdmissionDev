@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-// use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\RFIDEmployeeController;
 use App\Http\Controllers\RFIDStudentController;
 use App\Http\Controllers\ProfileController;
@@ -16,14 +14,11 @@ use App\Http\Controllers\ScheduleDateController;
 use App\Http\Controllers\ScheduleTimeController;
 use App\Http\Controllers\ScheduleRoomController;
 use App\Http\Controllers\ScheduleSessionController;
-use App\Http\Controllers\RFIDController;
 use App\Http\Controllers\CourseEvalController;
 use App\Http\Controllers\CourseEvalParameterController;
 use App\Http\Controllers\CourseEvalStatementController;
 use App\Http\Controllers\CourseEvalRatingController;
 use App\Http\Controllers\CourseEvalRemarkController;
-use App\Http\Middleware\CheckUserStatus;
-use App\Http\Middleware\ForcePasswordChange;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PDFController;
 
@@ -36,30 +31,11 @@ Route::middleware(['auth', 'isActive', 'forcePassChange'])->group(function () {
         Route::resource('registers', RegistrationController ::class);
     });
 
-    Route::prefix('error')->group(function () {
-        Route::get('/404', function () {
-            abort(404);
-        });
-
-        Route::get('/500', function () {
-            abort(500);
-        });
-
-        Route::get('/503', function () {
-            abort(503); // php artisan down  // php artisan up
-        });
-
-        Route::get('/419', function () {
-            throw new \Illuminate\Session\TokenMismatchException();
-        });
-    });
-
 
     Route::get('/', function () {
         return redirect()->route('dashboard');
     });
     Route::get('/dashboard', function () {
-        // abort(503);
         return view('dashboard');
     })->name('dashboard');
 
@@ -67,8 +43,6 @@ Route::middleware(['auth', 'isActive', 'forcePassChange'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
 
-
-    
     Route::get('admission/result/dashboard', [ResultController::class, 'index'])->name('results.index');
     Route::get('admission/result/applicants', [ResultController::class, 'applicants'])->name('results.applicants');
     Route::get('admission/result/overall', [ResultController::class, 'overall'])->name('results.overall');
@@ -85,26 +59,6 @@ Route::middleware(['auth', 'isActive', 'forcePassChange'])->group(function () {
     Route::resource('admission/schedule/scheduleSessions', ScheduleSessionController ::class);
 
 
-    //API
-    Route::get('/api/registrationsData', [RegistrationController::class, 'fetchData']);
-
-    Route::get('/api/admission/result/applicants', [ResultController::class, 'getData'])->name('api.results.data');
-    Route::get('/api/admission/result/overall', [ResultController::class, 'getOverallData'])->name('api.results.overall');
-    Route::get('/api/admission/result/transferees', [ResultController::class, 'getTransfereeData'])->name('api.results.transferees');
-    Route::get('/api/admission/result/dashboard', [ResultController::class, 'getDashboard'])->name('api.results.dashboard');
-    Route::get('/api/admission/result/getColleges', [ResultController::class, 'getColleges']);
-    Route::get('/api/admission/result/getPrograms', [ResultController::class, 'getPrograms']);
-    Route::get('/api/admission/result/getMajors', [ResultController::class, 'getMajors']);
-
-    Route::get('/api/admission/schedule/applicants', [ScheduleController::class, 'getData'])->name('api.schedulesApplicants.data');
-    Route::get('/api/admission/schedule/applicants/getDates', [ScheduleController::class, 'getDates']);
-    Route::get('/api/admission/schedule/applicants/getRooms', [ScheduleController::class, 'getRooms']);
-    Route::get('/api/admission/schedule/slots', [ScheduleSlotsController::class, 'getData'])->name('api.schedulesSlots.data');
-
-    Route::get('/api/admission/schedule/reschedule/applicantSchedules', [ScheduleRescheduleController::class, 'getData'])->name('api.applicantSchedules.data');
-    Route::get('/api/admission/schedule/reschedule/getAvailableScheds', [ScheduleRescheduleController::class, 'getAvailableScheds']);
-    Route::get('/api/admission/schedule/reschedule/selectSchedDetails', [ScheduleRescheduleController::class, 'selectSchedDetails']);
-
     //EXPORT
     Route::post('/admission/results/exportApplicantsResults', [ResultController::class, 'exportApplicantsResults'])->name('export.applicantsResults');
     Route::post('/admission/schedule/exportApplicantsScheds', [ScheduleController::class, 'exportApplicantsScheds'])->name('export.applicantsSchedules');
@@ -116,26 +70,12 @@ Route::middleware(['auth', 'isActive', 'forcePassChange'])->group(function () {
 
 
 
-
     Route::get('/rfid/dashboard', function () {
         return view('RFIDs.Dashboard');
     })->name('rfid.dashboard');
 
-    Route::resource('rfid/studentsRFIDs', RFIDStudentController::class)
-    ->where(['studentsRFIDs' => '[a-zA-Z0-9_]+']);
-
-    Route::resource('rfid/employeesRFIDs', RFIDEmployeeController::class)
-    ->where(['employeesRFIDs' => '[a-zA-Z0-9_]+']);
-
-    Route::get('/api/rfid/data', [RFIDController::class, 'getData'])->name('api.rfids.data');
-    Route::get('/api/rfid/genderStudent', [RFIDController::class, 'getStudentGender'])->name('api.rfids.genderStudent');
-    Route::get('/api/rfid/genderEmployee', [RFIDController::class, 'getEmployeeGender'])->name('api.rfids.genderEmployee');
-
-    Route::get('/api/rfid/employees', [RFIDEmployeeController::class, 'getData'])->name('api.rfidEmployees.data');
-    Route::get('/api/rfid/students', [RFIDStudentController::class, 'getData'])->name('api.rfidStudents.data');
-
-
-
+    Route::resource('rfid/studentsRFIDs', RFIDStudentController::class)->where(['studentsRFIDs' => '[a-zA-Z0-9_]+']);
+    Route::resource('rfid/employeesRFIDs', RFIDEmployeeController::class)->where(['employeesRFIDs' => '[a-zA-Z0-9_]+']);
 
 
     Route::resource('courseEvals', CourseEvalController::class);
@@ -143,6 +83,8 @@ Route::middleware(['auth', 'isActive', 'forcePassChange'])->group(function () {
     Route::resource('courseEvalStatements', CourseEvalStatementController::class);
     Route::resource('courseEvalRatings', CourseEvalRatingController::class);
     Route::resource('courseEvalRemarks', CourseEvalRemarkController::class);
+
+
 });
 
 
@@ -152,3 +94,5 @@ Route::middleware(['auth', 'isActive', 'forcePassChange'])->group(function () {
 
 
 require __DIR__.'/auth.php';
+require __DIR__.'/api.php';
+require __DIR__.'/error.php';

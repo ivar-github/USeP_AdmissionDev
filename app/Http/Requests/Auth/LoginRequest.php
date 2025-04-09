@@ -47,7 +47,8 @@ class LoginRequest extends FormRequest
         $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
 
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
+            // RateLimiter::hit($this->throttleKey());
+            RateLimiter::hit($this->throttleKey(), 3600);
 
             LoginLogs::create([
                 'userEmail' => $this->input('email'),
@@ -65,7 +66,7 @@ class LoginRequest extends FormRequest
         $user = Auth::user();
 
         if ($user->status == 0) {
-            
+
             LoginLogs::create([
                 'userID' => $user->id,
                 'userEmail' => $user->email,
@@ -100,12 +101,22 @@ class LoginRequest extends FormRequest
 
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
+        // throw ValidationException::withMessages([
+        //     'email' => trans('auth.throttle', [
+        //         'seconds' => $seconds,
+        //         'minutes' => ceil($seconds / 60),
+        //     ]),
+        // ]);
+
+        $minutes = ceil(RateLimiter::availableIn($this->throttleKey()) / 60);
+
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
+            'email' => "Too many login attempts.
+             Please try again in {$minutes} minute(s).",
+            // 'email' => 'Too many login attempts. Please try again in 1 hour.',
         ]);
+
+
     }
 
     /**

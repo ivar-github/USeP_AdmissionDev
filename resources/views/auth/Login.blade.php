@@ -16,7 +16,7 @@
                         <div class="mx-auto mb-2">
                             <img src="img_assets/usep.png" class="h-24 block mx-auto" alt="Image with fixed height">
                         </div>
-                        
+
                         <div class="block md:hidden px-5">
                             <img
                                 src="img_assets/AdmissionLogo.png"
@@ -25,17 +25,41 @@
                             />
                         </div>
                         <h5 class="text-xl md:text-3xl font-sans font-extrabold text-red-800 my-5 dark:text-slate-300 text-center" ></h5>
-            
+
                         <div class="my-3">
                             <x-Validation-Error :messages="$errors->get('inactive')" class="mt-2 md:text-sm text-xs " />
                             <x-Validation-Error :messages="$errors->get('email')" class="mt-2 md:text-sm text-xs " />
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                            <input type="email" name="email" id="email" :value="old('email')" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="email@usep.edu.ph" required />
+                            <input type="email"
+                                    name="email"
+                                    id="email"
+                                    autofocus
+                                    oninput="this.value = this.value.toLowerCase()"
+                                    autocomplete="off"
+                                    autocorrect="off"
+                                    autocapitalize="off"
+                                    spellcheck="false"
+                                    :value="old('email')"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                    placeholder="email@usep.edu.ph"
+                                    required
+                            />
                         </div>
-                        <div class="my-3">
-                            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                            <input type="password" name="password" id="password"   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
+                        <div x-data="{ capsLockOn: false }" class="my-3">
+                            <label for="password" class="flex items-center  mb-2 text-sm font-medium text-gray-900 dark:text-white">Password
+                                <span x-show="capsLockOn" class="ms-1  text-red-700 text-xs dark:text-slate-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="22px" :fill="capsLockOn ? '#008000' : '#434343'">
+                                        <path d="M660-240v-248l-64 64-56-56 160-160 160 160-56 56-64-64v248h-80Zm-540 0 165-440h79l165 440h-76l-39-113H236l-40 113h-76Zm139-177h131l-65-182h-4l-62 182Z"/>
+                                    </svg>
+                                </span>
+                            </label>
+
+                            <input type="password" name="password" id="password"
+                                   x-on:keydown="capsLockOn = event.getModifierState('CapsLock')"
+                                   x-on:keyup="capsLockOn = event.getModifierState('CapsLock')"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
                             <x-Validation-Error :messages="$errors->get('password')" class="mt-2" />
+
                         </div>
                         <div class="flex items-start ">
                             <div class="flex items-start">

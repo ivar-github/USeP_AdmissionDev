@@ -28,7 +28,7 @@ use Jenssegers\Agent\Agent;
 
 class ResultController extends Controller
 {
- 
+
     public function index()
     {
         return view('Results.Dashboard');
@@ -39,7 +39,7 @@ class ResultController extends Controller
     {
 
         try {
-           
+
             $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
                 ->limit(100)
                 ->orderBy('TermID', 'desc')
@@ -68,7 +68,7 @@ class ResultController extends Controller
     {
 
         try {
-           
+
             $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
                 ->limit(100)
                 ->orderBy('TermID', 'desc')
@@ -97,7 +97,7 @@ class ResultController extends Controller
     {
 
         try {
-           
+
             $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
                 ->limit(100)
                 ->orderBy('TermID', 'desc')
@@ -132,7 +132,7 @@ class ResultController extends Controller
 
             $campusId = $request->input('campusId');
 
-            $programs = CollegeProgramMajorStatic::select('CollegeID', 'CollegeName', 'ProgClass', 'CampusID') 
+            $programs = CollegeProgramMajorStatic::select('CollegeID', 'CollegeName', 'ProgClass', 'CampusID')
                 ->distinct()
                 ->when($campusId != 0, fn($query) => $query->where('CampusID', $campusId))
                 ->where('Display_Online', 1)
@@ -157,7 +157,7 @@ class ResultController extends Controller
 
             $campusId = $request->input('campusId');
             $collegeId = $request->input('collegeId');
-            $programs = CollegeProgramMajorStatic::select('ProgID', 'ProgName', 'ProgCode') 
+            $programs = CollegeProgramMajorStatic::select('ProgID', 'ProgName', 'ProgCode')
                 ->distinct()
                 ->when($campusId != 0, fn($query) => $query->where('CampusID', $campusId))
                 ->when($collegeId != 0, fn($query) => $query->where('CollegeID', $collegeId))
@@ -184,7 +184,7 @@ class ResultController extends Controller
             $programId = $request->input('programId');
             $collegeId = $request->input('collegeId');
 
-            $majors = CollegeProgramMajorStatic::select('ProgID', 'ProgName', 'MajorID', 'Major') 
+            $majors = CollegeProgramMajorStatic::select('ProgID', 'ProgName', 'MajorID', 'Major')
                 ->when($campusId != 0, fn($query) => $query->where('CampusID', $campusId))
                 ->when($collegeId != 0, fn($query) => $query->where('CollegeID', $collegeId))
                 ->when($programId != 0, fn($query) => $query->where('ProgID', $programId))
@@ -344,12 +344,12 @@ class ResultController extends Controller
                     'waitlisted' => $waitlistedCount,
                     'confirmed' => $confirmedtCount,
                     'total' => $totalCount,
-                    
+
                     'academic' => $academicCount,
                     'techVoc' => $techVocCount,
                     'sports' => $sportsCount,
                     'artsDesign' => $artsDesignCount,
-                    
+
                     'choiceA' => $choiceACount,
                     'choiceB' => $choiceBCount,
                     'choiceC' => $choiceCCount,
@@ -390,13 +390,13 @@ class ResultController extends Controller
                 ->when($program != 0, fn($query) => $query->where('QualifiedCourseID', $program))
                 ->when($college != 0, fn($query) => $query->where('CollegeID', $college))
                 ->when($major != 0, fn($query) => $query->where('QualifiedMajorID', $major))
-                ->when($search, fn($query) => 
+                ->when($search, fn($query) =>
                     $query->where(function ($query) use ($search) {
                         $query->where('ApplicantName', 'LIKE', "%$search%")
                         ->orWhere('AppNo', 'LIKE', "%$search%");
                     })
                 );
-                // ->groupBy($columns);  
+                // ->groupBy($columns);
 
             $qualifiedCount = (clone $prefCountQuery)->where('Status', 'Qualified')->count();
             $waivedslotCount = (clone $prefCountQuery)->where('Status', 'WaivedSlot')->count();
@@ -413,14 +413,14 @@ class ResultController extends Controller
                 ->when($major != 0, fn($query) => $query->where('QualifiedMajorID', $major))
                 ->when($status && $status !== 'all' && $status !== '1', fn($query) => $query->where('Status', $status))
                 ->when($status == 1, fn($query) => $query->where('isEnlisted', $status))
-                ->when($search, fn($query) => 
+                ->when($search, fn($query) =>
                     $query->where(function ($q) use ($search) {
                         $q->where('ApplicantName', 'LIKE', '%' . $search . '%')
                         ->orWhere('AppNo', 'LIKE', '%' . $search . '%');
                     })
                 )
                 ->when($sort, fn($q) => $q->orderBy($sort, $isAscending));
-                // ->groupBy($columns); 
+                // ->groupBy($columns);
 
             $academicCount = (clone $prefRowQuery)->where('Track_ID', 1)->count();
             $techVocCount = (clone $prefRowQuery)->where('Track_ID', 2)->count();
@@ -460,12 +460,12 @@ class ResultController extends Controller
                     'confirmed' => $confirmedtCount,
                     'notQualified' => $notQualifiedCount,
                     'total' => $totalCount,
-                    
+
                     'academic' => $academicCount,
                     'techVoc' => $techVocCount,
                     'sports' => $sportsCount,
                     'artsDesign' => $artsDesignCount,
-                    
+
                     'choiceA' => $choiceACount,
                     'choiceB' => $choiceBCount,
                     'choiceC' => $choiceCCount,
@@ -479,7 +479,7 @@ class ResultController extends Controller
             ], 500);
         }
     }
-    
+
 
     public function getTransfereeData(Request $request)
     {
@@ -496,14 +496,14 @@ class ResultController extends Controller
                 ->where('TermID', $termID)
                 ->where('ApplyTypeID', 2)
                 ->when($campus != 0, fn($q) => $q->where('CampusID', $campus))
-                ->when($search, fn($q) => 
+                ->when($search, fn($q) =>
                     $q->where(function ($q) use ($search) {
                         $q->where('ApplicantName', 'LIKE', "%$search%")
                         ->orWhere('AppNo', 'LIKE', "%$search%");
                     })
                 )
                 ->when($sort, fn($q) => $q->orderBy($sort, $isAscending))
-                ->groupBy($columns);  
+                ->groupBy($columns);
 
             $data = $query->paginate($perPage);
 
@@ -570,7 +570,7 @@ class ResultController extends Controller
                 'hostName' => gethostname(),
                 'platform' => $agentInfo,
             ]);
-            if ($export == 'Overall') { 
+            if ($export == 'Overall') {
                 return Excel::download(new ExportApplicantsResultOverall($columns, $filters), 'applicantsResultsOverall-data.xlsx');
 
             } else if ($export == 'Qualified') {
@@ -609,10 +609,10 @@ class ResultController extends Controller
 
     public function show(string $id)
     {
-        //      
+        //
     }
 
-    
+
     public function edit(string $id)
     {
         //
