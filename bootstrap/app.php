@@ -21,7 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'isActive' => CheckUserStatus::class,
             'forcePassChange' => ForcePasswordChange::class,
             'verifySession' => VerifySessionContext::class,
-            'security.headers' => SecurityHeaders::class,
+            'securityHeaders' => SecurityHeaders::class,
         ]);
 
     $middleware->appendToGroup('web', SecurityHeaders::class);
