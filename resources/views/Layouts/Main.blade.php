@@ -66,7 +66,7 @@
 
         {{-- BACKEND JS --}}
         <script src="{{ asset('JS/Backend/Darkmode.js') }}"></script>
-        {{-- <script src="{{ asset('JS/Backend/NetworkLock.js') }}"></script> --}}
+        <script src="{{ asset('JS/Backend/Secure.js') }}"></script>
 
 
     </body>
