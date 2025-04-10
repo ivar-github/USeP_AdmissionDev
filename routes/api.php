@@ -12,8 +12,8 @@ use App\Http\Controllers\RFIDStudentController;
 use App\Http\Controllers\RFIDController;
 
 
-    //API
-    Route::middleware(['auth', 'isActive', 'verifySession'])->group(function () {
+    //API ,'verifySession'
+    Route::middleware(['auth', 'isActive'])->group(function () { 
 
         //ADMISSION API
         Route::get('/api/registrationsData', [RegistrationController::class, 'fetchData']);
