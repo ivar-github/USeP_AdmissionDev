@@ -17,9 +17,9 @@ class SecurityHeaders
         //     "default-src * data: blob: 'unsafe-inline' 'unsafe-eval';"
         // );
 
-        $response->headers->set('Content-Security-Policy',
-            "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://code.jquery.com http://code.jquery.com https://cdnjs.cloudflare.com http://cdnjs.cloudflare.com https://cdn.jsdelivr.net http://cdn.jsdelivr.net http://cdn.datatables.net https://cdn.datatables.net https://cdn.jsdelivr.net/npm/apexcharts; style-src 'self' 'unsafe-inline' https://fonts.bunny.net http://fonts.bunny.net http://cdn.datatables.net https://cdn.datatables.net https://cdnjs.cloudflare.com http://cdnjs.cloudflare.com; font-src 'self' https://fonts.bunny.net http://fonts.bunny.net; connect-src 'self' https://cdn.jsdelivr.net http://cdn.jsdelivr.net; img-src 'self' data:; child-src 'none'; frame-src 'none'; form-action 'self'; upgrade-insecure-requests;"
-        );
+        // $response->headers->set('Content-Security-Policy',
+        //     "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://code.jquery.com http://code.jquery.com https://cdnjs.cloudflare.com http://cdnjs.cloudflare.com https://cdn.jsdelivr.net http://cdn.jsdelivr.net http://cdn.datatables.net https://cdn.datatables.net https://cdn.jsdelivr.net/npm/apexcharts; style-src 'self' 'unsafe-inline' https://fonts.bunny.net http://fonts.bunny.net http://cdn.datatables.net https://cdn.datatables.net https://cdnjs.cloudflare.com http://cdnjs.cloudflare.com; font-src 'self' https://fonts.bunny.net http://fonts.bunny.net; connect-src 'self' https://cdn.jsdelivr.net http://cdn.jsdelivr.net; img-src 'self' data:; child-src 'none'; frame-src 'none'; form-action 'self'; upgrade-insecure-requests;"
+        // );
 
         $response->headers->set('X-Content-Type-Options', 'nosniff');
         $response->headers->set('X-Frame-Options', 'DENY');
