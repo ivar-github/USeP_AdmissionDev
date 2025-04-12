@@ -15,7 +15,7 @@
             <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1">
                 <div class="dark:text-gray-200 mx-2 mb-2">
                     <label for="termID" class="block text-md text-gray-700  dark:text-gray-300">Term </label>
-                    <select id="termID" name="termID" onchange="getDataByTerm()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
+                    <select id="termID" name="termID" onchange="getDataByTerm()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">>
                         @foreach ($terms as $term)
                             <option value="{{ $term->TermID }}">({{ $term->TermID }}) &nbsp; {{ $term->AcademicYear }} &nbsp;&nbsp;{{ $term->SchoolTerm }}</option>
                         @endforeach
@@ -26,7 +26,7 @@
                 <div class="dark:text-gray-200 mx-2 mb-2">
                     <div class="rounded-lg">
                         <label for="campus" class="block text-md text-gray-700  dark:text-gray-300">Campus</label>
-                        <select id="campus" name="campus" onchange="getCollegeByCampus()" onclick="getDataByCampus()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
+                        <select id="campus" name="campus" onchange="getCollegeByCampus()" onclick="getDataByCampus()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">>
                             <option value="0">All </option>
                             @foreach ($campuses as $campus)
                                 <option value="{{ $campus->id }}">{{ $campus->name }}</option>
@@ -37,15 +37,15 @@
                 <div class="dark:text-gray-200 mx-2 mb-2">
                     <div class="rounded-lg">
                         <label for="college" class="block text-md text-gray-700  dark:text-gray-300">College</label>
-                        <select id="college" name="college" onchange="getProgramByCollege()" onclick="getDataByCollege()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
+                        <select id="college" name="college" onchange="getProgramByCollege()" onclick="getDataByCollege()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">>
                             <option value="0">All </option>
                         </select>
                     </div>
                 </div>
-                <div class="dark:text-gray-200 mx-2 mb-2"> 
+                <div class="dark:text-gray-200 mx-2 mb-2">
                     <div class="rounded-lg">
                         <label for="program" class="block text-md text-gray-700  dark:text-gray-300">Program</label>
-                        <select id="program" name="program" onchange="getMajorByProgram()"  onclick="getDataByProgram()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
+                        <select id="program" name="program" onchange="getMajorByProgram()"  onclick="getDataByProgram()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">>
                             <option value="0">All </option>
                         </select>
                     </div>
@@ -53,14 +53,14 @@
                 <div class="dark:text-gray-200 mx-2 mb-2">
                     <div class="rounded-lg">
                         <label for="major" class="block text-md text-gray-700  dark:text-gray-300">Major</label>
-                        <select id="major" name="major" onchange="getDataByMajor()"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">> 
+                        <select id="major" name="major" onchange="getDataByMajor()"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">>
                             <option value="0">All </option>
                         </select>
                     </div>
                 </div>
             </div>
-            
-            
+
+
             <div class="mb-10 mt-3 mx-2">
                 <form id="filterForm ">
                     <label class="text-gray-700  dark:text-gray-300 mx-1">
@@ -81,7 +81,7 @@
                 </form>
                 <hr class="my-3">
             </div>
-            
+
             <div class="flex justify-between items-center my-2">
                 <button type="button"  onclick="generateData()" class="flex items-center justify-center text-white bg-red-900 hover:bg-red-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-900 dark:hover:bg-red-800 focus:outline-none dark:focus:ring-primary-800">
                     <svg aria-hidden="true" class="w-5 h-5 me-1" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -123,16 +123,16 @@
                                     <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
                                 </svg>
                             </button>
-                            
+
                             <div id="filterDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
                                 <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white bg-slate-200 dark:bg-slate-800 p-1 rounded-lg text-center">Columns</h6>
-                                <div class="max-h-60 overflow-y-auto"> 
+                                <div class="max-h-60 overflow-y-auto">
                                     <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
-                                        @foreach([ 'CampusName', 'QualifiedCourse', 'QualifiedMajor', 
-                                                    'FinalRating',  'FinalGradesWeight', 'GpaWeight', 'IncomeSourceWeight', 'UsepatScoreWeight', 
+                                        @foreach([ 'CampusName', 'QualifiedCourse', 'QualifiedMajor',
+                                                    'FinalRating',  'FinalGradesWeight', 'GpaWeight', 'IncomeSourceWeight', 'UsepatScoreWeight',
                                                     'FinalGradesAvg', 'GpaAvg', 'IncomeSourceAvg', 'UsepatScore',
                                                     'OverAll_Rank', 'coursePreferenceLvl','track_name', 'strand_name',
-                                                    'OriginalQualifiedCourse', 'OriginalQualifiedMajor', 
+                                                    'OriginalQualifiedCourse', 'OriginalQualifiedMajor',
                                                     'IsEnlisted', 'EnlistmentDate', 'IsPreviouslyWaitlisted', 'HasWaivedSlot', 'App_PassCode'] as $column)
                                             <li class="flex items-center">
                                                 <input type="checkbox" value="{{ $column }}" onchange="updateColumns(this)" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
@@ -145,29 +145,29 @@
                         </div>
                         <div class="flex items-center rounded-lg">
                             <select id="sort" name="sort" onchange="sortByColumn()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full   dark:bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                {{-- <option value="" disabled selected>Sort</option>        
+                                {{-- <option value="" disabled selected>Sort</option>
                                 <option value="" selected>None</option>     --}}
                                 @foreach([ 'Rank', 'AppNo', 'Applicant', 'Status',
-                                            'CampusName', 'QualifiedCourse', 'QualifiedMajor', 
-                                            'FinalRating',  'FinalGradesWeight', 'GpaWeight', 'IncomeSourceWeight', 'UsepatScoreWeight', 
+                                            'CampusName', 'QualifiedCourse', 'QualifiedMajor',
+                                            'FinalRating',  'FinalGradesWeight', 'GpaWeight', 'IncomeSourceWeight', 'UsepatScoreWeight',
                                             'FinalGradesAvg', 'GpaAvg', 'IncomeSourceAvg', 'UsepatScore',
                                             'OverAll_Rank', 'coursePreferenceLvl', 'track_name', 'strand_name',
-                                            'OriginalQualifiedCourse', 'OriginalQualifiedMajor', 
-                                            'IsEnlisted', 'EnlistmentDate', 'IsPreviouslyWaitlisted', 'HasWaivedSlot'] as $sort)    
+                                            'OriginalQualifiedCourse', 'OriginalQualifiedMajor',
+                                            'IsEnlisted', 'EnlistmentDate', 'IsPreviouslyWaitlisted', 'HasWaivedSlot'] as $sort)
                                     <option value="{{ $sort }}">{{ $sort }} </option>
                                 @endforeach
                             </select>
                             <button onclick="SortOrder()" class="ms-1 p-1 hover:bg-gray-100 dark:text-gray-300 text-gray-600 rounded-xl">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5 7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
-                                  </svg>                                  
+                                  </svg>
                             </button>
-                              
+
                         </div>
                     </div>
                 </div>
 
-                
+
 
                 <hr class="mx-5">
                 <div id="paginationControls" class="flex items-center justify-center space-x-2 my-2">
@@ -210,18 +210,18 @@
         <script src="{{ asset('JS/SweetAlerts/SwalGeneric.js') }}"></script>
 
         <script>
-            let selectedColumns = ['Rank', 'AppNo', 'Applicant', 'Status' ]; 
+            let selectedColumns = ['Rank', 'AppNo', 'Applicant', 'Status' ];
             let currentPage = 1;
-            let pageLimit = 10; 
-            let selectedStatus = 'all'; 
-            let isAscending = true;  
+            let pageLimit = 10;
+            let selectedStatus = 'all';
+            let isAscending = true;
 
             // getProgramByCollege();
 
 
             function handleInputChange(event) {
                 const searchValue = event.target.value;
-                getDataRows(); 
+                getDataRows();
 
             }
 
@@ -231,7 +231,7 @@
                 } else {
                     selectedColumns = selectedColumns.filter(column => column !== checkbox.value);
                 }
-                currentPage = 1;  
+                currentPage = 1;
                 getDataRows();
             }
 
@@ -242,11 +242,11 @@
 
             function changeLimit(limit) {
                 pageLimit = limit;
-                currentPage = 1;  
+                currentPage = 1;
                 getDataRows();
             }
 
-            
+
             function getDataByTerm() {
                 getDataRows();
             }
@@ -255,41 +255,42 @@
                 getCollegeByCampus();
                 getDataRows();
             }
-            
+
             function getDataByCollege() {
                 getProgramByCollege();
                 getDataRows();
             }
-            
+
             function getDataByProgram() {
                 getMajorByProgram();
                 getDataRows();
             }
 
             function getDataByMajor() {
-                getDataRows(); 
+                getDataRows();
             }
 
             function generateData() {
-                getDataRows(); 
+                getDataRows();
             }
 
             function sortByColumn() {
-                getDataRows(); 
+                getDataRows();
             }
 
             function SortOrder() {
                 isAscending = !isAscending;
-                getDataRows(); 
+                getDataRows();
             }
-            
+
             function getCollegeByCampus() {
                 axios.get('/api/admission/result/getColleges', {
                         params: {
                             campusId: document.getElementById('campus').value,
                         },
                         headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
-                    }).then(response => {
+                    })
+                    .then(response => {
                         const collegeSelect = document.getElementById('college');
                         collegeSelect.innerHTML = '<option value="0">All</option>';
                         response.data.forEach(college => {
@@ -299,11 +300,11 @@
                             collegeSelect.appendChild(option);
                         });
                         document.getElementById('program').innerHTML = '<option value="0">All</option>';
-                        // getDataRows(); 
+                        // getDataRows();
                     })
                     .catch(error => console.error('Error fetching colleges:', error));
             }
-            
+
             function getProgramByCollege() {
                 axios.get('/api/admission/result/getPrograms', {
                         params: {
@@ -311,7 +312,8 @@
                             collegeId: document.getElementById('college').value,
                         },
                         headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
-                    }).then(response => {
+                    })
+                    .then(response => {
                         const programSelect = document.getElementById('program');
                         programSelect.innerHTML = '<option value="0">All</option>';
                         response.data.forEach(program => {
@@ -321,7 +323,7 @@
                             programSelect.appendChild(option);
                         });
                         document.getElementById('major').innerHTML = '<option value="0">All</option>';
-                        // getDataRows(); 
+                        // getDataRows();
                     })
                     .catch(error => console.error('Error fetching programs:', error));
             }
@@ -345,16 +347,16 @@
                             option.text = major.Major;
                             majorSelect.appendChild(option);
                         });
-                        // getDataRows(); 
+                        // getDataRows();
                     })
                     .catch(error => console.error('Error fetching majors:', error));
             }
-            
+
 
             function filterByStatus(status) {
                 selectedStatus = status;
-                currentPage = 1; 
-                getDataRows(); 
+                currentPage = 1;
+                getDataRows();
             }
 
             function getDataRows(page = currentPage, limit = pageLimit) {
@@ -362,10 +364,10 @@
                 if (!selectedColumns.length) {
                     tableContainer.innerHTML = "<p>No data found!!</p>";
                     document.getElementById('paginationControls').innerHTML = "";
-                    document.getElementById('totalRows').innerHTML = ""; 
+                    document.getElementById('totalRows').innerHTML = "";
                     return;
                 }
-                
+
                 SpinnerGlobal.classList.remove("hidden");
 
                 axios.get('/api/admission/result/applicants', {
@@ -380,8 +382,8 @@
                         program: document.getElementById('program').value,
                         major: document.getElementById('major').value,
                         search: document.getElementById('searchInput').value,
-                        sort: document.getElementById('sort').value, 
-                        isAscending: isAscending, 
+                        sort: document.getElementById('sort').value,
+                        isAscending: isAscending,
                     },
                     headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
                 })
@@ -394,16 +396,16 @@
                     document.getElementById('countWaivedSlot').textContent = data.counts.waivedslot.toLocaleString();
                     document.getElementById('countConfirmed').textContent = data.counts.confirmed.toLocaleString();
                     document.getElementById('countWaitlisted').textContent = data.counts.waitlisted.toLocaleString();
-                    
+
                     document.getElementById('countAcademic').textContent = data.counts.academic.toLocaleString();
                     document.getElementById('counTechVoc').textContent = data.counts.techVoc.toLocaleString();
                     document.getElementById('countSports').textContent = data.counts.sports.toLocaleString();
                     document.getElementById('countArtsDesign').textContent = data.counts.artsDesign.toLocaleString();
-                    
+
                     document.getElementById('countChoiceA').textContent = data.counts.choiceA.toLocaleString();
                     document.getElementById('countChoiceB').textContent = data.counts.choiceB.toLocaleString();
                     document.getElementById('countChoiceC').textContent = data.counts.choiceC.toLocaleString();
-                    
+
                 })
                 .catch(console.error)
                 .finally(() => {
@@ -414,20 +416,20 @@
 
             function renderTable(data, currentPage, limit) {
                 let tableHTML = '<table class="min-w-full border border-gray-300 rounded-xl text-gray-700  dark:text-gray-300"><thead><tr>';
-                // tableHTML += '<th class="py-2 px-4 border">#</th>';  
+                // tableHTML += '<th class="py-2 px-4 border">#</th>';
                 selectedColumns.forEach(column => {
                     tableHTML += `<th class="py-2 px-4 border">${column.charAt(0).toUpperCase() + column.slice(1)}</th>`;
                 });
                 tableHTML += '</tr></thead><tbody>';
 
                 data.forEach((row, index) => {
-                    // let rowNumber = (currentPage - 1) * limit + index + 1; 
-                    // tableHTML += `<tr><td class="py-2 px-4 border">${rowNumber}</td>`; 
+                    // let rowNumber = (currentPage - 1) * limit + index + 1;
+                    // tableHTML += `<tr><td class="py-2 px-4 border">${rowNumber}</td>`;
                     selectedColumns.forEach(column => {
                         if (column === 'IsEnlisted') {
-                            tableHTML += `<td class="py-2 px-4 border">${row[column] === '1' ? 'Yes' 
-                                : row[column] === '0'  ? 'No' 
-                                : ''}</td>`; 
+                            tableHTML += `<td class="py-2 px-4 border">${row[column] === '1' ? 'Yes'
+                                : row[column] === '0'  ? 'No'
+                                : ''}</td>`;
                         } else {
                             tableHTML += `<td class="py-2 px-4 border">${row[column] || ''}</td>`;
                         }
@@ -441,7 +443,7 @@
 
             function renderPagination(pagination) {
                 let pageSelect = document.getElementById('pageSelect');
-                pageSelect.innerHTML = ''; 
+                pageSelect.innerHTML = '';
 
                 for (let page = 1; page <= pagination.last_page; page++) {
                     let option = document.createElement('option');
@@ -463,16 +465,16 @@
                     status: selectedStatus,
                     search: document.getElementById('searchInput').value,
                     sort: document.getElementById('sort').value,
-                    export: 'Qualified', 
+                    export: 'Qualified',
                 };
-                
+
                 SpinnerGlobal.classList.remove("hidden");
 
                 axios.post('/admission/results/exportApplicantsResults', {
                     columns:  selectedColumns.join(','),
                     ...filters,
                 }, {
-                    responseType: 'blob',  
+                    responseType: 'blob',
                 })
                 .then(response => {
                     const url = window.URL.createObjectURL(new Blob([response.data]));

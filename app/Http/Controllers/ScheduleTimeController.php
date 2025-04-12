@@ -31,6 +31,10 @@ class ScheduleTimeController extends Controller
     public function store(Request $request)
     {
 
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
             $request->validate([
                 'Time_Start' => ['required', 'string'],
@@ -91,15 +95,32 @@ class ScheduleTimeController extends Controller
     }
 
 
-    public function edit(string $id)
+    public function edit(Request $request, string $id)
     {
-        $time = ScheduleTime::findOrFail($id);
-        return response()->json($time);
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
+        try {
+            $time = ScheduleTime::findOrFail($id);
+            return response()->json($time);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
 
     public function update(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
 
         try {
 
@@ -167,8 +188,13 @@ class ScheduleTimeController extends Controller
     }
 
 
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
 
             $isBeingUSed = ScheduleViewSlot::where('testTimeID', $id)

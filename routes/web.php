@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PDFController;
 
 
-Route::middleware(['auth', 'isActive', 'forcePassChange'])->group(function () {
+Route::middleware(['auth', 'isActive', 'forcePassChange', 'securityHeaders'])->group(function () {
 
     Route::middleware(['isAdmin'])->group(function () {
         Route::resource('users', UserController::class);
@@ -59,7 +59,7 @@ Route::middleware(['auth', 'isActive', 'forcePassChange'])->group(function () {
     Route::resource('admission/schedule/scheduleSessions', ScheduleSessionController ::class);
 
 
-    //EXPORT
+    // //EXPORT
     Route::post('/admission/results/exportApplicantsResults', [ResultController::class, 'exportApplicantsResults'])->name('export.applicantsResults');
     Route::post('/admission/schedule/exportApplicantsScheds', [ScheduleController::class, 'exportApplicantsScheds'])->name('export.applicantsSchedules');
     Route::post('/admission/schedule/exportSchedulesSlots', [ScheduleSlotsController::class, 'exportSchedulesSlots'])->name('export.schedulesSlots');

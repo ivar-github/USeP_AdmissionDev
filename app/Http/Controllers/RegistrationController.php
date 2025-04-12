@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Registration;
+use Exception;
+use Throwable;
 
 class RegistrationController extends Controller
 {
@@ -22,39 +24,52 @@ class RegistrationController extends Controller
 
     public function fetchData(Request $request)
     {
-        
-        $columns = explode(',', $request->input('columns', ''));
-        $perPage = $request->input('limit', 10);
-        $gender = $request->input('gender');
 
-        $maleCount = Registration::where('Gender', 'M')->where('TermID', 204)->count();
-        $femaleCount = Registration::where('Gender', 'F')->where('TermID', 204)->count();
-        $totalCount = Registration::where('TermID', 204)->count();
-
-        $query = Registration::select($columns);
-        $query->where('TermID', 204);
-
-        if ($gender && $gender !== 'all') {
-            $query->where('Gender', $gender);
+        if (!$request->ajax()) {
+            abort(403);
         }
 
-        $data = $query->paginate($perPage);
+        try {
 
-        return response()->json([
-            'data' => $data->items(),
-            'current_page' => $data->currentPage(),
-            'last_page' => $data->lastPage(),
-            'total' => $data->total(),
-            'counts' => [
-                'male' => $maleCount,
-                'female' => $femaleCount,
-                'total' => $totalCount,
-            ]
-        ]);
+            $columns = explode(',', $request->input('columns', ''));
+            $perPage = $request->input('limit', 10);
+            $gender = $request->input('gender');
+
+            $maleCount = Registration::where('Gender', 'M')->where('TermID', 204)->count();
+            $femaleCount = Registration::where('Gender', 'F')->where('TermID', 204)->count();
+            $totalCount = Registration::where('TermID', 204)->count();
+
+            $query = Registration::select($columns);
+            $query->where('TermID', 204);
+
+            if ($gender && $gender !== 'all') {
+                $query->where('Gender', $gender);
+            }
+
+            $data = $query->paginate($perPage);
+
+            return response()->json([
+                'data' => $data->items(),
+                'current_page' => $data->currentPage(),
+                'last_page' => $data->lastPage(),
+                'total' => $data->total(),
+                'counts' => [
+                    'male' => $maleCount,
+                    'female' => $femaleCount,
+                    'total' => $totalCount,
+                ]
+            ]);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
 
-    
+
     /**
      * Show the form for creating a new resource.
      */

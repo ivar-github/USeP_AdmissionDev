@@ -33,12 +33,16 @@ class ScheduleDateController extends Controller
     public function store(Request $request)
     {
 
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
             $request->validate([
                 'Date' => [
                     'required',
                     'string',
-                    Rule::unique('sqlsrv2.CUSTOM_AdmissionTestDate', 'testDate'),                
+                    Rule::unique('sqlsrv2.CUSTOM_AdmissionTestDate', 'testDate'),
                 ],
                 'Status' => ['required', 'integer', 'in:0,1'],
             ]);
@@ -91,15 +95,32 @@ class ScheduleDateController extends Controller
     }
 
 
-    public function edit(string $id)
+    public function edit(Request $request, string $id)
     {
-        $date = ScheduleDate::findOrFail($id);
-        return response()->json($date);
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
+        try {
+            $date = ScheduleDate::findOrFail($id);
+            return response()->json($date);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
 
     public function update(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
 
         try {
 
@@ -111,7 +132,7 @@ class ScheduleDateController extends Controller
                     'required',
                     'string',
                     Rule::unique('sqlsrv2.CUSTOM_AdmissionTestDate', 'testDate')
-                    ->ignore($date->id, 'id'),                
+                    ->ignore($date->id, 'id'),
                 ],
                 'Status' => ['required', 'integer', 'in:0,1'],
             ]);
@@ -166,8 +187,13 @@ class ScheduleDateController extends Controller
     }
 
 
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
 
             $isBeingUSed = ScheduleViewSlot::where('testDateID', $id)

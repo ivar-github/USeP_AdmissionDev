@@ -124,11 +124,12 @@ class ResultController extends Controller
 
     public function getColleges(Request $request)
     {
-        try {
 
-            if (!Auth::check()) {
-                return response()->json(['error' => 'Unauthorized'], 401);
-            }
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
+        try {
 
             $campusId = $request->input('campusId');
 
@@ -153,6 +154,11 @@ class ResultController extends Controller
 
     public function getPrograms(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
 
             $campusId = $request->input('campusId');
@@ -178,6 +184,11 @@ class ResultController extends Controller
 
     public function getMajors(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
 
             $campusId = $request->input('campusId');
@@ -207,6 +218,10 @@ class ResultController extends Controller
 
     public function getDashboard(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
 
         try {
 
@@ -253,6 +268,10 @@ class ResultController extends Controller
 
     public function getData(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
 
         try {
 
@@ -366,6 +385,10 @@ class ResultController extends Controller
 
     public function getOverallData(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
 
         try {
 
@@ -483,6 +506,11 @@ class ResultController extends Controller
 
     public function getTransfereeData(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
             $columns = explode(',', $request->input('columns', ''));
             $perPage = $request->input('limit', 10);
@@ -529,7 +557,7 @@ class ResultController extends Controller
                 'total' => $data->total(),
             ]);
 
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             return response()->json([
                 'error' => 'An unexpected error occurred',
                 'message' => $e->getMessage(),
@@ -540,6 +568,11 @@ class ResultController extends Controller
 
     public function exportApplicantsResults(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
 
             $columns = explode(',', $request->input('columns', ''));

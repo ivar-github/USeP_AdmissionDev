@@ -70,6 +70,11 @@ class ScheduleController extends Controller
 
     public function getDates(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
 
             $centerId = $request->input('centerID');
@@ -96,6 +101,11 @@ class ScheduleController extends Controller
 
     public function getRooms(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
 
             $centerId = $request->input('centerID');
@@ -127,6 +137,10 @@ class ScheduleController extends Controller
 
     public function getData(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
 
         try {
 
@@ -197,6 +211,11 @@ class ScheduleController extends Controller
 
     public function exportApplicantsScheds(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
 
             $columns = explode(',', $request->input('columns', ''));
@@ -249,15 +268,15 @@ class ScheduleController extends Controller
         $dates = ScheduleDate::
             orderBy('id', 'asc')
             ->get();
-    
+
         $times = ScheduleTime::
             orderBy('id', 'asc')
             ->get();
-    
+
         $rooms = ScheduleRoom::
             orderBy('id', 'asc')
             ->get();
-    
+
         $sessions = ScheduleSession::
             orderBy('id', 'asc')
             ->get();

@@ -32,7 +32,7 @@ class ScheduleRescheduleController extends Controller
                 ->orderBy('TermID', 'desc')
                 ->get();
 
-            
+
             $testCenters = ScheduleCenter::select('id', 'campusID', 'testCenterName', 'description')
                 ->where('isActive',1)
                 ->limit(10)
@@ -62,9 +62,14 @@ class ScheduleRescheduleController extends Controller
     }
 
 
-    
-    public function edit(string $id): JsonResponse
+
+    public function edit(Request $request, string $id): JsonResponse
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
             $applicant = ScheduleApplicants::from('CUSTOM_AdmissionApplicantTestSchedule as sa')
                 ->select(
@@ -94,7 +99,7 @@ class ScheduleRescheduleController extends Controller
                 ->leftJoin('ES_Admission as reg', 'reg.AppNO', '=', 'sa.appNo')
                 ->leftJoin('vw_CUSTOM_AdmissionApplicantTestSchedules as sa_view', 'sa_view.AppNO', '=', 'sa.appNo')
                 ->where('sa.id', $id)
-                ->first(); 
+                ->first();
 
             if (!$applicant) {
                 return response()->json([
@@ -116,6 +121,10 @@ class ScheduleRescheduleController extends Controller
 
     public function update(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
 
         try {
 
@@ -210,36 +219,41 @@ class ScheduleRescheduleController extends Controller
 
     public function getAvailableScheds(Request $request): JsonResponse
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
             $centerID = $request->input('centerID');
 
-            $ScheduleSlots = ScheduleViewSlot::select('id', 
-                    'termID', 
-                    'testCenterID', 
-                    'testDateID', 
-                    'testTimeID', 
+            $ScheduleSlots = ScheduleViewSlot::select('id',
+                    'termID',
+                    'testCenterID',
+                    'testDateID',
+                    'testTimeID',
                     'testSessionID',
-                    'testRoomID', 
-                    'termID', 
-                    'testCenterName', 
-                    'testDate', 
-                    'testTimeStartString', 
-                    'testTimeEndString', 
+                    'testRoomID',
+                    'termID',
+                    'testCenterName',
+                    'testDate',
+                    'testTimeStartString',
+                    'testTimeEndString',
                     'testRoomName',
-                    'availableSlots', 
-                    'totalRegistered', 
-                    'isFull', 
+                    'availableSlots',
+                    'totalRegistered',
+                    'isFull',
                     'isActive'
                 )
                 ->where('isFull', 'false')
                 ->where('isActive', 1)
                 ->where('testCenterID', $centerID)
                 ->where('testDate', '>', now())
-                ->orderBy('testCenterID') 
+                ->orderBy('testCenterID')
                 ->orderBy('testDate')
                 ->orderBy('testSessionName')
                 ->get();
-        
+
             if (!$ScheduleSlots) {
                 return response()->json(['error' => 'Schedules not found or unavailable'], 404);
             }
@@ -257,13 +271,18 @@ class ScheduleRescheduleController extends Controller
 
     public function selectSchedDetails(Request $request): JsonResponse
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
             $schedID = $request->input('e_slotID');
 
             $ScheduleDetails = ScheduleViewSlot::select(
                 'id', 'termID', 'testCenterID', 'testDateID', 'testTimeID', 'testSessionID',
-                'testRoomID', 'termID', 'testCenterName', 'testDate', 'testTimeStartString', 
-                'testTimeEndString', 'testRoomName', 'availableSlots', 'totalRegistered', 
+                'testRoomID', 'termID', 'testCenterName', 'testDate', 'testTimeStartString',
+                'testTimeEndString', 'testRoomName', 'availableSlots', 'totalRegistered',
                 'isFull', 'isActive'
             )->where('id', $schedID)
             ->first();
@@ -285,6 +304,10 @@ class ScheduleRescheduleController extends Controller
     public function getData(Request $request)
     {
 
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
 
             $search = $request->input('examinee');
@@ -296,7 +319,7 @@ class ScheduleRescheduleController extends Controller
                     'message' => "Please input Applicant's number or name !",
                 ], 400);
             }
-                
+
             $query = ScheduleApplicants::from('CUSTOM_AdmissionApplicantTestSchedule as sa')
             ->select(
                 'sa.id',
@@ -362,13 +385,13 @@ class ScheduleRescheduleController extends Controller
     public function destroy(Request $request, string $id)
     {
         try {
-            
+
             $appNo = $request->input('appNo');
-    
+
             $hasMoreThanOneRow = ScheduleApplicants::where('appNo', $appNo)
                 ->havingRaw('COUNT(*) > 1')
                 ->exists();
-    
+
             if (!$hasMoreThanOneRow) {
                 return response()->json([
                     'status' => 'error',

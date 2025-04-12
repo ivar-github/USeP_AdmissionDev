@@ -23,6 +23,7 @@ use Illuminate\Http\JsonResponse;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\ActionLogs;
 use Illuminate\Validation\ValidationException;
 use Exception;
@@ -31,7 +32,7 @@ use Jenssegers\Agent\Agent;
 
 class ScheduleSlotsController extends Controller
 {
- 
+
     public function index()
     {
 
@@ -75,6 +76,10 @@ class ScheduleSlotsController extends Controller
 
     public function getData(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
 
         try {
 
@@ -135,6 +140,11 @@ class ScheduleSlotsController extends Controller
 
     public function exportSchedulesSlots(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
 
             $columns = explode(',', $request->input('columns', ''));
@@ -186,6 +196,10 @@ class ScheduleSlotsController extends Controller
     public function store(Request $request)
     {
 
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
             $request->validate([
                 'Term' => ['required', 'integer'],
@@ -197,7 +211,7 @@ class ScheduleSlotsController extends Controller
                 'Slot' => ['required', 'integer', 'max:200'],
                 'Status' => ['required', 'integer', 'in:0,1'],
             ]);
- 
+
             $existingSchedule = ScheduleSlot::where([
                 'termID' => $request->Term,
                 'testCenterID' => $request->Center,
@@ -206,12 +220,12 @@ class ScheduleSlotsController extends Controller
                 'testSessionID' => $request->Session,
                 'testRoomID' => $request->Room,
             ])->exists();
-    
+
             if ($existingSchedule) {
                 return response()->json([
                     'message' => 'A schedule with the same details already exists!',
                     'status' => 'error',
-                ], 409);  
+                ], 409);
             }
 
             $scheduleSlot = ScheduleSlot::create([
@@ -277,8 +291,13 @@ class ScheduleSlotsController extends Controller
     }
 
 
-    public function edit(string $id): JsonResponse
+    public function edit(Request $request, string $id): JsonResponse
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
             $slot = ScheduleSlot::select(
                     'id',
@@ -292,7 +311,7 @@ class ScheduleSlotsController extends Controller
                     'isActive',
                 )
                 ->where('id', $id)
-                ->first(); 
+                ->first();
 
             if (!$slot) {
                 return response()->json([
@@ -315,6 +334,10 @@ class ScheduleSlotsController extends Controller
     public function update(Request $request)
     {
 
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
 
             $slotID = $request->input('slotID');
@@ -329,7 +352,7 @@ class ScheduleSlotsController extends Controller
                 'Slot' => ['required', 'integer', 'max:200'],
                 'Status' => ['required', 'integer', 'in:0,1'],
             ]);
- 
+
             $existingSchedule = ScheduleSlot::where([
                 'termID' => $request->Term,
                 'testCenterID' => $request->Center,
@@ -340,12 +363,12 @@ class ScheduleSlotsController extends Controller
             ])
             ->where('id', '!=', $slotID)
             ->exists();
-    
+
             if ($existingSchedule) {
                 return response()->json([
                     'message' => 'A schedule with the same details already exists!',
                     'status' => 'error',
-                ], 409);  
+                ], 409);
             }
 
             $scheduleSlot = ScheduleSlot::where('id', $slotID)->firstOrFail();
@@ -420,12 +443,17 @@ class ScheduleSlotsController extends Controller
 
     public function destroy(Request $request, string $id)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
 
             $isBeingUsed = ScheduleViewSlot::where('id', $id)
                 ->where('totalRegistered', '>', 0)
                 ->exists();
-    
+
             if ($isBeingUsed) {
                 return response()->json([
                     'status' => 'error',

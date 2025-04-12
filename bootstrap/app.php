@@ -24,7 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'securityHeaders' => SecurityHeaders::class,
         ]);
 
-    $middleware->appendToGroup('web', SecurityHeaders::class);
+    // $middleware->appendToGroup('web', SecurityHeaders::class);
 
     })
 

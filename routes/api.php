@@ -13,7 +13,7 @@ use App\Http\Controllers\RFIDController;
 
 
     //API ,'verifySession'
-    Route::middleware(['auth', 'isActive'])->group(function () { 
+    Route::middleware(['auth', 'securityHeaders'])->group(function () {
 
         //ADMISSION API
         Route::get('/api/registrationsData', [RegistrationController::class, 'fetchData']);
@@ -43,6 +43,7 @@ use App\Http\Controllers\RFIDController;
         Route::get('/api/rfid/genderEmployee', [RFIDController::class, 'getEmployeeGender'])->name('api.rfids.genderEmployee');
         Route::get('/api/rfid/employees', [RFIDEmployeeController::class, 'getData'])->name('api.rfidEmployees.data');
         Route::get('/api/rfid/students', [RFIDStudentController::class, 'getData'])->name('api.rfidStudents.data');
+
     });
 
 

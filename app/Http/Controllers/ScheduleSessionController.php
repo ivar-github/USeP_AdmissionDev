@@ -33,12 +33,16 @@ class ScheduleSessionController extends Controller
     public function store(Request $request)
     {
 
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
             $request->validate([
                 'Session' => [
                     'required',
                     'string',
-                    Rule::unique('sqlsrv2.CUSTOM_AdmissionTestSession', 'testSessionName'),                
+                    Rule::unique('sqlsrv2.CUSTOM_AdmissionTestSession', 'testSessionName'),
                 ],
                 'Status' => ['required', 'integer', 'in:0,1'],
             ]);
@@ -91,15 +95,32 @@ class ScheduleSessionController extends Controller
     }
 
 
-    public function edit(string $id)
+    public function edit(Request $request, string $id)
     {
-        $session = ScheduleSession::findOrFail($id);
-        return response()->json($session);
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
+        try {
+            $session = ScheduleSession::findOrFail($id);
+            return response()->json($session);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
 
     public function update(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
 
         try {
 
@@ -111,7 +132,7 @@ class ScheduleSessionController extends Controller
                     'required',
                     'string',
                     Rule::unique('sqlsrv2.CUSTOM_AdmissionTestSession', 'testSessionName')
-                    ->ignore($session->id, 'id'),                
+                    ->ignore($session->id, 'id'),
                 ],
                 'Status' => ['required', 'integer', 'in:0,1'],
             ]);
@@ -166,8 +187,13 @@ class ScheduleSessionController extends Controller
     }
 
 
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
 
             $isBeingUSed = ScheduleViewSlot::where('testSessionID', $id)

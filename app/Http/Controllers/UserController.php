@@ -59,15 +59,19 @@ class UserController extends Controller
     public function store(Request $request)
     {
 
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
 
             $request->validate([
                 'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 
-                    'string', 
-                    'lowercase', 
-                    'email', 
-                    'max:255', 
+                'email' => ['required',
+                    'string',
+                    'lowercase',
+                    'email',
+                    'max:255',
                     'unique:'.User::class,
                     'ends_with:@usep.edu.ph',
                 ],
@@ -94,7 +98,7 @@ class UserController extends Controller
 
             $agent = new Agent();
             $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
-            
+
             ActionLogs::create([
                 'type' => 'Create',
                 'module' => 'Users',
@@ -137,8 +141,13 @@ class UserController extends Controller
     }
 
 
-    public function edit($user)
+    public function edit(Request $request, $user)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
 
             $user = User::findOrFail($user);
@@ -158,15 +167,19 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
 
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
 
             $request->validate([
                 'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 
-                    'string', 
-                    'lowercase', 
-                    'email', 
-                    'max:255', 
+                'email' => ['required',
+                    'string',
+                    'lowercase',
+                    'email',
+                    'max:255',
                     'ends_with:@usep.edu.ph',
                     Rule::unique(User::class)->ignore($user->id)],
                 'type' => ['required', 'integer', 'in:0,1'],
@@ -186,7 +199,7 @@ class UserController extends Controller
                 $status = 1;
                 $desc = 'User Update Successful';
             }
-            
+
             $agent = new Agent();
             $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
             ActionLogs::create([
@@ -224,6 +237,10 @@ class UserController extends Controller
 
     public function resetPassword(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
 
         try {
 
@@ -285,8 +302,13 @@ class UserController extends Controller
 
     }
 
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
 
             $isActive = ActionLogs::where('userID', $id)

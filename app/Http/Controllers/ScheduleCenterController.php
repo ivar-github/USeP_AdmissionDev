@@ -32,12 +32,16 @@ class ScheduleCenterController extends Controller
     public function store(Request $request)
     {
 
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
             $request->validate([
-                'Campus' => ['required', 
+                'Campus' => ['required',
                     'integer',
                     'max:500',
-                    Rule::unique('sqlsrv2.CUSTOM_AdmissionTestCenter', 'campusID'), 
+                    Rule::unique('sqlsrv2.CUSTOM_AdmissionTestCenter', 'campusID'),
                 ],
                 'Center' => ['required', 'string', 'max:100'],
                 'Description' => ['required', 'string', 'max:255'],
@@ -94,15 +98,32 @@ class ScheduleCenterController extends Controller
     }
 
 
-    public function edit(string $id)
+    public function edit(Request $request, string $id)
     {
-        $center = ScheduleCenter::findOrFail($id);
-        return response()->json($center);
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
+        try {
+            $center = ScheduleCenter::findOrFail($id);
+            return response()->json($center);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
 
     public function update(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
 
         try {
 
@@ -114,7 +135,7 @@ class ScheduleCenterController extends Controller
                     'required',
                     'string',
                     Rule::unique('sqlsrv2.CUSTOM_AdmissionTestCenter', 'campusID')
-                    ->ignore($center->id, 'id'),                
+                    ->ignore($center->id, 'id'),
                 ],
                 'Center' => ['required', 'string', 'max:200'],
                 'Description' => ['required', 'string', 'max:255'],
@@ -173,8 +194,13 @@ class ScheduleCenterController extends Controller
     }
 
 
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
 
             $isBeingUSed = ScheduleViewSlot::where('testCenterID', $id)

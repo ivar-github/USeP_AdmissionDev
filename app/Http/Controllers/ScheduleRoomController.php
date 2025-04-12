@@ -31,6 +31,10 @@ class ScheduleRoomController extends Controller
     public function store(Request $request)
     {
 
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
             $request->validate([
                 'Room' => ['required', 'string', 'max:200'],
@@ -87,15 +91,32 @@ class ScheduleRoomController extends Controller
     }
 
 
-    public function edit(string $id)
+    public function edit(Request $request, string $id)
     {
-        $room = ScheduleRoom::findOrFail($id);
-        return response()->json($room);
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
+        try {
+            $room = ScheduleRoom::findOrFail($id);
+            return response()->json($room);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
 
     public function update(Request $request)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
 
         try {
 
@@ -159,8 +180,13 @@ class ScheduleRoomController extends Controller
     }
 
 
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
         try {
 
             $isBeingUSed = ScheduleViewSlot::where('testRoomID', $id)
