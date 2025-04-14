@@ -361,8 +361,6 @@ if (document.getElementById("third-table") && typeof simpleDatatables.DataTable 
     })
 }
 
-
-
 //FOURTH-TABLE
 if (document.getElementById("fourth-table") && typeof simpleDatatables.DataTable !== 'undefined') {
 
@@ -471,8 +469,6 @@ if (document.getElementById("fourth-table") && typeof simpleDatatables.DataTable
         })
     })
 }
-
-
 
 //FIFTH-TABLE
 if (document.getElementById("fifth-table") && typeof simpleDatatables.DataTable !== 'undefined') {

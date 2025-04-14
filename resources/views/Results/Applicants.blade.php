@@ -201,6 +201,9 @@
                 <div id="tableContainer" class="overflow-x-auto overflow-y-auto h-100 text-sm border border-gray-300 rounded-lg"></div>
             </div>
 
+            {{-- MODALS --}}
+            @include('Layouts.Modal.ResultChangeCourse.Edit')
+
         </div>
     </div>
 
@@ -256,6 +259,12 @@
                 getDataRows();
             }
 
+            function getCollegeByCampus_Trigger() {
+                getCollegeByCampus_Edit();
+                getProgramByCollege_Edit();
+                getMajorByProgram_Edit();
+            }
+
             function getDataByCollege() {
                 getProgramByCollege();
                 getDataRows();
@@ -287,8 +296,7 @@
                 axios.get('/api/admission/result/getColleges', {
                         params: {
                             campusId: document.getElementById('campus').value,
-                        },
-                        headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+                        }
                     })
                     .then(response => {
                         const collegeSelect = document.getElementById('college');
@@ -300,6 +308,29 @@
                             collegeSelect.appendChild(option);
                         });
                         document.getElementById('program').innerHTML = '<option value="0">All</option>';
+                        document.getElementById('major').innerHTML = '<option value="0">All</option>';
+                        // getDataRows();
+                    })
+                    .catch(error => console.error('Error fetching colleges:', error));
+            }
+
+            function getCollegeByCampus_Edit() {
+                axios.get('/api/admission/result/getColleges', {
+                        params: {
+                            campusId: document.getElementById('e_campus').value,
+                        }
+                    })
+                    .then(response => {
+                        const collegeSelect = document.getElementById('e_college');
+                        collegeSelect.innerHTML = '<option value="">All</option>';
+                        response.data.forEach(college => {
+                            const option = document.createElement('option');
+                            option.value = college.CollegeID;
+                            option.text = college.CollegeName;
+                            collegeSelect.appendChild(option);
+                        });
+                        document.getElementById('e_program').innerHTML = '<option value="">All</option>';
+                        document.getElementById('e_major').innerHTML = '<option value="">All</option>';
                         // getDataRows();
                     })
                     .catch(error => console.error('Error fetching colleges:', error));
@@ -310,8 +341,7 @@
                         params: {
                             campusId: document.getElementById('campus').value,
                             collegeId: document.getElementById('college').value,
-                        },
-                        headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+                        }
                     })
                     .then(response => {
                         const programSelect = document.getElementById('program');
@@ -328,6 +358,28 @@
                     .catch(error => console.error('Error fetching programs:', error));
             }
 
+            function getProgramByCollege_Edit() {
+                axios.get('/api/admission/result/getPrograms', {
+                        params: {
+                            campusId: document.getElementById('e_campus').value,
+                            collegeId: document.getElementById('e_college').value,
+                        }
+                    })
+                    .then(response => {
+                        const programSelect = document.getElementById('e_program');
+                        programSelect.innerHTML = '<option value="">All</option>';
+                        response.data.forEach(program => {
+                            const option = document.createElement('option');
+                            option.value = program.ProgID;
+                            option.text = program.ProgName;
+                            programSelect.appendChild(option);
+                        });
+                        document.getElementById('e_major').innerHTML = '<option value="">All</option>';
+                        // getDataRows();
+                    })
+                    .catch(error => console.error('Error fetching programs:', error));
+            }
+
 
             function getMajorByProgram() {
                 axios.get('/api/admission/result/getMajors', {
@@ -335,11 +387,33 @@
                             campusId: document.getElementById('campus').value,
                             collegeId: document.getElementById('college').value,
                             programId: document.getElementById('program').value,
-                        },
-                        headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+                        }
                     })
                     .then(response => {
                         const majorSelect = document.getElementById('major');
+                        majorSelect.innerHTML = '<option value="0">All</option>';
+                        response.data.forEach(major => {
+                            const option = document.createElement('option');
+                            option.value = major.MajorID;
+                            option.text = major.Major;
+                            majorSelect.appendChild(option);
+                        });
+                        // getDataRows();
+                    })
+                    .catch(error => console.error('Error fetching majors:', error));
+            }
+
+
+            function getMajorByProgram_Edit() {
+                axios.get('/api/admission/result/getMajors', {
+                        params: {
+                            campusId: document.getElementById('e_campus').value,
+                            collegeId: document.getElementById('e_college').value,
+                            programId: document.getElementById('e_program').value,
+                        }
+                    })
+                    .then(response => {
+                        const majorSelect = document.getElementById('e_major');
                         majorSelect.innerHTML = '<option value="0">All</option>';
                         response.data.forEach(major => {
                             const option = document.createElement('option');
@@ -384,8 +458,7 @@
                         search: document.getElementById('searchInput').value,
                         sort: document.getElementById('sort').value,
                         isAscending: isAscending,
-                    },
-                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+                    }
                 })
                 .then(({ data }) => {
                     renderTable(data.data, data.current_page, pageLimit);
@@ -420,11 +493,13 @@
                 selectedColumns.forEach(column => {
                     tableHTML += `<th class="py-2 px-4 border">${column.charAt(0).toUpperCase() + column.slice(1)}</th>`;
                 });
+                tableHTML += `<th class="py-2 px-4 border border-gray-300">Actions</th>`;
                 tableHTML += '</tr></thead><tbody>';
 
                 data.forEach((row, index) => {
                     // let rowNumber = (currentPage - 1) * limit + index + 1;
                     // tableHTML += `<tr><td class="py-2 px-4 border">${rowNumber}</td>`;
+                    let AppNo = row.AppNo;    
                     selectedColumns.forEach(column => {
                         if (column === 'IsEnlisted') {
                             tableHTML += `<td class="py-2 px-4 border">${row[column] === '1' ? 'Yes'
@@ -434,7 +509,18 @@
                             tableHTML += `<td class="py-2 px-4 border">${row[column] || ''}</td>`;
                         }
                     });
-                    tableHTML += '</tr>';
+ 
+                    tableHTML += `
+                        <td class="py-2 text-center border border-gray-300">
+                            <div class="inline-flex gap-3 items-center text-base font-semibold  dark:text-white">
+                                <a href="javascript:void(0)" onclick="openEditModal('${AppNo}')" class="text-blue-800 hover:text-blue-400 dark:text-blue-500 dark:hover:text-blue-400 ">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" height="24px" viewBox="0 -960 960 960" width="24px">
+                                        <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>`;
                 });
 
                 tableHTML += '</tbody></table>';
@@ -494,6 +580,80 @@
                     SpinnerGlobal.classList.add("hidden");
                 });
             }
+
+            /// AXIOS UPDATE COURSE
+            document.addEventListener('DOMContentLoaded', function() {
+                 document.getElementById('editChangeCourseForm').addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(this);
+                    const appID = document.getElementById('appID').value;
+
+                    axios.post(`/admission/result/changeApplicantCourse/${appID}`, formData)
+                    .then(response => {
+                            this.reset();
+                            document.getElementById('e_errorMessageChangeCourse').innerHTML = '';
+                            swalGenericSinglePageUpdate(response.data.message);
+                            closeEditModal();
+                            getDataRows();
+                        })
+                        .catch(error => {
+                            if (error.response && error.response.status === 422) {
+                                const errors = error.response.data.errors;
+                                const errorList = document.getElementById('e_errorMessageChangeCourse');
+                                errorList.innerHTML = '';
+
+                                for (const key in errors) {
+                                    if (errors.hasOwnProperty(key)) {
+                                        const errorMessage = document.createElement('li');
+                                        errorMessage.innerText = errors[key][0];
+                                        errorList.appendChild(errorMessage);
+                                    }
+                                }
+                            } else {
+                                const errorMsg = error.response.data.message;
+                                swalGenericError('An unexpected error occurred!',errorMsg);
+                            }
+                        });
+                });
+
+            });
+            
+
+            // FUNCTION TO SHOW EDIT MODAL
+            function openEditModal(id) {
+                
+                document.getElementById('editChangeCourseModal').classList.remove('hidden'); 
+                document.getElementById('e_errorMessageChangeCourse').innerHTML = '';
+
+                axios.get(`/admission/result/changeApplicantCourse/${id}/edit`)
+                    .then(response => {
+                        const applicant = response.data;
+                        document.getElementById('appID').value = applicant.AppNo;
+                        document.getElementById('current_term').value = applicant.TermID;
+                        document.getElementById('current_status').value = applicant.Status;
+                        document.getElementById('current_campus').value = applicant.CampusID;
+                        document.getElementById('current_course').value = applicant.QualifiedCourseID;
+                        document.getElementById('current_major').value = applicant.QualifiedMajorID;
+                        document.getElementById('i_appNo').textContent = applicant.AppNo;
+                        document.getElementById('i_name').textContent = applicant.Applicant;
+                        document.getElementById('i_status').textContent = applicant.Status;
+                        document.getElementById('i_campus').textContent = applicant.CampusName;
+                        document.getElementById('i_courseID').textContent = applicant.QualifiedCourse;
+                        document.getElementById('i_majorID').textContent = applicant.QualifiedMajor ? applicant.QualifiedMajor : 'None';
+                    })
+                    .catch(error => {
+                        swalGenericError('An unexpected error occurred!', error);
+                    });
+            }
+
+            function closeEditModal() {
+                document.getElementById('editChangeCourseModal').classList.add('hidden');
+                document.getElementById('e_errorMessageChangeCourse').innerHTML = '';
+            }
+
+            
+
 
         </script>
 

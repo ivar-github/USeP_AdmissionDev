@@ -55,7 +55,7 @@ class RFIDStudentController extends Controller
         try {
         
             $student = Student::select('StudentNo', 
-                    'AppNo', 
+                    // 'AppNo', 
                     'TermID', 
                     'LastName', 
                     'FirstName', 

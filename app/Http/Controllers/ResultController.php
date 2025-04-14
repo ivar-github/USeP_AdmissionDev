@@ -11,6 +11,7 @@ use App\Models\Program;
 use App\Models\ProgramMajorsView;
 use App\Models\ResultOverallView;
 use App\Models\CollegeProgramMajorStatic;
+use App\Models\Custom_ResultEnlistLogs;
 use App\Models\Major;
 use Illuminate\Support\Facades\DB;
 
@@ -41,6 +42,7 @@ class ResultController extends Controller
         try {
 
             $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
+                ->where('TermID', 204)
                 ->limit(100)
                 ->orderBy('TermID', 'desc')
                 ->get();
@@ -112,6 +114,35 @@ class ResultController extends Controller
             ]);
 
             return view('Results.Transferees', compact('terms', 'campuses'));
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+    public function changeCourse()
+    {
+
+        try {
+
+            $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
+                ->limit(100)
+                ->orderBy('TermID', 'desc')
+                ->get();
+
+            $campuses = collect([
+                (object) ['id' => 1, 'name' => 'Obrero'],
+                (object) ['id' => 6, 'name' => 'Mintal'],
+                (object) ['id' => 7, 'name' => 'Tagum'],
+                (object) ['id' => 8, 'name' => 'Mabini'],
+                (object) ['id' => 10, 'name' => 'Malabog'],
+            ]);
+
+            return view('Results.Applicants', compact('terms', 'campuses'));
 
         } catch (Throwable $e) {
             return response()->json([
@@ -646,15 +677,195 @@ class ResultController extends Controller
     }
 
 
-    public function edit(string $id)
+    public function edit(Request $request, string $id) 
     {
-        //
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
+        try {
+        
+            $applicant = Result::select('AppNo', 
+                    'CampusID', 
+                    'QualifiedCourseID', 
+                    'QualifiedCourse', 
+                    'QualifiedMajorID', 
+                    'QualifiedMajor', 
+                    'OverAll_Rank', 
+                    'Rank', 
+                    'Status', 
+                    'Applicant', 
+                    'TermID'
+                )
+                ->where('AppNo', $id)
+                ->first(); 
+
+            if (!$applicant) {
+                return response()->json([
+                    'error' => 'Applicant not found'
+                ], 404);
+            }
+
+            $campuses = collect([
+                (object) ['id' => 1, 'name' => 'Obrero'],
+                (object) ['id' => 6, 'name' => 'Mintal'],
+                (object) ['id' => 7, 'name' => 'Tagum'],
+                (object) ['id' => 8, 'name' => 'Mabini'],
+                (object) ['id' => 10, 'name' => 'Malabog'],
+            ]);
+     
+            $matchedCampus = $campuses->firstWhere('id', $applicant->CampusID);
+            $applicant->CampusName = $matchedCampus ? $matchedCampus->name : 'Unknown';
+    
+
+            return response()->json($applicant);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
 
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
+        try {
+
+            $applicantID = $request->input('appID');
+            $currentStatus = $request->input('current_status');
+            $currentCampus = $request->input('current_campus');
+            $currentCourse = $request->input('current_course');
+            $currentMajor = $request->input('current_major');
+
+            $transCampus = $request->input('campus');
+            $transCollege = $request->input('college');
+            $transCourse = $request->input('program');
+            $transMajor = $request->input('major');
+
+            $programs = CollegeProgramMajorStatic::select('ProgID', 'ProgName', 'MajorID', 'Major')
+                ->where('CampusID', $transCampus)
+                ->where('CollegeID', $transCollege)
+                ->where('ProgID', $transCourse)
+                ->where('MajorID', $transMajor)
+                ->where('Display_Online', 1)
+                ->first();
+
+
+
+            //UPDATE QUALIFIED APPLICANT'S INFO
+            if (!$applicantID) {
+                return response()->json([
+                    'error' => 'Please select an applicant',
+                    'message' => 'Please select an applicant before proceeding.',
+                ], 400);
+            }
+
+            $applicantCourse = Result::where('AppNo', $applicantID)->firstOrFail();
+
+            $request->validate([
+                'campus' => ['required', 'integer'],
+                'college' => ['required', 'integer'],
+                'program' => ['required', 'integer'],
+                'major' => ['required', 'integer'],
+            ]);
+
+            $applicantCourse->CampusID =  $transCampus;
+            $applicantCourse->QualifiedCourse = $programs->ProgName;
+            $applicantCourse->QualifiedCourseID = $transCourse;
+            $applicantCourse->QualifiedMajor =  $programs->Major;
+            $applicantCourse->QualifiedMajorID = $transMajor;
+            $applicantCourse->Status = 'Qualified';
+            $applicantCourse->save();
+
+            $status = 0;
+            $desc = 'No changes were made';
+
+            if ($applicantCourse->wasChanged()) {
+                $status = 1;
+                $desc = 'Course Enlistment Successful';
+
+                $applicantCourse->IsEnlisted = 1;
+                $applicantCourse->EnlistmentDate = now();
+                $applicantCourse->save();
+                
+                
+                //ADD ENLISTMENT LOGS
+                $type = 'Transfer';
+                if($currentStatus == 'Waitlisted' || $currentStatus == 'Waivedslot' ){
+                    $type = 'Manual';
+                }
+
+                Custom_ResultEnlistLogs::create([
+                    'type' => $type,
+                    'TermID' => $request->input('current_term'),
+                    'AppNo' =>  $applicantID,
+                    'previousStatus' => $currentStatus,
+                    'previousCampusID' => $currentCampus,
+                    'previousCourseID' => $currentCourse,
+                    'previousMajorID' => $currentMajor,
+                    'currentStatus' => 'Qualified',
+                    'currentCampusID' => $transCampus,
+                    'currentCollegeID' => $transCollege,
+                    'currentCourseID' => $transCourse,
+                    'currentMajorID' =>  $transMajor,
+                    'enlistedBy_userID' => Auth::user()->id,
+                    'enlistedBy_userEmail' => Auth::user()->email,
+                ]);
+
+            }
+
+
+            
+
+            //ADD ACTION LOGS
+            $agent = new Agent();
+            $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
+
+            ActionLogs::create([
+                'type' => 'Update',
+                'module' => 'USePAT Result - Enlist',
+                'affectedID' => $applicantCourse->AppNo,
+                'affectedItem' => 'Campus:'.$transCampus.', Course:'.$transCourse.' Major:'.$transMajor,
+                'description' => $desc,
+                'status' => $status,
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'hostName' => gethostname(),
+                'platform' => $agentInfo,
+            ]);
+
+            return response()->json([
+                'message' => $desc,
+                'status' => 'success',
+            ], 200);
+
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $e->errors(),
+                'status' => 'error',
+            ], 422);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Applicant not found',
+                'message' => 'The requested applicant does not exist.',
+            ], 404);
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+
     }
 
 

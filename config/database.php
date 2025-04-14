@@ -158,6 +158,19 @@ return [
             'trust_server_certificate' => true,
         ],
 
+        'CustomDB' => [
+            'driver' => 'sqlsrv',
+            'host' => env('DB_HOST_CUSTOM', ''),
+            'port' => env('DB_PORT_CUSTOM', ''),
+            'database' => env('DB_DATABASE_CUSTOM', ''),
+            'username' => env('DB_USERNAME_CUSTOM', ''),
+            'password' => env('DB_PASSWORD_CUSTOM', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'encrypt' => 'yes',
+            'trust_server_certificate' => true,
+        ],
+
 
 
     ],

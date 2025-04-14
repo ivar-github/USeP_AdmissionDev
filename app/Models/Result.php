@@ -10,13 +10,20 @@ class Result extends Model
     protected $connection = 'sqlsrv2'; 
     protected $table = 'CUSTOM_AdmissionQualifiedApplicantsOfficial';
 
-    protected $primaryKey = 'AppNO';
+    protected $primaryKey = 'AppNo';
     public $incrementing = false;
     protected $keyType = 'string';
 
     public $timestamps = false;
 
     protected $fillable = [
-        // 'MobileNo'
+        'Status',
+        'CampusID',
+        'QualifiedCourse',
+        'QualifiedCourseID',
+        'QualifiedMajor',
+        'QualifiedMajorID',
+        'IsEnlisted',
+        'EnlistmentDate',
     ];
 }
