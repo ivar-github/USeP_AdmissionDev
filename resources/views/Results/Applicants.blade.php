@@ -692,7 +692,7 @@
                     document.getElementById('applicantName').textContent = name;
 
                     const ul = document.createElement('ul');
-                    ul.classList.add("max-w-md", "divide-y", "divide-gray-200", "dark:divide-gray-700", "mx-auto");
+                    ul.classList.add("max-w-xl", "divide-y", "divide-gray-200", "dark:divide-gray-700", "mx-auto");
 
                     response.data.enlistlogs.forEach(enlistlog => {
                         let formattedDate = new Date(enlistlog.created_at)
@@ -711,25 +711,27 @@
                         li.classList.add("justify-content", "mx-auto", "border-b", "border-gray-200", "dark:border-gray-700", "py-2");
 
                         li.innerHTML = `
-                            <div class="flex items-center  px-1 space-x-2 rtl:space-x-reverse">
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-md font-bold text-yellow-700 truncate dark:text-yellow-400">From</p>
-                                    <p class="text-sm font-sm text-gray-700 truncate dark:text-gray-300">${enlistlog.previousStatus}</p>
-                                    <p class="text-sm font-sm text-gray-700 truncate dark:text-gray-300">${enlistlog.previousCampusName}</p>
-                                    <p class="text-sm font-sm text-gray-700 truncate dark:text-gray-300">${enlistlog.previousCourseID}-${enlistlog.previousMajorID}</p>
+                            <div class="flex items-center rtl:space-x-reverse">
+                                <div class="flex-1 min-w-0 text-base font-bold ">
+                                    <p class="text-md font-bold text-yellow-700 dark:text-yellow-400">From</p>
+                                    <p class="text-sm font-sm text-gray-700 dark:text-gray-300">${enlistlog.previousStatus}</p>
+                                    <p class="text-sm font-sm text-gray-700 dark:text-gray-300">${enlistlog.PrevCampus}</p>
+                                    <p class="text-sm font-sm text-gray-700 dark:text-gray-300">${enlistlog.previousProgram}</p>
+                                    <p class="text-sm font-sm text-gray-700 dark:text-gray-300">${enlistlog.previousMajor}</p>
                                     
-                                    <p class="text-md font-bold text-green-700 truncate dark:text-green-400 mt-2">To</p>
-                                    <p class="text-sm font-sm text-gray-700 truncate dark:text-gray-300">${enlistlog.currentStatus}</p>
-                                    <p class="text-sm font-sm text-gray-700 truncate dark:text-gray-300">${enlistlog.currentCampusName}</p>
-                                    <p class="text-sm font-sm text-gray-700 truncate dark:text-gray-300">${enlistlog.currentCourseID}-${enlistlog.currentMajorID}</p>
+                                    <p class="text-md font-bold text-green-700 dark:text-green-400 mt-2">To</p>
+                                    <p class="text-sm font-sm text-gray-700 dark:text-gray-300">${enlistlog.currentStatus}</p>
+                                    <p class="text-sm font-sm text-gray-700 dark:text-gray-300">${enlistlog.CurrCampus}</p>
+                                    <p class="text-sm font-sm text-gray-700 dark:text-gray-300">${enlistlog.currentProgram}</p>
+                                    <p class="text-sm font-sm text-gray-700 dark:text-gray-300">${enlistlog.currentMajor}</p>
                                 </div>
-                                <div class="gap-1 items-center text-base font-semibold text-gray-900 dark:text-white">
-                                    <p class="text-sm font-sm text-gray-900 truncate dark:text-gray-300">Enlisted by: </p>
-                                    <p class="text-sm font-sm text-gray-700 truncate dark:text-gray-300">${enlistlog.enlistedBy_userEmail}</p>
-                                    <p class="text-sm font-sm text-gray-900 truncate dark:text-gray-300">Date Enlisted: </p>
-                                    <p class="text-sm font-sm text-gray-700 truncate dark:text-gray-300">${formattedDate}</p>
-                                    <p class="text-sm font-sm text-gray-900 truncate dark:text-gray-300">Enlistment Type</p>
-                                    <p class="text-sm font-sm text-gray-700 truncate dark:text-gray-300">${enlistlog.type}</p>
+                                <div class="gap-1 items-center text-gray-900 dark:text-white">
+                                    <p class="text-sm font-sm text-gray-500 dark:text-gray-500">Enlisted by: </p>
+                                    <p class="text-sm font-sm text-gray-700 dark:text-gray-300">${enlistlog.enlistedBy_userEmail}</p>
+                                    <p class="text-sm font-sm text-gray-500 dark:text-gray-500">Date Enlisted: </p>
+                                    <p class="text-sm font-sm text-gray-700 dark:text-gray-300">${formattedDate}</p>
+                                    <p class="text-sm font-sm text-gray-500 dark:text-gray-500">Enlistment Type</p>
+                                    <p class="text-sm font-sm text-gray-700 dark:text-gray-300">${enlistlog.type}</p>
                                 </div>
                             </div>
                         `;

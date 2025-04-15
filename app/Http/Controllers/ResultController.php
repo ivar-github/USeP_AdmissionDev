@@ -42,7 +42,7 @@ class ResultController extends Controller
         try {
 
             $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
-                // ->where('TermID', 204)
+                ->where('TermID', 204)
                 ->limit(100)
                 ->orderBy('TermID', 'desc')
                 ->get();
@@ -894,79 +894,48 @@ class ResultController extends Controller
                 ], 400);
             }
 
-            $query = Custom_ResultEnlistLogs::select('AppNo', 
-                    'previousStatus',
-                    'previousCampusID', 
-                    'previousCourseID', 
-                    'previousMajorID', 
-                    'currentStatus', 
-                    'currentCampusID', 
-                    'currentCollegeID', 
-                    'currentCourseID', 
-                    'currentMajorID', 
-                    'enlistedBy_userID', 
-                    'enlistedBy_userEmail',
-                    'created_at',
-                    'type'
+
+            $logsDB = config('database.connections.CustomDB.database');  
+            $prismDB = config('database.connections.sqlsrv2.database');  
+
+            $query = DB::connection('CustomDB')  
+                ->table("$logsDB.dbo.AdmissionResult_CourseEnlistmentLogs as enl")
+                ->leftJoin("$prismDB.dbo.CUSTOM_AdmissionProgramMajorsOfferedStatic as prev", function($join) {
+                    $join->on('prev.ProgID', '=', 'enl.previousCourseID')
+                         ->on('prev.MajorID', '=', 'enl.previousMajorID')
+                         ->on('prev.CampusID', '=', 'enl.previousCampusID');
+                })
+                ->leftJoin("$prismDB.dbo.CUSTOM_AdmissionProgramMajorsOfferedStatic as curr", function($join) {
+                    $join->on('curr.ProgID', '=', 'enl.currentCourseID')
+                         ->on('curr.MajorID', '=', 'enl.currentMajorID')
+                         ->on('curr.CampusID', '=', 'enl.currentCampusID');
+                })
+                ->select(
+                    'enl.AppNo',
+                    'enl.previousStatus',
+                    'enl.previousCampusID', 
+                    'enl.previousCourseID', 
+                    'enl.previousMajorID', 
+                    'enl.currentStatus', 
+                    'enl.currentCampusID', 
+                    'enl.currentCollegeID', 
+                    'enl.currentCourseID', 
+                    'enl.currentMajorID', 
+                    'enl.enlistedBy_userID', 
+                    'enl.enlistedBy_userEmail',
+                    'enl.created_at',
+                    'enl.type',
+                    'prev.ProgName as previousProgram',   
+                    'prev.Major as previousMajor',       
+                    'curr.ProgName as currentProgram',   
+                    'curr.Major as currentMajor',
+                    DB::raw("$prismDB.dbo.fn_CampusName2(enl.previousCampusID) as PrevCampus"),
+                    DB::raw("$prismDB.dbo.fn_CampusName2(enl.currentCampusID) as CurrCampus")        
                 )
-            ->where('AppNo', $applicantID)
-            ->orderBy('created_at', 'desc');
-
-            // $query = DB::connection('CustomDB')
-            // ->table('AdmissionResult_CourseEnlistmentLogs as sa')
-            // ->select(
-            //     'sa.AppNo',
-            //     'sa.previousStatus',
-            //     'sa.previousCampusID', 
-            //     'sa.previousCourseID', 
-            //     'sa.previousMajorID', 
-            //     'sa.currentStatus', 
-            //     'sa.currentCampusID', 
-            //     'sa.currentCollegeID', 
-            //     'sa.currentCourseID', 
-            //     'sa.currentMajorID', 
-            //     'sa.enlistedBy_userID', 
-            //     'sa.enlistedBy_userEmail',
-            //     'sa.created_at',
-            //     'sa.type',
-            //     'prev.ProgName as previousProgram',   
-            //     'prev.Major as previousMajor',       
-            //     'curr.ProgName as currentProgram',   
-            //     'curr.Major as currentMajor'        
-            // )
-            // ->leftJoin(DB::connection('sqlsrv2')->raw('CUSTOM_AdmissionProgramMajorsOfferedStatic as prev'), function($join) {
-            //     $join->on('prev.ProgID', '=', 'sa.previousCourseID')
-            //         ->on('prev.MajorID', '=', 'sa.previousMajorID');
-            // })
-            // ->leftJoin(DB::connection('sqlsrv2')->raw('CUSTOM_AdmissionProgramMajorsOfferedStatic as curr'), function($join) {
-            //     $join->on('curr.ProgID', '=', 'sa.currentCourseID')
-            //         ->on('curr.MajorID', '=', 'sa.currentMajorID');
-            // })
-            // ->where('sa.AppNo', $applicantID)
-            // ->orderBy('sa.created_at', 'desc');
-
-
- 
-
-            $campuses = collect([
-                (object) ['id' => 1, 'name' => 'Obrero'],
-                (object) ['id' => 6, 'name' => 'Mintal'],
-                (object) ['id' => 7, 'name' => 'Tagum'],
-                (object) ['id' => 8, 'name' => 'Mabini'],
-                (object) ['id' => 10, 'name' => 'Malabog'],
-            ]);
+                ->where('enl.AppNo', $applicantID)
+                ->orderBy('enl.created_at', 'desc');
              
             $enlistlogs = $query->get();
-             
-            $enlistlogs->each(function ($enlistlog) use ($campuses) { 
-                $matchedPrevCampus = $campuses->firstWhere('id', $enlistlog->previousCampusID);
-                $enlistlog->previousCampusName = $matchedPrevCampus ? $matchedPrevCampus->name : 'Unknown';
-             
-                $matchedCurrCampus = $campuses->firstWhere('id', $enlistlog->currentCampusID);
-                $enlistlog->currentCampusName = $matchedCurrCampus ? $matchedCurrCampus->name : 'Unknown';
-            });
-
-
 
             return response()->json([
                 'enlistlogs' => $enlistlogs
