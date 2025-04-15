@@ -42,7 +42,7 @@ class ResultController extends Controller
         try {
 
             $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
-                ->where('TermID', 204)
+                // ->where('TermID', 204)
                 ->limit(100)
                 ->orderBy('TermID', 'desc')
                 ->get();
