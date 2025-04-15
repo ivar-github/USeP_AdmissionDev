@@ -203,6 +203,7 @@
 
             {{-- MODALS --}}
             @include('Layouts.Modal.ResultChangeCourse.Edit')
+            @include('Layouts.Modal.ResultChangeCourse.View')
 
         </div>
     </div>
@@ -488,18 +489,20 @@
 
 
             function renderTable(data, currentPage, limit) {
-                let tableHTML = '<table class="min-w-full border border-gray-300 rounded-xl text-gray-700  dark:text-gray-300"><thead><tr>';
+                let tableHTML = '<table class="min-w-full border border-gray-400 rounded-md text-gray-700  dark:text-gray-300"><thead><tr>';
                 // tableHTML += '<th class="py-2 px-4 border">#</th>';
                 selectedColumns.forEach(column => {
-                    tableHTML += `<th class="py-2 px-4 border">${column.charAt(0).toUpperCase() + column.slice(1)}</th>`;
+                    tableHTML += `<th class="py-2 px-4 border border-gray-300 bg-slate-300/50 dark:bg-slate-900/40">${column.charAt(0).toUpperCase() + column.slice(1)}</th>`;
                 });
-                tableHTML += `<th class="py-2 px-4 border border-gray-300">Actions</th>`;
+                tableHTML += `<th class="py-2 px-4 border border-gray-300 bg-slate-300/50 dark:bg-slate-900/40">Actions</th>`;
                 tableHTML += '</tr></thead><tbody>';
 
                 data.forEach((row, index) => {
                     // let rowNumber = (currentPage - 1) * limit + index + 1;
                     // tableHTML += `<tr><td class="py-2 px-4 border">${rowNumber}</td>`;
+                tableHTML += '<tr class="hover:bg-gray-100 dark:hover:bg-gray-600">';
                     let AppNo = row.AppNo;    
+                    let Applicant = row.Applicant;    
                     selectedColumns.forEach(column => {
                         if (column === 'IsEnlisted') {
                             tableHTML += `<td class="py-2 px-4 border">${row[column] === '1' ? 'Yes'
@@ -511,13 +514,19 @@
                     });
  
                     tableHTML += `
-                        <td class="py-2 text-center border border-gray-300">
-                            <div class="inline-flex gap-3 items-center text-base font-semibold  dark:text-white">
-                                <a href="javascript:void(0)" onclick="openEditModal('${AppNo}')" class="text-blue-800 hover:text-blue-400 dark:text-blue-500 dark:hover:text-blue-400 ">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" height="24px" viewBox="0 -960 960 960" width="24px">
-                                        <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
-                                    </svg>
+                        <td class="py-2 text-center border border-gray-200">
+                            <div class="inline-flex justify-between gap-3 items-center text-base dark:text-white">
+                                <a href="javascript:void(0)" onclick="openEditModal('${AppNo}')" 
+                                    class="hover:underline text-red-800 hover:text-red-400 dark:text-red-500 dark:hover:text-red-400 "
+                                    >
+                                    Enlist
                                 </a>
+                                <a href="javascript:void(0)" onclick="openViewModal('${AppNo}','${Applicant}')" 
+                                    class="hover:underline text-blue-800 hover:text-blue-400 dark:text-blue-500 dark:hover:text-blue-400 "
+                                    >
+                                    View
+                                </a>
+
                             </div>
                         </td>
                     </tr>`;
@@ -626,7 +635,11 @@
                 document.getElementById('editChangeCourseModal').classList.remove('hidden'); 
                 document.getElementById('e_errorMessageChangeCourse').innerHTML = '';
 
-                axios.get(`/admission/result/changeApplicantCourse/${id}/edit`)
+                axios.get(`/admission/result/changeApplicantCourse/${id}/edit`,{
+                        headers: { 
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    })
                     .then(response => {
                         const applicant = response.data;
                         document.getElementById('appID').value = applicant.AppNo;
@@ -652,6 +665,89 @@
                 document.getElementById('e_errorMessageChangeCourse').innerHTML = '';
             }
 
+            
+
+            // FUNCTION TO SHOW EDIT MODAL
+            function openViewModal(id, name) {
+                
+                document.getElementById('viewEnlistLogsModal').classList.remove('hidden'); 
+                axios.get('/api/admission/result/getEnlistedLogs', {
+                    params: { 
+                            applicantID: id,
+                            applicantName: name,
+                        }
+                })
+                .then(response => {
+                    const enlistLogsList = document.getElementById('enlistLogsList');
+                    const noResult = document.getElementById('noResult');
+                    enlistLogsList.innerHTML = '';
+
+                    if (response.data.enlistlogs.length === 0) {
+                        noResult.classList.remove("hidden");
+                    } else {
+                        noResult.classList.add("hidden");
+                    }
+
+                    document.getElementById('applicantNo').textContent = id;
+                    document.getElementById('applicantName').textContent = name;
+
+                    const ul = document.createElement('ul');
+                    ul.classList.add("max-w-md", "divide-y", "divide-gray-200", "dark:divide-gray-700", "mx-auto");
+
+                    response.data.enlistlogs.forEach(enlistlog => {
+                        let formattedDate = new Date(enlistlog.created_at)
+                        .toLocaleString('en-PH', {
+                            timeZone: 'Asia/Manila',
+                            hour12: true, 
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                        });
+
+                        const li = document.createElement('li');
+                        li.classList.add("justify-content", "mx-auto", "border-b", "border-gray-200", "dark:border-gray-700", "py-2");
+
+                        li.innerHTML = `
+                            <div class="flex items-center  px-1 space-x-2 rtl:space-x-reverse">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-md font-bold text-yellow-700 truncate dark:text-yellow-400">From</p>
+                                    <p class="text-sm font-sm text-gray-700 truncate dark:text-gray-300">${enlistlog.previousStatus}</p>
+                                    <p class="text-sm font-sm text-gray-700 truncate dark:text-gray-300">${enlistlog.previousCampusName}</p>
+                                    <p class="text-sm font-sm text-gray-700 truncate dark:text-gray-300">${enlistlog.previousCourseID}-${enlistlog.previousMajorID}</p>
+                                    
+                                    <p class="text-md font-bold text-green-700 truncate dark:text-green-400 mt-2">To</p>
+                                    <p class="text-sm font-sm text-gray-700 truncate dark:text-gray-300">${enlistlog.currentStatus}</p>
+                                    <p class="text-sm font-sm text-gray-700 truncate dark:text-gray-300">${enlistlog.currentCampusName}</p>
+                                    <p class="text-sm font-sm text-gray-700 truncate dark:text-gray-300">${enlistlog.currentCourseID}-${enlistlog.currentMajorID}</p>
+                                </div>
+                                <div class="gap-1 items-center text-base font-semibold text-gray-900 dark:text-white">
+                                    <p class="text-sm font-sm text-gray-900 truncate dark:text-gray-300">Enlisted by: </p>
+                                    <p class="text-sm font-sm text-gray-700 truncate dark:text-gray-300">${enlistlog.enlistedBy_userEmail}</p>
+                                    <p class="text-sm font-sm text-gray-900 truncate dark:text-gray-300">Date Enlisted: </p>
+                                    <p class="text-sm font-sm text-gray-700 truncate dark:text-gray-300">${formattedDate}</p>
+                                    <p class="text-sm font-sm text-gray-900 truncate dark:text-gray-300">Enlistment Type</p>
+                                    <p class="text-sm font-sm text-gray-700 truncate dark:text-gray-300">${enlistlog.type}</p>
+                                </div>
+                            </div>
+                        `;
+
+                        ul.appendChild(li);
+                    });
+
+                    enlistLogsList.appendChild(ul);
+                })
+                .catch(error => {
+                    const errorMsg = error.response.data.message;
+                    swalGenericError('Error!',errorMsg);
+                });
+            }
+
+            function closeViewModal() {
+                document.getElementById('viewEnlistLogsModal').classList.add('hidden');
+            }
             
 
 

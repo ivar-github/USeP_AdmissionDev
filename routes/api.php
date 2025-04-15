@@ -25,6 +25,7 @@ use App\Http\Controllers\RFIDController;
         Route::get('/api/admission/result/getColleges', [ResultController::class, 'getColleges']);
         Route::get('/api/admission/result/getPrograms', [ResultController::class, 'getPrograms']);
         Route::get('/api/admission/result/getMajors', [ResultController::class, 'getMajors']);
+        Route::get('/api/admission/result/getEnlistedLogs', [ResultController::class, 'getEnlistedLogs'])->name('api.results.enlistedLogs');
 
         Route::get('/api/admission/schedule/applicants', [ScheduleController::class, 'getData'])->name('api.schedulesApplicants.data');
         Route::get('/api/admission/schedule/applicants/getDates', [ScheduleController::class, 'getDates']);

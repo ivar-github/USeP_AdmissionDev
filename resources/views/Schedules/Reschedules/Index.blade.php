@@ -160,31 +160,35 @@
                     const formData = new FormData(this);
                     const applicantID = document.getElementById('applicantID').value;
 
-                    axios.post(`/admission/schedule/scheduleReschedules/${applicantID}`, formData)
+                    axios.post(`/admission/schedule/scheduleReschedules/${applicantID}`, formData, {
+                        headers: { 
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    })
                     .then(response => {
                             this.reset();
                             document.getElementById('e_errorMessage').innerHTML = '';
                             swalGenericSinglePageUpdate(response.data.message);
                             fetchExaminees();
-                        })
-                        .catch(error => {
-                            if (error.response && error.response.status === 422) {
-                                const errors = error.response.data.errors;
-                                const errorList = document.getElementById('e_errorMessage');
-                                errorList.innerHTML = '';
+                    })
+                    .catch(error => {
+                        if (error.response && error.response.status === 422) {
+                            const errors = error.response.data.errors;
+                            const errorList = document.getElementById('e_errorMessage');
+                            errorList.innerHTML = '';
 
-                                for (const key in errors) {
-                                    if (errors.hasOwnProperty(key)) {
-                                        const errorMessage = document.createElement('li');
-                                        errorMessage.innerText = errors[key][0];
-                                        errorList.appendChild(errorMessage);
-                                    }
+                            for (const key in errors) {
+                                if (errors.hasOwnProperty(key)) {
+                                    const errorMessage = document.createElement('li');
+                                    errorMessage.innerText = errors[key][0];
+                                    errorList.appendChild(errorMessage);
                                 }
-                            } else {
-                                const errorMsg = error.response.data.message;
-                                swalGenericError('An unexpected error occurred!',errorMsg);
                             }
-                        });
+                        } else {
+                            const errorMsg = error.response.data.message;
+                            swalGenericError('An unexpected error occurred!',errorMsg);
+                        }
+                    });
                 });
 
             });
@@ -217,8 +221,7 @@
                 axios.get('/api/admission/schedule/reschedule/getAvailableScheds', {
                         params: {
                             centerID: document.getElementById('centerID').value,
-                        },
-                        headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+                        }
                     }).then(response => {
                         const availableSlotSelect = document.getElementById('e_slots');
                         availableSlotSelect.innerHTML = '<option value="0" disabled selected>Select</option>';
@@ -238,8 +241,7 @@
                 axios.get('/api/admission/schedule/reschedule/selectSchedDetails', {
                         params: {
                             e_slotID: document.getElementById('e_slots').value,
-                        },
-                        headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+                        }
                     })
                     .then(response => {
                         const details = response.data;
@@ -261,7 +263,11 @@
             // FUNCTION TO SHOW SCHEDULE TO EDIT
             function openEditModal(id) {
                 console.log("Student ID Sent to Axios:", id, typeof id);
-                axios.get(`/admission/schedule/scheduleReschedules/${id}/edit`)
+                axios.get(`/admission/schedule/scheduleReschedules/${id}/edit`,{
+                        headers: { 
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    })
                     .then(response => {
                         const applicant = response.data;
                         document.getElementById('applicantID').value = applicant.id;
@@ -295,8 +301,7 @@
                     params: { 
                             examinee: document.getElementById('examineeSearch').value,
                             termID: document.getElementById('termID').value,
-                        },
-                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+                        }
                 })
                 .then(response => {
                     defaultIDValue();
