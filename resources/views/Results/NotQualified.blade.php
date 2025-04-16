@@ -336,15 +336,118 @@
                     SpinnerGlobal.classList.add("hidden");
                 });
             }
+
+            function getCollegeByCampus_Edit() {
+                axios.get('/api/admission/result/getColleges', {
+                        params: {
+                            campusId: document.getElementById('e_campus').value,
+                        }
+                    })
+                    .then(response => {
+                        const collegeSelect = document.getElementById('e_college');
+                        collegeSelect.innerHTML = '<option value="">All</option>';
+                        response.data.forEach(college => {
+                            const option = document.createElement('option');
+                            option.value = college.CollegeID;
+                            option.text = college.CollegeName;
+                            collegeSelect.appendChild(option);
+                        });
+                        document.getElementById('e_program').innerHTML = '<option value="">All</option>';
+                        document.getElementById('e_major').innerHTML = '<option value="">All</option>';
+                        // getDataRows();
+                    })
+                    .catch(error => console.error('Error fetching colleges:', error));
+            }
+
+            function getProgramByCollege_Edit() {
+                axios.get('/api/admission/result/getPrograms', {
+                        params: {
+                            campusId: document.getElementById('e_campus').value,
+                            collegeId: document.getElementById('e_college').value,
+                        }
+                    })
+                    .then(response => {
+                        const programSelect = document.getElementById('e_program');
+                        programSelect.innerHTML = '<option value="">All</option>';
+                        response.data.forEach(program => {
+                            const option = document.createElement('option');
+                            option.value = program.ProgID;
+                            option.text = program.ProgName;
+                            programSelect.appendChild(option);
+                        });
+                        document.getElementById('e_major').innerHTML = '<option value="">All</option>';
+                        // getDataRows();
+                    })
+                    .catch(error => console.error('Error fetching programs:', error));
+            }
+
+
+            function getMajorByProgram_Edit() {
+                axios.get('/api/admission/result/getMajors', {
+                        params: {
+                            campusId: document.getElementById('e_campus').value,
+                            collegeId: document.getElementById('e_college').value,
+                            programId: document.getElementById('e_program').value,
+                        }
+                    })
+                    .then(response => {
+                        const majorSelect = document.getElementById('e_major');
+                        majorSelect.innerHTML = '<option value="0">All</option>';
+                        response.data.forEach(major => {
+                            const option = document.createElement('option');
+                            option.value = major.MajorID;
+                            option.text = major.Major;
+                            majorSelect.appendChild(option);
+                        });
+                        // getDataRows();
+                    })
+                    .catch(error => console.error('Error fetching majors:', error));
+            }
+
+            /// AXIOS UPDATE COURSE
+            document.addEventListener('DOMContentLoaded', function () {
+                document.getElementById('editManualEnlistForm').addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(this);
+
+                    axios.post(`/admission/results/manualEnlist`, formData)
+                        .then(response => {
+                            this.reset();
+                            document.getElementById('e_errorMessageManualEnlist').innerHTML = '';
+                            swalGenericSinglePageUpdate(response.data.message);
+                            closeEditModal();
+                        })
+                        .catch(error => {
+                            const errorList = document.getElementById('e_errorMessageManualEnlist');
+                            errorList.innerHTML = '';
+
+                            if (error.response && error.response.status === 422) {
+                                const errors = error.response.data.errors;
+                                for (const key in errors) {
+                                    if (errors.hasOwnProperty(key)) {
+                                        const errorMessage = document.createElement('li');
+                                        errorMessage.innerText = errors[key][0];
+                                        errorList.appendChild(errorMessage);
+                                    }
+                                }
+                            } else {
+                                const errorMsg = error.response?.data?.message || error.message;
+                                swalGenericError('An unexpected error occurred!', errorMsg);
+                            }
+                        });
+                });
+            });
+
             
 
             // FUNCTION TO SHOW EDIT MODAL
             function openEditModal(id) {
                 
                 document.getElementById('editManualEnlistModal').classList.remove('hidden'); 
-                document.getElementById('e_errorMessageChangeCourse').innerHTML = '';
+                document.getElementById('e_errorMessageManualEnlist').innerHTML = '';
 
-                axios.get(`/admission/results/${id}/edit`,{
+                axios.get(`/admission/result/manual/${id}/fetch`,{
                         headers: { 
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                         }
@@ -354,15 +457,13 @@
                         document.getElementById('appID').value = applicant.AppNo;
                         document.getElementById('current_term').value = applicant.TermID;
                         document.getElementById('current_status').value = applicant.Status;
-                        document.getElementById('current_campus').value = applicant.CampusID;
-                        document.getElementById('current_course').value = applicant.QualifiedCourseID;
-                        document.getElementById('current_major').value = applicant.QualifiedMajorID;
                         document.getElementById('i_appNo').textContent = applicant.AppNo;
-                        document.getElementById('i_name').textContent = applicant.Applicant;
+                        document.getElementById('i_name').textContent = applicant.ApplicantName;
                         document.getElementById('i_status').textContent = applicant.Status;
-                        document.getElementById('i_campus').textContent = applicant.CampusName;
-                        document.getElementById('i_courseID').textContent = applicant.QualifiedCourse;
-                        document.getElementById('i_majorID').textContent = applicant.QualifiedMajor ? applicant.QualifiedMajor : 'None';
+                        document.getElementById('i_track').textContent = applicant.Track_Name;
+                        document.getElementById('i_strand').textContent = applicant.Strand_Name;
+                        document.getElementById('i_stanine').textContent = applicant.Test_Score_Stanine;
+                        document.getElementById('i_ranking').textContent = applicant.Total_Ranking_Score;
                     })
                     .catch(error => {
                         swalGenericError('An unexpected error occurred!', error);

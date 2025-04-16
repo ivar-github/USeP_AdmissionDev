@@ -1042,4 +1042,89 @@ class ResultController extends Controller
             ], 500);
         }
     }
+
+    public function fetch(Request $request, $appNo)
+    {
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
+        try {
+
+            $applicant = ResultOverallView::select('AppNo', 
+                    'ApplicantName', 
+                    'TermID', 
+                    'Track_Name',
+                    'Strand_Name',
+                    'Test_Score_Stanine', 
+                    'Total_Ranking_Score', 
+                    'Status')
+            ->where('AppNo', $appNo)
+            ->firstOrFail();
+
+            return response()->json($applicant);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+    public function manualEnlist(Request $request)
+    {
+
+        try {
+
+            $applicantID = $request->input('appID');
+            $applicantID = $request->input('appID');
+            $currentTerm = $request->input('current_term'); 
+            $currentStatus = $request->input('current_status');
+            // $currentCampus = $request->input('current_campus');
+            // $currentCourse = $request->input('current_course');
+            // $currentMajor = $request->input('current_major');
+
+            $transCampus = $request->input('campus');
+            $transCollege = $request->input('college');
+            $transCourse = $request->input('program');
+            $transMajor = $request->input('major');
+
+
+            if (!$applicantID) {
+                return response()->json([
+                    'error' => 'Please select an applicant',
+                    'message' => 'Please select an applicant before proceeding.',
+                ], 400);
+            }
+
+
+            $request->validate([
+                'campus' => ['required', 'integer'],
+                'college' => ['required', 'integer'],
+                'program' => ['required', 'integer'],
+                'major' => ['required', 'integer'],
+            ]);
+
+
+            DB::statement('EXEC sp_ManualInsertResultss ?, ?, ?, ?, ?', [
+                $validated['AppNo'],
+                $validated['TermID'],
+                $validated['CampusID'],
+                $validated['CourseID'],
+                $validated['MajorID'],
+            ]);
+
+            return response()->json(['message' => 'Manual Enlistment Successful.']);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 }
