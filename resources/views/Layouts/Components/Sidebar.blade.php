@@ -146,8 +146,9 @@
                     <li x-data="{
                             open: false,
                             isActive: window.location.pathname.includes('/admission/result/dashboard') ||
-                                    window.location.pathname.includes('/admission/result/applicants') ||
                                     window.location.pathname.includes('/admission/result/overall') ||
+                                    window.location.pathname.includes('/admission/result/qualified') ||
+                                    window.location.pathname.includes('/admission/result/notQualified') ||
                                     window.location.pathname.includes('/admission/result/transferees'),
                             init() {
                                 if (this.isActive) {
@@ -177,13 +178,18 @@
                                 </x-subNav-Link>
                             </li>
                             <li >
-                                <x-subNav-Link :href="route('results.applicants')" :active="request()->routeIs('results.applicants')">
-                                    <span class="ms-3">Qualified Applicants</span>
+                                <x-subNav-Link :href="route('results.overall')" :active="request()->routeIs('results.overall')">
+                                    <span class="ms-3">Overall Ranking</span>
                                 </x-subNav-Link>
                             </li>
                             <li >
-                                <x-subNav-Link :href="route('results.overall')" :active="request()->routeIs('results.overall')">
-                                    <span class="ms-3">Overall Ranking</span>
+                                <x-subNav-Link :href="route('results.qualified')" :active="request()->routeIs('results.qualified')">
+                                    <span class="ms-3">Qualified</span>
+                                </x-subNav-Link>
+                            </li>
+                            <li >
+                                <x-subNav-Link :href="route('results.notQualified')" :active="request()->routeIs('results.notQualified')">
+                                    <span class="ms-3">Not Qualified</span>
                                 </x-subNav-Link>
                             </li>
                             <li >

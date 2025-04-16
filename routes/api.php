@@ -18,8 +18,9 @@ use App\Http\Controllers\RFIDController;
         //ADMISSION API
         Route::get('/api/registrationsData', [RegistrationController::class, 'fetchData']);
 
-        Route::get('/api/admission/result/applicants', [ResultController::class, 'getData'])->name('api.results.data');
         Route::get('/api/admission/result/overall', [ResultController::class, 'getOverallData'])->name('api.results.overall');
+        Route::get('/api/admission/result/qualified', [ResultController::class, 'getQualifiedData'])->name('api.results.qualified');
+        Route::get('/api/admission/result/notQualified', [ResultController::class, 'getNotQualifiedData'])->name('api.results.notQualified');
         Route::get('/api/admission/result/transferees', [ResultController::class, 'getTransfereeData'])->name('api.results.transferees');
         Route::get('/api/admission/result/dashboard', [ResultController::class, 'getDashboard'])->name('api.results.dashboard');
         Route::get('/api/admission/result/getColleges', [ResultController::class, 'getColleges']);

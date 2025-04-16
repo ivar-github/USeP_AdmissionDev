@@ -5,7 +5,7 @@
     use Maatwebsite\Excel\Concerns\FromQuery;
     use Maatwebsite\Excel\Concerns\WithHeadings;
 
-    class ExportApplicantsResultOverall implements FromQuery, WithHeadings
+    class ExportApplicantsResultNotQualified implements FromQuery, WithHeadings
     {
         protected $columns;
         protected $filters;
@@ -19,13 +19,10 @@
         public function query()
         {
             return ResultOverallView::query()
+                // ->distinct()
                 ->select($this->columns)
                 ->where('TermID', $this->filters['termID'])
-                ->when($this->filters['campus'] != 0, fn($query) => $query->where('CampusID', $this->filters['campus']))
-                ->when($this->filters['program'] != 0, fn($query) => $query->where('QualifiedCourseID', $this->filters['program']))
-                ->when($this->filters['major'] != 0, fn($query) => $query->where('QualifiedMajorID', $this->filters['major']))
-                ->when($this->filters['status'] && $this->filters['status'] !== 'all' && $this->filters['status'] != '1', fn($query) => $query->where('Status', $this->filters['status']))
-                ->when($this->filters['status'] == 1, fn($query) => $query->where('isEnlisted', $this->filters['status']))
+                ->where('Status', 'NotQualified')
                 ->when($this->filters['search'], function ($query, $search) {
                     $query->where(function ($q) use ($search) {
                         $q->where('ApplicantName', 'LIKE', '%' . $search . '%')

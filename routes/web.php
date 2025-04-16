@@ -43,10 +43,11 @@ Route::middleware(['auth', 'isActive', 'forcePassChange', 'securityHeaders'])->g
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
 
-    Route::resource('admission/result/changeApplicantCourse', ResultController ::class);
+    Route::resource('admission/results', ResultController ::class);
     Route::get('admission/result/dashboard', [ResultController::class, 'index'])->name('results.index');
-    Route::get('admission/result/applicants', [ResultController::class, 'applicants'])->name('results.applicants');
     Route::get('admission/result/overall', [ResultController::class, 'overall'])->name('results.overall');
+    Route::get('admission/result/qualified', [ResultController::class, 'qualified'])->name('results.qualified');
+    Route::get('admission/result/notQualified', [ResultController::class, 'notQualified'])->name('results.notQualified');
     Route::get('admission/result/transferees', [ResultController::class, 'transferees'])->name('results.transferees');
 
     Route::resource('admission/schedule/scheduleReschedules', ScheduleRescheduleController ::class);

@@ -1,6 +1,6 @@
 <x-Main-layout>
     <x-Breadcrumbs>
-        <a  href="{{route('results.applicants')}}" class="ms-1 text-lg font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">RESULTS - Qualified Applicants</a>
+        <a  href="{{route('results.qualified')}}" class="ms-1 text-lg font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">RESULTS - Qualified Applicants</a>
     </x-Breadcrumbs>
     <div class="mx-auto h-full pb-10">
         <div class="overflow-hidden py-5 lg:py-10">
@@ -202,8 +202,8 @@
             </div>
 
             {{-- MODALS --}}
-            @include('Layouts.Modal.ResultChangeCourse.Edit')
-            @include('Layouts.Modal.ResultChangeCourse.View')
+            @include('Layouts.Modal.ResultEnlist.Edit')
+            @include('Layouts.Modal.ResultEnlist.View')
 
         </div>
     </div>
@@ -445,7 +445,7 @@
 
                 SpinnerGlobal.classList.remove("hidden");
 
-                axios.get('/api/admission/result/applicants', {
+                axios.get('/api/admission/result/qualified', {
                     params: {
                         columns: selectedColumns.join(','),
                         page,
@@ -598,7 +598,7 @@
                     const formData = new FormData(this);
                     const appID = document.getElementById('appID').value;
 
-                    axios.post(`/admission/result/changeApplicantCourse/${appID}`, formData)
+                    axios.post(`/admission/results/${appID}`, formData)
                     .then(response => {
                             this.reset();
                             document.getElementById('e_errorMessageChangeCourse').innerHTML = '';
@@ -635,7 +635,7 @@
                 document.getElementById('editChangeCourseModal').classList.remove('hidden'); 
                 document.getElementById('e_errorMessageChangeCourse').innerHTML = '';
 
-                axios.get(`/admission/result/changeApplicantCourse/${id}/edit`,{
+                axios.get(`/admission/results/${id}/edit`,{
                         headers: { 
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                         }
