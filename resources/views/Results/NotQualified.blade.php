@@ -406,12 +406,15 @@
 
             /// AXIOS UPDATE COURSE
             document.addEventListener('DOMContentLoaded', function () {
+                
+                var submitFormUrl = "{{ route('results.store') }}";
                 document.getElementById('editManualEnlistForm').addEventListener('submit', function (e) {
                     e.preventDefault();
 
                     const formData = new FormData(this);
+                    const appID = document.getElementById('appID').value;
 
-                    axios.post(`/admission/results/manualEnlist`, formData)
+                    axios.post(submitFormUrl, formData)
                         .then(response => {
                             this.reset();
                             document.getElementById('e_errorMessageManualEnlist').innerHTML = '';
@@ -419,11 +422,11 @@
                             closeEditModal();
                         })
                         .catch(error => {
-                            const errorList = document.getElementById('e_errorMessageManualEnlist');
-                            errorList.innerHTML = '';
-
                             if (error.response && error.response.status === 422) {
                                 const errors = error.response.data.errors;
+                                const errorList = document.getElementById('e_errorMessageManualEnlist');
+                                errorList.innerHTML = '';
+
                                 for (const key in errors) {
                                     if (errors.hasOwnProperty(key)) {
                                         const errorMessage = document.createElement('li');
@@ -432,8 +435,10 @@
                                     }
                                 }
                             } else {
-                                const errorMsg = error.response?.data?.message || error.message;
-                                swalGenericError('An unexpected error occurred!', errorMsg);
+                                const errorMsg = error.response.data.message;
+                                console.log('ErrorMsg',errorMsg);
+                                console.log('Error',error);
+                                swalGenericError('An unexpected error occurred!',errorMsg);
                             }
                         });
                 });

@@ -72,7 +72,7 @@ class ResultController extends Controller
         try {
 
             $terms = Term::select('TermID', 'AcademicYear', 'SchoolTerm')
-                ->where('TermID', 204)
+                // ->where('TermID', 204)
                 ->limit(100)
                 ->orderBy('TermID', 'desc')
                 ->get();
@@ -761,7 +761,75 @@ class ResultController extends Controller
 
     public function store(Request $request)
     {
-        //
+
+        if (!$request->ajax()) {
+            abort(403);
+        }
+
+        try {
+
+            $applicantID = $request->input('appID');
+            $currentTerm = $request->input('current_term'); 
+            $currentStatus = $request->input('current_status');
+            // $currentCampus = $request->input('current_campus');
+            // $currentCourse = $request->input('current_course');
+            // $currentMajor = $request->input('current_major');
+
+            $transCampus = $request->input('campus');
+            $transCollege = $request->input('college');
+            $transCourse = $request->input('program');
+            $transMajor = $request->input('major');
+
+            if (!$applicantID) {
+                return response()->json([
+                    'error' => 'Please select an applicant',
+                    'message' => 'Please select an applicant before proceeding.',
+                ], 400);
+            }
+    
+            $validated = $request->validate([
+                'campus' => ['required', 'integer'],
+                'college' => ['required', 'integer'],
+                'program' => ['required', 'integer'],
+                'major' => ['required', 'integer'],
+            ]);
+
+            Custom_ResultEnlistLogs::create([
+                'type' => 'Manual',
+                'TermID' => $currentTerm,
+                'AppNo' =>  $applicantID,
+                'previousStatus' => $currentStatus,
+                // 'previousCampusID' => $currentCampus,
+                // 'previousCourseID' => $currentCourse,
+                // 'previousMajorID' => $currentMajor,
+                'currentStatus' => 'Qualified',
+                'currentCampusID' => $transCampus,
+                'currentCollegeID' => $transCollege,
+                'currentCourseID' => $transCourse,
+                'currentMajorID' =>  $transMajor,
+                'enlistedBy_userID' => Auth::user()->id,
+                'enlistedBy_userEmail' => Auth::user()->email,
+            ]);
+    
+            DB::connection('sqlsrv2')->statement(
+                'EXEC sp_OAS_AdmissionResultManualEnlist ?, ?, ?, ?, ?', [
+                    $applicantID,
+                    (int) $currentTerm,
+                    (int) $validated['campus'],
+                    (int) $validated['program'],
+                    (int) $validated['major'],
+                ]
+            );
+            
+    
+            return response()->json(['message' => 'Manual Enlistment Successful.']);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
 
@@ -1080,7 +1148,6 @@ class ResultController extends Controller
         try {
 
             $applicantID = $request->input('appID');
-            $applicantID = $request->input('appID');
             $currentTerm = $request->input('current_term'); 
             $currentStatus = $request->input('current_status');
             // $currentCampus = $request->input('current_campus');
@@ -1092,31 +1159,48 @@ class ResultController extends Controller
             $transCourse = $request->input('program');
             $transMajor = $request->input('major');
 
-
             if (!$applicantID) {
                 return response()->json([
                     'error' => 'Please select an applicant',
                     'message' => 'Please select an applicant before proceeding.',
                 ], 400);
             }
-
-
-            $request->validate([
+    
+            $validated = $request->validate([
                 'campus' => ['required', 'integer'],
                 'college' => ['required', 'integer'],
                 'program' => ['required', 'integer'],
                 'major' => ['required', 'integer'],
             ]);
 
-
-            DB::statement('EXEC sp_ManualInsertResultss ?, ?, ?, ?, ?', [
-                $validated['AppNo'],
-                $validated['TermID'],
-                $validated['CampusID'],
-                $validated['CourseID'],
-                $validated['MajorID'],
+            Custom_ResultEnlistLogs::create([
+                'type' => 'Manual',
+                'TermID' => $currentTerm,
+                'AppNo' =>  $applicantID,
+                'previousStatus' => $currentStatus,
+                // 'previousCampusID' => $currentCampus,
+                // 'previousCourseID' => $currentCourse,
+                // 'previousMajorID' => $currentMajor,
+                'currentStatus' => 'Qualified',
+                'currentCampusID' => $transCampus,
+                'currentCollegeID' => $transCollege,
+                'currentCourseID' => $transCourse,
+                'currentMajorID' =>  $transMajor,
+                'enlistedBy_userID' => Auth::user()->id,
+                'enlistedBy_userEmail' => Auth::user()->email,
             ]);
-
+    
+            DB::connection('sqlsrv2')->statement(
+                'EXEC sp_OAS_AdmissionResultManualEnlist ?, ?, ?, ?, ?', [
+                    (int) $applicantID,
+                    (int) $currentTerm,
+                    (int) $validated['campus'],
+                    (int) $validated['program'],
+                    (int) $validated['major'],
+                ]
+            );
+            
+    
             return response()->json(['message' => 'Manual Enlistment Successful.']);
 
         } catch (Throwable $e) {

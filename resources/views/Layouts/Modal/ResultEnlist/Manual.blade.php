@@ -16,7 +16,7 @@
             <!-- MODAL Body-->
             <form method="POST" id="editManualEnlistForm">
                 @csrf
-                @method('PATCH')
+                @method('POST')
                 <input type="hidden" id="appID" name="appID">
                 <input type="hidden" id="current_term" name="current_term">
                 <input type="hidden" id="current_status" name="current_status">
