@@ -524,7 +524,7 @@
                                 <a href="javascript:void(0)" onclick="openViewModal('${AppNo}','${Applicant}')" 
                                     class="hover:underline text-blue-800 hover:text-blue-400 dark:text-blue-500 dark:hover:text-blue-400 "
                                     >
-                                    View
+                                    Logs
                                 </a>
 
                             </div>
@@ -715,9 +715,9 @@
                                 <div class="flex-1 min-w-0 text-base font-bold ">
                                     <p class="text-md font-bold text-yellow-700 dark:text-yellow-400">From</p>
                                     <p class="text-sm font-sm text-gray-700 dark:text-gray-300">${enlistlog.previousStatus}</p>
-                                    <p class="text-sm font-sm text-gray-700 dark:text-gray-300">${enlistlog.PrevCampus}</p>
-                                    <p class="text-sm font-sm text-gray-700 dark:text-gray-300">${enlistlog.previousProgram}</p>
-                                    <p class="text-sm font-sm text-gray-700 dark:text-gray-300">${enlistlog.previousMajor}</p>
+                                    <p class="text-sm font-sm text-gray-700 dark:text-gray-300">${enlistlog.PrevCampus ? enlistlog.PrevCampus : ''}</p>
+                                    <p class="text-sm font-sm text-gray-700 dark:text-gray-300">${enlistlog.previousProgram ? enlistlog.previousProgram : ''}</p>
+                                    <p class="text-sm font-sm text-gray-700 dark:text-gray-300">${enlistlog.previousMajor ? enlistlog.previousMajor : ''}</p>
                                     
                                     <p class="text-md font-bold text-green-700 dark:text-green-400 mt-2">To</p>
                                     <p class="text-sm font-sm text-gray-700 dark:text-gray-300">${enlistlog.currentStatus}</p>
