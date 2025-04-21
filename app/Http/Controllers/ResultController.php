@@ -786,7 +786,24 @@ class ResultController extends Controller
                 ]
             );
             
-    
+
+            //ADD ACTION LOGS
+            $agent = new Agent();
+            $agentInfo = $agent->platform().', '. $agent->browser().', '. $agent->device();
+
+            ActionLogs::create([
+                'type' => 'Create',
+                'module' => 'USePAT Result - Enlist',
+                'affectedID' => $applicantID,
+                'affectedItem' => 'Campus:'.$transCampus.', Course:'.$transCourse.' Major:'.$transMajor,
+                'description' => 'Manual Enlistment Successful',
+                'status' => 1,
+                'userID' => Auth::user()->id,
+                'userEmail' => Auth::user()->email,
+                'hostName' => gethostname(),
+                'platform' => $agentInfo,
+            ]);
+
             return response()->json(['message' => 'Manual Enlistment Successful.']);
 
         } catch (Throwable $e) {
