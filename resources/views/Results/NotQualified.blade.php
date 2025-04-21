@@ -419,6 +419,7 @@
                             this.reset();
                             document.getElementById('e_errorMessageManualEnlist').innerHTML = '';
                             swalGenericSinglePageUpdate(response.data.message);
+                            getDataRows();
                             closeEditModal();
                         })
                         .catch(error => {

@@ -45,7 +45,7 @@ Route::middleware(['auth', 'isActive', 'forcePassChange', 'securityHeaders'])->g
 
     Route::resource('admission/results', ResultController ::class);
     Route::get('/admission/result/manual/{id}/fetch', [ResultController::class, 'fetch'])->name('results.fetch');
-    Route::post('/admission/results/manualEnlist', [ResultController::class, 'manualEnlist'])->name('results.manualEnlist');
+    // Route::post('/admission/results/manualEnlist', [ResultController::class, 'manualEnlist'])->name('results.manualEnlist');
     Route::get('admission/result/dashboard', [ResultController::class, 'index'])->name('results.index');
     Route::get('admission/result/overall', [ResultController::class, 'overall'])->name('results.overall');
     Route::get('admission/result/qualified', [ResultController::class, 'qualified'])->name('results.qualified');
