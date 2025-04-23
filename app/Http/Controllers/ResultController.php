@@ -762,6 +762,32 @@ class ResultController extends Controller
                 'major' => ['required', 'integer'],
             ]);
 
+    
+            $desc =  'Manual Enlistment Failed';
+            $status = 0;
+
+            $existingQualifiedApplicant = Result::where('AppNo', $applicantID)->exists();
+
+            if ($existingQualifiedApplicant) {
+                return response()->json([
+                    'message' => 'The applicant already exists!',
+                    'status' => 'error',
+                ], 409);
+
+            }
+
+            //EXECUTE
+            DB::connection('sqlsrv2')->statement(
+                'EXEC sp_OAS_AdmissionResultManualEnlist ?, ?, ?, ?, ?', [
+                    $applicantID,
+                    (int) $currentTerm,
+                    (int) $validated['campus'],
+                    (int) $validated['program'],
+                    (int) $validated['major'],
+                ]
+            );
+
+
             Custom_ResultEnlistLogs::create([
                 'type' => 'Manual',
                 'TermID' => $currentTerm,
@@ -775,17 +801,10 @@ class ResultController extends Controller
                 'enlistedBy_userID' => Auth::user()->id,
                 'enlistedBy_userEmail' => Auth::user()->email,
             ]);
-    
-            DB::connection('sqlsrv2')->statement(
-                'EXEC sp_OAS_AdmissionResultManualEnlist ?, ?, ?, ?, ?', [
-                    $applicantID,
-                    (int) $currentTerm,
-                    (int) $validated['campus'],
-                    (int) $validated['program'],
-                    (int) $validated['major'],
-                ]
-            );
-            
+
+
+            $desc =  'Manual Enlistment Successful';
+            $status = 1;
 
             //ADD ACTION LOGS
             $agent = new Agent();
@@ -796,8 +815,8 @@ class ResultController extends Controller
                 'module' => 'USePAT Result - Enlist',
                 'affectedID' => $applicantID,
                 'affectedItem' => 'Campus:'.$transCampus.', Course:'.$transCourse.' Major:'.$transMajor,
-                'description' => 'Manual Enlistment Successful',
-                'status' => 1,
+                'description' => $desc,
+                'status' => $status, 
                 'userID' => Auth::user()->id,
                 'userEmail' => Auth::user()->email,
                 'hostName' => gethostname(),
