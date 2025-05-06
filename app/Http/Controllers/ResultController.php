@@ -767,44 +767,61 @@ class ResultController extends Controller
             $status = 0;
 
             $existingQualifiedApplicant = Result::where('AppNo', $applicantID)->exists();
+            // dd($existingQualifiedApplicant);
 
-            if ($existingQualifiedApplicant) {
-                return response()->json([
-                    'message' => 'The applicant already exists!',
-                    'status' => 'error',
-                ], 409);
+            DB::transaction(function () use (
+                $applicantID,
+                $currentTerm,
+                $currentStatus,
+                $transCampus,
+                $transCollege,
+                $transCourse,
+                $transMajor,
+                $validated,
+                &$desc,
+                &$status,
+            ) {
+                
+                $alreadyExists = Result::where('AppNo', $applicantID)
+                    ->lockForUpdate()
+                    ->exists();
+    
+                if ($alreadyExists) {
+                    throw new \Exception('The applicant already exists.');
+                }
 
-            }
+                //EXECUTE
+                DB::connection('sqlsrv2')->statement(
+                    'EXEC sp_OAS_AdmissionResultManualEnlist ?, ?, ?, ?, ?', [
+                        $applicantID,
+                        (int) $currentTerm,
+                        (int) $validated['campus'],
+                        (int) $validated['program'],
+                        (int) $validated['major'],
+                    ]
+                );
 
-            //EXECUTE
-            DB::connection('sqlsrv2')->statement(
-                'EXEC sp_OAS_AdmissionResultManualEnlist ?, ?, ?, ?, ?', [
-                    $applicantID,
-                    (int) $currentTerm,
-                    (int) $validated['campus'],
-                    (int) $validated['program'],
-                    (int) $validated['major'],
-                ]
-            );
+                //ENLISTMENT LOGS
+                Custom_ResultEnlistLogs::create([
+                    'type' => 'Manual',
+                    'TermID' => $currentTerm,
+                    'AppNo' =>  $applicantID,
+                    'previousStatus' => $currentStatus,
+                    'currentStatus' => 'Qualified',
+                    'currentCampusID' => $transCampus,
+                    'currentCollegeID' => $transCollege,
+                    'currentCourseID' => $transCourse,
+                    'currentMajorID' =>  $transMajor,
+                    'enlistedBy_userID' => Auth::user()->id,
+                    'enlistedBy_userEmail' => Auth::user()->email,
+                ]);
+
+                $desc =  'Manual Enlistment Successful';
+                $status = 1;
+
+            });
 
 
-            Custom_ResultEnlistLogs::create([
-                'type' => 'Manual',
-                'TermID' => $currentTerm,
-                'AppNo' =>  $applicantID,
-                'previousStatus' => $currentStatus,
-                'currentStatus' => 'Qualified',
-                'currentCampusID' => $transCampus,
-                'currentCollegeID' => $transCollege,
-                'currentCourseID' => $transCourse,
-                'currentMajorID' =>  $transMajor,
-                'enlistedBy_userID' => Auth::user()->id,
-                'enlistedBy_userEmail' => Auth::user()->email,
-            ]);
-
-
-            $desc =  'Manual Enlistment Successful';
-            $status = 1;
 
             //ADD ACTION LOGS
             $agent = new Agent();

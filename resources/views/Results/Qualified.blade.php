@@ -490,7 +490,7 @@
 
             function renderTable(data, currentPage, limit) {
                 let tableHTML = '<table class="min-w-full border border-gray-400 rounded-md text-gray-700  dark:text-gray-300"><thead><tr>';
-                // tableHTML += '<th class="py-2 px-4 border">#</th>';
+                tableHTML += '<th class="py-2 px-4 border">Count#</th>';
                 selectedColumns.forEach(column => {
                     tableHTML += `<th class="py-2 px-4 border border-gray-300 bg-slate-300/50 dark:bg-slate-900/40">${column.charAt(0).toUpperCase() + column.slice(1)}</th>`;
                 });
@@ -498,9 +498,9 @@
                 tableHTML += '</tr></thead><tbody>';
 
                 data.forEach((row, index) => {
-                    // let rowNumber = (currentPage - 1) * limit + index + 1;
-                    // tableHTML += `<tr><td class="py-2 px-4 border">${rowNumber}</td>`;
-                tableHTML += '<tr class="hover:bg-gray-100 dark:hover:bg-gray-600">';
+                    let rowNumber = (currentPage - 1) * limit + index + 1;
+                    tableHTML += '<tr class="hover:bg-gray-100 dark:hover:bg-gray-600">';
+                    tableHTML += `<td class="py-2 px-4 border">${rowNumber}</td>`;
                     let AppNo = row.AppNo;    
                     let Applicant = row.Applicant;    
                     selectedColumns.forEach(column => {
